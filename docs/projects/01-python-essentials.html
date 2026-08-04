@@ -58,37 +58,66 @@
               so you can grow a coherent codebase over time.
             </p>
             <p>
-              In later projects, you will reuse some of these scripts and patterns when working
-              with JSON datasets and simple data pipelines.
+              For this project, you will work with a public-domain essay from Project Gutenberg:
+              <em>Short Stories and Essays (from Literature and Life)</em> by William Dean Howells
+              (Project Gutenberg ID 3379).
             </p>
           </article>
         </div>
       </div>
     </section>
 
-    <!-- Repository layout -->
+    <!-- Download instructions -->
     <section class="section bg-light">
       <div class="container section-inner">
         <header class="section-header">
-          <h2>Repository layout</h2>
+          <h2>Download the sample text</h2>
           <p class="section-subtitle">
-            Start by creating a folder for this project inside your own repository. You will keep
-            one repository for all projects, with a separate folder per project.
+            You will use one shared text file for all tasks in this project. Everyone works from the same source.
           </p>
         </header>
 
         <article class="info-card">
-          <h3>Your repository structure</h3>
+          <h3>Public-domain essay from Project Gutenberg</h3>
           <p>
-            In your personal repository (for example <code>holberton-ml-python-refresh-yourname</code>),
-            create a folder named <code>project01/</code> and keep everything for this project there.
+            Download the plain text UTF-8 version of
+            <em>Short Stories and Essays (from Literature and Life)</em> by William Dean Howells
+            from Project Gutenberg:
           </p>
-          <p>A possible structure:</p>
+          <p>
+            <a href="https://www.gutenberg.org/ebooks/3379.txt.utf-8" target="_blank" rel="noreferrer">
+              https://www.gutenberg.org/ebooks/3379.txt.utf-8
+            </a>
+          </p>
+          <p>
+            Save this file in your own repository as:
+          </p>
+          <pre><code>project01/data/sample.txt</code></pre>
+          <p>
+            Project Gutenberg texts include a header and footer describing the project and license.
+            You can keep them as part of the text; they will simply be included in your counts and statistics.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <!-- Repository layout -->
+    <section class="section">
+      <div class="container section-inner">
+        <header class="section-header">
+          <h2>Your repository layout</h2>
+          <p class="section-subtitle">
+            Keep one repository for all projects and a separate folder per project. For this project, everything lives in <code>project01/</code>.
+          </p>
+        </header>
+
+        <article class="info-card">
+          <h3>Suggested structure</h3>
+          <p>A possible structure in your personal repository:</p>
           <pre><code>your-repo/
 ├── project01/
 │   ├── data/
-│   │   ├── sample.txt
-│   │   └── logs.txt
+│   │   └── sample.txt
 │   ├── scripts/
 │   │   ├── file_preview.py
 │   │   ├── file_stats.py
@@ -99,17 +128,17 @@
 ├── project02/
 ├── project03/
 └── ...
-</code></pre>
+          </code></pre>
           <p>
-            You can copy any starter <code>data/</code> files from this curriculum repository,
-            but you are free to add your own small text files to explore.
+            All core tasks (0, 1, and 2) use <code>project01/data/sample.txt</code> as their default input file.
+            Task 3 can reuse the same file or another text file you choose.
           </p>
         </article>
       </div>
     </section>
 
     <!-- Task 0 -->
-    <section class="section">
+    <section class="section bg-light">
       <div class="container section-inner">
         <header class="section-header">
           <h2>Task 0 · warm-up – preview a file</h2>
@@ -123,21 +152,22 @@
           <ul>
             <li>Create a script <code>scripts/file_preview.py</code> inside <code>project01/</code>.</li>
             <li>The script takes a file path as a required argument.</li>
-            <li>It prints the first N lines (default 10) of the file to the terminal.</li>
-            <li>If the file does not exist, it should print a clear error message and exit with a non-zero code.</li>
+            <li>Use <code>project01/data/sample.txt</code> as your default test file.</li>
+            <li>Print the first N lines (default 10) of the file to the terminal.</li>
+            <li>If the file does not exist, print a clear error message and exit with a non-zero code.</li>
           </ul>
           <h3>Hints</h3>
           <ul>
             <li>Use <code>sys.argv</code> or <code>argparse</code> to handle command-line arguments.</li>
             <li>Use a <code>with open(path)</code> block to read the file safely.</li>
-            <li>Start with a hardcoded path first, then refactor to use arguments.</li>
+            <li>Start with a hardcoded path to <code>data/sample.txt</code>, then refactor to use arguments.</li>
           </ul>
         </article>
       </div>
     </section>
 
     <!-- Task 1 -->
-    <section class="section bg-light">
+    <section class="section">
       <div class="container section-inner">
         <header class="section-header">
           <h2>Task 1 · file statistics</h2>
@@ -153,7 +183,7 @@
             <li>Implement a function <code>compute_file_stats(path)</code> that returns a dictionary of stats.</li>
             <li>The script should:
               <ul>
-                <li>Take a file path from the command line.</li>
+                <li>Take a file path from the command line (start with <code>data/sample.txt</code>).</li>
                 <li>Print the number of lines, characters, and non-empty lines.</li>
               </ul>
             </li>
@@ -161,8 +191,8 @@
           </ul>
           <h3>Suggested progression</h3>
           <ul>
-            <li>1.1 – Start with a hardcoded path and print the stats.</li>
-            <li>1.2 – Add command-line arguments.</li>
+            <li>1.1 – Start with a hardcoded path to <code>data/sample.txt</code> and print the stats.</li>
+            <li>1.2 – Add command-line arguments so you can pass any path.</li>
             <li>1.3 – Wrap file access in <code>try/except</code> and return a non-zero exit code on error.</li>
           </ul>
         </article>
@@ -170,12 +200,12 @@
     </section>
 
     <!-- Task 2 -->
-    <section class="section">
+    <section class="section bg-light">
       <div class="container section-inner">
         <header class="section-header">
           <h2>Task 2 · word count and frequencies</h2>
           <p class="section-subtitle">
-            Count how often each word appears in a file and explore different ways to implement it.
+            Count how often each word appears in <code>sample.txt</code> and explore different ways to implement it.
           </p>
         </header>
 
@@ -186,7 +216,7 @@
             <li>Implement a function <code>count_words(text)</code> that returns a dictionary mapping words to counts.</li>
             <li>The script should:
               <ul>
-                <li>Read the contents of a text file passed as an argument.</li>
+                <li>Read the contents of a text file passed as an argument (start with <code>data/sample.txt</code>).</li>
                 <li>Normalize text (for example, lowercase and strip basic punctuation).</li>
                 <li>Print the top N words (default 10) and their counts.</li>
               </ul>
@@ -202,14 +232,14 @@
           <h3>Hints</h3>
           <ul>
             <li>Keep your counting logic separate from printing; this makes testing easier.</li>
-            <li>Think about how you handle whitespace and punctuation consistently.</li>
+            <li>Use the same <code>sample.txt</code> so you can compare results with other students.</li>
           </ul>
         </article>
       </div>
     </section>
 
     <!-- Task 3 -->
-    <section class="section bg-light">
+    <section class="section">
       <div class="container section-inner">
         <header class="section-header">
           <h2>Task 3 · filter lines by pattern</h2>
@@ -224,9 +254,9 @@
             <li>Create <code>scripts/filter_lines.py</code>.</li>
             <li>The script should accept:
               <ul>
-                <li><code>--input FILE</code> – path to the input file</li>
-                <li><code>--output FILE</code> – path to the output file</li>
-                <li><code>--contains STRING</code> – keep only lines that contain this substring</li>
+                <li><code>--input FILE</code> – path to the input file (start with <code>data/sample.txt</code>).</li>
+                <li><code>--output FILE</code> – path to the output file (for example <code>data/filtered.txt</code>).</li>
+                <li><code>--contains STRING</code> – keep only lines that contain this substring.</li>
               </ul>
             </li>
             <li>Read the input file line by line and write only matching lines to the output file.</li>
@@ -240,7 +270,7 @@
           </ul>
           <h3>Hints</h3>
           <ul>
-            <li>Reuse <code>with open(...)</code> for both input and output to keep code clear.</li>
+            <li>Reuse <code>data/sample.txt</code> to avoid downloading a new file.</li>
             <li>Track total lines and kept lines to compute your summary.</li>
           </ul>
         </article>
@@ -248,7 +278,7 @@
     </section>
 
     <!-- Task 4 -->
-    <section class="section">
+    <section class="section bg-light">
       <div class="container section-inner">
         <header class="section-header">
           <h2>Task 4 · toolbox entry point</h2>
@@ -263,7 +293,7 @@
             <li>Create <code>toolbox.py</code> in the root of <code>project01/</code>.</li>
             <li>The toolbox should support subcommands, for example:
               <ul>
-                <li><code>python toolbox.py stats data/logs.txt</code></li>
+                <li><code>python toolbox.py stats data/sample.txt</code></li>
                 <li><code>python toolbox.py preview data/sample.txt</code></li>
                 <li><code>python toolbox.py wc data/sample.txt --top 5</code></li>
               </ul>
@@ -287,7 +317,7 @@
     </section>
 
     <!-- Stretch goals -->
-    <section class="section bg-light">
+    <section class="section">
       <div class="container section-inner">
         <header class="section-header">
           <h2>Stretch goals (optional)</h2>
@@ -316,7 +346,7 @@
     </section>
 
     <!-- Reflection -->
-    <section class="section">
+    <section class="section bg-light">
       <div class="container section-inner">
         <header class="section-header">
           <h2>Reflection and notes</h2>
