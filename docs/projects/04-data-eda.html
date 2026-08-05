@@ -27,39 +27,56 @@
   </header>
 
   <main>
-    <!-- Intro -->
-    <section class="section">
-      <div class="container section-inner">
-        <header class="section-header">
+    <!-- Project hero -->
+    <section class="section bg-white">
+      <div class="container">
+        <div class="project-hero project-hero-inner">
           <p class="eyebrow">Project 4</p>
-          <h1>Data skills – exploratory analysis with pandas</h1>
-          <p class="section-subtitle">
-            In this project you use pandas to explore the cleaned todo dataset from Project 3:
-            inspect its structure, compute simple statistics, and create basic visualizations.
+          <h1 class="project-hero-title">Data skills – exploratory analysis with pandas</h1>
+          <p class="project-hero-subtitle">
+            In this project you use pandas to explore the cleaned todos dataset from Project 3. You will inspect the data,
+            compute simple statistics, and create basic visualizations, saving figures as files.
           </p>
-        </header>
 
+          <div class="project-hero-tags">
+            <span class="pill-tag"><span class="pill-tag-icon">📊</span> pandas DataFrames</span>
+            <span class="pill-tag"><span class="pill-tag-icon">🔎</span> EDA</span>
+            <span class="pill-tag"><span class="pill-tag-icon">📈</span> Plots</span>
+            <span class="pill-tag"><span class="pill-tag-icon">💾</span> Saved figures</span>
+          </div>
+
+          <div class="info-strip">
+            <span class="info-pill">Focus: loading CSV, describing data, grouping</span>
+            <span class="info-pill">Tools: pandas, matplotlib (or built-in plotting via pandas)</span>
+            <span class="info-pill">Goal: a few saved plots and text summaries</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Key concepts + study panel -->
+    <section class="section bg-light">
+      <div class="container section-inner">
         <div class="section-card-grid">
           <article class="info-card">
-            <h3>Learning goals</h3>
-            <ul>
-              <li>Load CSV data into pandas and perform basic inspection.</li>
-              <li>Compute simple descriptive statistics and distributions.</li>
-              <li>Use grouping and aggregation to understand per-user patterns.</li>
-              <li>Save simple figures to files for later viewing and sharing.</li>
+            <h3>Key concepts</h3>
+            <ul class="study-list">
+              <li>Reading CSV files into pandas DataFrames.</li>
+              <li>Inspecting data with <code>head</code>, <code>info</code>, and <code>describe</code>.</li>
+              <li>Grouping and aggregating by key columns (for example <code>user_id</code>).</li>
+              <li>Creating simple plots (histograms, bar charts) and saving them as image files.</li>
             </ul>
           </article>
 
           <article class="info-card">
-            <h3>Project context</h3>
-            <p>
-              You continue working inside the same personal repository used for Projects 1–3.
-              Each project has its own folder, so your work stays organized.
-            </p>
-            <p>
-              This project reuses the cleaned CSV output from Project 3
-              (<code>todos_clean.csv</code>) and focuses on exploratory data analysis,
-              not on machine learning.
+            <h3>Study first (15–30 minutes)</h3>
+            <ul class="study-list">
+              <li>Install pandas if you do not have it: run <code>pip install pandas</code> in your virtual environment.</li>
+              <li>Read a short “getting started” guide for pandas (DataFrames, columns, basic methods).</li>
+              <li>Skim a tutorial on basic EDA with pandas (loading, describing, grouping).</li>
+            </ul>
+            <p class="section-subtitle">
+              Make sure you can import pandas (<code>import pandas as pd</code>) in a Python shell before starting the tasks.
             </p>
           </article>
         </div>
@@ -67,7 +84,7 @@
     </section>
 
     <!-- Prepare data -->
-    <section class="section bg-light">
+    <section class="section">
       <div class="container section-inner">
         <header class="section-header">
           <h2>Prepare the cleaned CSV file</h2>
@@ -89,7 +106,7 @@
           <pre><code>mkdir -p project04/data
 cp project03/data/todos_clean.csv project04/data/todos_clean.csv
           </code></pre>
-          <p>
+          <p class="section-subtitle">
             All tasks in this project will use <code>project04/data/todos_clean.csv</code> as the dataset.
           </p>
         </article>
@@ -97,7 +114,7 @@ cp project03/data/todos_clean.csv project04/data/todos_clean.csv
     </section>
 
     <!-- Repository layout -->
-    <section class="section">
+    <section class="section bg-light">
       <div class="container section-inner">
         <header class="section-header">
           <h2>Your repository layout for Project 4</h2>
@@ -110,224 +127,232 @@ cp project03/data/todos_clean.csv project04/data/todos_clean.csv
           <h3>Suggested structure</h3>
           <pre><code>your-repo/
 ├── project01/
-│   └── ...
 ├── project02/
-│   └── ...
 ├── project03/
-│   └── ...
 ├── project04/
 │   ├── data/
 │   │   └── todos_clean.csv
 │   ├── scripts/
 │   │   ├── eda_overview.py
 │   │   ├── eda_grouping.py
+│   │   ├── eda_filters.py
 │   │   └── eda_plots.py
 │   ├── figures/
 │   │   ├── title_length_hist.png
 │   │   ├── completion_bar.png
 │   │   └── completion_by_user_bar.png
 │   └── project04-notes.md
+├── project05/
 └── ...
           </code></pre>
-          <p>
-            Most work will be done in scripts. If you prefer, you can also create a Jupyter notebook
-            to experiment interactively, but it is optional.
-          </p>
-        </article>
-      </div>
-    </section>
-
-    <!-- Task 0: load and first look -->
-    <section class="section bg-light">
-      <div class="container section-inner">
-        <header class="section-header">
-          <h2>Task 0 · load and first look</h2>
           <p class="section-subtitle">
-            Get comfortable loading the CSV into pandas and performing basic inspection.
+            Most work will be done in scripts. If you prefer, you can also create a Jupyter notebook to experiment interactively, but it is optional.
           </p>
-        </header>
-
-        <article class="info-card">
-          <h3>Requirements</h3>
-          <ul>
-            <li>Create <code>scripts/eda_overview.py</code> inside <code>project04/</code>.</li>
-            <li>In this script:
-              <ul>
-                <li>Import <code>pandas as pd</code>.</li>
-                <li>Load <code>data/todos_clean.csv</code> into a DataFrame.</li>
-                <li>Print:
-                  <ul>
-                    <li>The first few rows (<code>df.head()</code>).</li>
-                    <li>The shape (<code>df.shape</code> – number of rows and columns).</li>
-                    <li>Data types (<code>df.dtypes</code>).</li>
-                    <li>Basic info (<code>df.info()</code>).</li>
-                  </ul>
-                </li>
-              </ul>
-            </li>
-          </ul>
-          <h3>Hints</h3>
-          <ul>
-            <li>Think of this step as “getting acquainted” with the dataset.</li>
-            <li>In your notes, write down: number of rows, number of columns, and what each column seems to represent.</li>
-          </ul>
         </article>
       </div>
     </section>
 
-    <!-- Task 1: descriptive stats and distributions -->
+    <!-- Tasks -->
     <section class="section">
       <div class="container section-inner">
         <header class="section-header">
-          <h2>Task 1 · descriptive statistics and distributions</h2>
+          <h2>Tasks</h2>
           <p class="section-subtitle">
-            Compute simple statistics and look at basic distributions of key columns.
+            Load the CSV into pandas, inspect it, compute basic statistics, and then create and save simple plots.
           </p>
         </header>
 
-        <article class="info-card">
-          <h3>Requirements</h3>
-          <ul>
-            <li>Extend <code>eda_overview.py</code> or create additional functions in it.</li>
-            <li>Compute:
+        <div class="tasks-grid">
+          <!-- Task 0: load and first look -->
+          <article class="task-card">
+            <div class="task-header">
+              <div class="task-header-main">
+                <h3 class="task-title">Task 0 · load and first look</h3>
+                <p class="task-subtitle">
+                  Get comfortable loading the CSV into pandas and performing basic inspection.
+                </p>
+              </div>
+              <div class="task-toggle"></div>
+            </div>
+            <div class="task-body">
+              <h4>Requirements</h4>
               <ul>
-                <li><code>df.describe()</code> for numeric columns (such as <code>title_length</code> and any numeric completion flag).</li>
-                <li>Value counts for completion status (<code>df["completed"].value_counts()</code> or similar).</li>
-              </ul>
-            </li>
-            <li>Print these summaries to the terminal.</li>
-          </ul>
-          <h3>Hints</h3>
-          <ul>
-            <li>Use <code>df["completed"]</code> or <code>df["completed_int"]</code> depending on how you defined the column in Project 3.</li>
-            <li>Look at minimum, maximum, mean, and quartiles for <code>title_length</code> to understand how long todo titles tend to be.</li>
-          </ul>
-        </article>
-      </div>
-    </section>
-
-    <!-- Task 2: grouping and aggregations -->
-    <section class="section bg-light">
-      <div class="container section-inner">
-        <header class="section-header">
-          <h2>Task 2 · grouping and simple aggregations</h2>
-          <p class="section-subtitle">
-            Use <code>groupby</code> to understand per-user patterns in the todo data.
-          </p>
-        </header>
-
-        <article class="info-card">
-          <h3>Requirements</h3>
-          <ul>
-            <li>Create <code>scripts/eda_grouping.py</code>.</li>
-            <li>In this script:
-              <ul>
-                <li>Load <code>todos_clean.csv</code> with pandas.</li>
-                <li>Compute:
+                <li>Create <code>scripts/eda_overview.py</code> inside <code>project04/</code>.</li>
+                <li>In this script:
                   <ul>
-                    <li>Number of todos per user (for example <code>df.groupby("user_id")["id"].count()</code>).</li>
-                    <li>Completion rate per user (for example mean of a numeric completion flag).</li>
-                  </ul>
-                </li>
-                <li>Print:
-                  <ul>
-                    <li>The user with the most todos.</li>
-                    <li>The user(s) with the highest completion rate.</li>
+                    <li>Import <code>pandas as pd</code>.</li>
+                    <li>Load <code>data/todos_clean.csv</code> into a DataFrame (<code>df</code>).</li>
+                    <li>Print:
+                      <ul>
+                        <li>The first few rows (<code>df.head()</code>).</li>
+                        <li>The shape (<code>df.shape</code> – number of rows and columns).</li>
+                        <li>Data types (<code>df.dtypes</code>).</li>
+                        <li>Basic info (<code>df.info()</code>).</li>
+                      </ul>
+                    </li>
                   </ul>
                 </li>
               </ul>
-            </li>
-          </ul>
-          <h3>Hints</h3>
-          <ul>
-            <li><code>groupby</code> followed by aggregation (like <code>.count()</code> or <code>.mean()</code>) is a powerful pattern.</li>
-            <li>Sorting the results (for example <code>.sort_values()</code>) can help you identify top users quickly.</li>
-          </ul>
-        </article>
-      </div>
-    </section>
-
-    <!-- Task 3: filtering and questions -->
-    <section class="section">
-      <div class="container section-inner">
-        <header class="section-header">
-          <h2>Task 3 · filtering and questions</h2>
-          <p class="section-subtitle">
-            Use filtering to answer simple questions about the data.
-          </p>
-        </header>
-
-        <article class="info-card">
-          <h3>Requirements</h3>
-          <ul>
-            <li>Extend <code>eda_grouping.py</code> or create a new script <code>eda_filters.py</code>.</li>
-            <li>Answer questions such as:
+              <h4>Hints</h4>
               <ul>
-                <li>Which todos have a <code>title_length</code> above a certain threshold?</li>
-                <li>How many completed vs pending todos are there?</li>
-                <li>For a given <code>user_id</code>, how many todos are completed and how many are pending?</li>
+                <li>Think of this step as “getting acquainted” with the dataset in pandas form.</li>
+                <li>In your notes, write down: number of rows, number of columns, and what each column seems to represent.</li>
               </ul>
-            </li>
-            <li>Use boolean indexing on the DataFrame (for example <code>df[df["completed"] == 1]</code>).</li>
-          </ul>
-          <h3>Hints</h3>
-          <ul>
-            <li>Think of each question as “filter rows, then count or summarize”.</li>
-            <li>Keep your filters clear and readable; avoid chaining too many conditions in one line if it becomes hard to understand.</li>
-          </ul>
-        </article>
-      </div>
-    </section>
+            </div>
+          </article>
 
-    <!-- Task 4: plots and saved figures -->
-    <section class="section bg-light">
-      <div class="container section-inner">
-        <header class="section-header">
-          <h2>Task 4 · plots – save simple figures</h2>
-          <p class="section-subtitle">
-            Create a few basic plots and save them to image files so you can view and share them.
-          </p>
-        </header>
-
-        <article class="info-card">
-          <h3>Requirements</h3>
-          <ul>
-            <li>Create <code>scripts/eda_plots.py</code>.</li>
-            <li>Use pandas plotting or matplotlib to create:
+          <!-- Task 1: descriptive stats and distributions -->
+          <article class="task-card">
+            <div class="task-header">
+              <div class="task-header-main">
+                <h3 class="task-title">Task 1 · descriptive statistics and distributions</h3>
+                <p class="task-subtitle">
+                  Compute simple statistics and look at basic distributions of key columns.
+                </p>
+              </div>
+              <div class="task-toggle"></div>
+            </div>
+            <div class="task-body">
+              <h4>Requirements</h4>
               <ul>
-                <li>A histogram of <code>title_length</code>, saved as <code>figures/title_length_hist.png</code>.</li>
-                <li>A bar chart of completed vs pending todos, saved as <code>figures/completion_bar.png</code>.</li>
-                <li>A bar chart of completion rate per user (or number of todos per user), saved as <code>figures/completion_by_user_bar.png</code>.</li>
+                <li>Extend <code>eda_overview.py</code> or add functions inside it.</li>
+                <li>Compute and print:
+                  <ul>
+                    <li><code>df.describe()</code> for numeric columns (such as <code>title_length</code> and any numeric completion flag).</li>
+                    <li>Value counts for completion status (<code>df["completed"].value_counts()</code> or similar).</li>
+                  </ul>
+                </li>
               </ul>
-            </li>
-            <li>Make sure you create the <code>figures/</code> folder before saving.</li>
-          </ul>
-          <h3>Hints</h3>
-          <ul>
-            <li>Use <code>plt.savefig("project04/figures/filename.png", dpi=150)</code> to save your plots.</li>
-            <li>Keep the plots simple: clear labels, readable axes, and no need for advanced styling.</li>
-          </ul>
-        </article>
-      </div>
-    </section>
-
-    <!-- Optional: summary script -->
-    <section class="section">
-      <div class="container section-inner">
-        <header class="section-header">
-          <h2>Optional · summary script</h2>
-          <p class="section-subtitle">
-            Create a small script that prints a text summary of key EDA findings.
-          </p>
-        </header>
-
-        <article class="info-card">
-          <h3>Optional requirements</h3>
-          <ul>
-            <li>Create <code>scripts/eda_summary.py</code> (optional).</li>
-            <li>In this script:
+              <h4>Hints</h4>
               <ul>
-                <li>Load <code>todos_clean.csv</code>.</li>
+                <li>Use <code>df["completed"]</code> or <code>df["completed_int"]</code> depending on your Project 3 output.</li>
+                <li>Look at minimum, maximum, mean, and quartiles for <code>title_length</code> to understand how long todo titles tend to be.</li>
+              </ul>
+            </div>
+          </article>
+
+          <!-- Task 2: grouping and aggregations -->
+          <article class="task-card">
+            <div class="task-header">
+              <div class="task-header-main">
+                <h3 class="task-title">Task 2 · grouping and simple aggregations</h3>
+                <p class="task-subtitle">
+                  Use <code>groupby</code> to understand per-user patterns in the todo data.
+                </p>
+              </div>
+              <div class="task-toggle"></div>
+            </div>
+            <div class="task-body">
+              <h4>Requirements</h4>
+              <ul>
+                <li>Create <code>scripts/eda_grouping.py</code>.</li>
+                <li>In this script:
+                  <ul>
+                    <li>Load <code>todos_clean.csv</code> into a DataFrame.</li>
+                    <li>Compute:
+                      <ul>
+                        <li>Number of todos per user (for example <code>df.groupby("user_id")["id"].count()</code>).</li>
+                        <li>Completion rate per user (for example mean of a numeric completion flag).</li>
+                      </ul>
+                    </li>
+                    <li>Print:
+                      <ul>
+                        <li>The user with the most todos.</li>
+                        <li>The user(s) with the highest completion rate.</li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+              <h4>Hints</h4>
+              <ul>
+                <li><code>groupby</code> followed by aggregation (like <code>.count()</code> or <code>.mean()</code>) is a powerful pattern in pandas.</li>
+                <li>Sorting the results (for example <code>.sort_values()</code>) can help you identify top users quickly.</li>
+              </ul>
+            </div>
+          </article>
+
+          <!-- Task 3: filtering and questions -->
+          <article class="task-card">
+            <div class="task-header">
+              <div class="task-header-main">
+                <h3 class="task-title">Task 3 · filtering and questions</h3>
+                <p class="task-subtitle">
+                  Use filtering to answer simple questions about the data.
+                </p>
+              </div>
+              <div class="task-toggle"></div>
+            </div>
+            <div class="task-body">
+              <h4>Requirements</h4>
+              <ul>
+                <li>Create <code>scripts/eda_filters.py</code> or extend <code>eda_grouping.py</code>.</li>
+                <li>Answer questions such as:
+                  <ul>
+                    <li>Which todos have a <code>title_length</code> above a chosen threshold?</li>
+                    <li>How many completed vs pending todos are there?</li>
+                    <li>For a given <code>user_id</code>, how many todos are completed and how many are pending?</li>
+                  </ul>
+                </li>
+                <li>Use boolean indexing on the DataFrame (for example <code>df[df["completed"] == 1]</code>).</li>
+              </ul>
+              <h4>Hints</h4>
+              <ul>
+                <li>Think of each question as “filter rows, then count or summarize”.</li>
+                <li>Chain conditions using <code>&</code> and <code>|</code> with parentheses when you need multiple filters.</li>
+              </ul>
+            </div>
+          </article>
+
+          <!-- Task 4: plots and saved figures -->
+          <article class="task-card">
+            <div class="task-header">
+              <div class="task-header-main">
+                <h3 class="task-title">Task 4 · plots – save simple figures</h3>
+                <p class="task-subtitle">
+                  Create a few basic plots and save them to image files so you can view and share them.
+                </p>
+              </div>
+              <div class="task-toggle"></div>
+            </div>
+            <div class="task-body">
+              <h4>Requirements</h4>
+              <ul>
+                <li>Create <code>scripts/eda_plots.py</code>.</li>
+                <li>Use pandas plotting or matplotlib to create:
+                  <ul>
+                    <li>A histogram of <code>title_length</code>, saved as <code>figures/title_length_hist.png</code>.</li>
+                    <li>A bar chart of completed vs pending todos, saved as <code>figures/completion_bar.png</code>.</li>
+                    <li>A bar chart of completion rate per user (or number of todos per user), saved as <code>figures/completion_by_user_bar.png</code>.</li>
+                  </ul>
+                </li>
+                <li>Make sure you create the <code>figures/</code> folder before saving.</li>
+              </ul>
+              <h4>Hints</h4>
+              <ul>
+                <li>Use <code>plt.savefig("project04/figures/filename.png", dpi=150)</code> to save plots if you use matplotlib.</li>
+                <li>Keep plots simple: clear labels, readable axes, and no need for advanced styling.</li>
+              </ul>
+            </div>
+          </article>
+
+          <!-- Optional: summary script -->
+          <article class="task-card">
+            <div class="task-header">
+              <div class="task-header-main">
+                <h3 class="task-title">Optional · summary script</h3>
+                <p class="task-subtitle">
+                  Create a small script that prints a text summary of key EDA findings.
+                </p>
+              </div>
+              <div class="task-toggle"></div>
+            </div>
+            <div class="task-body">
+              <span class="task-badge">Optional</span>
+              <h4>Ideas</h4>
+              <ul>
+                <li>Create <code>scripts/eda_summary.py</code>.</li>
+                <li>Load <code>todos_clean.csv</code> into pandas.</li>
                 <li>Print:
                   <ul>
                     <li>Overall shape and basic <code>describe()</code> output.</li>
@@ -336,13 +361,9 @@ cp project03/data/todos_clean.csv project04/data/todos_clean.csv
                   </ul>
                 </li>
               </ul>
-            </li>
-          </ul>
-          <h3>Hints</h3>
-          <ul>
-            <li>Think of this script as a quick “health check” on the dataset that you can rerun after any changes.</li>
-          </ul>
-        </article>
+            </div>
+          </article>
+        </div>
       </div>
     </section>
 
@@ -358,19 +379,10 @@ cp project03/data/todos_clean.csv project04/data/todos_clean.csv
 
         <article class="info-card">
           <h3>Optional extensions</h3>
-          <ul>
-            <li>
-              Compute a simple correlation between <code>title_length</code> and a numeric completion flag
-              and print the result.
-            </li>
-            <li>
-              Save a short EDA report to a markdown file (<code>project04/eda_report.md</code>) summarizing
-              your main findings (counts, rates, and any interesting patterns).
-            </li>
-            <li>
-              Add another figure of your choice (for example, a boxplot of <code>title_length</code> per user)
-              and save it in the <code>figures/</code> folder.
-            </li>
+          <ul class="study-list">
+            <li>Compute a simple correlation between <code>title_length</code> and a numeric completion flag and print the result.</li>
+            <li>Save a short EDA report to a markdown file (<code>project04/eda_report.md</code>) summarizing your main findings.</li>
+            <li>Add another figure of your choice (for example, a boxplot of <code>title_length</code> per user) and save it in the <code>figures/</code> folder.</li>
           </ul>
         </article>
       </div>
@@ -389,15 +401,14 @@ cp project03/data/todos_clean.csv project04/data/todos_clean.csv
         <article class="info-card">
           <h3>Project notes</h3>
           <p>
-            Create a file <code>project04-notes.md</code> inside <code>project04/</code> and write short answers
-            to these questions:
+            Create a file <code>project04-notes.md</code> inside <code>project04/</code> and write short answers to questions like:
           </p>
-          <ul>
+          <ul class="study-list">
             <li>What was the most surprising pattern you found in the todo data?</li>
             <li>Which pandas operation (describe, groupby, filtering) felt most powerful or useful?</li>
             <li>How does exploring your own pipeline output help you understand the importance of data quality?</li>
           </ul>
-          <p>
+          <p class="section-subtitle">
             These reflections help you see EDA as a core skill in working with data, even before any ML is involved.
           </p>
         </article>
@@ -418,5 +429,6 @@ cp project03/data/todos_clean.csv project04/data/todos_clean.csv
     </div>
   </footer>
 
+  <script src="../assets/js/main.js"></script>
 </body>
 </html>

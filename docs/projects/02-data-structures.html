@@ -27,40 +27,57 @@
   </header>
 
   <main>
-    <!-- Intro -->
-    <section class="section">
-      <div class="container section-inner">
-        <header class="section-header">
+    <!-- Project hero -->
+    <section class="section bg-white">
+      <div class="container">
+        <div class="project-hero project-hero-inner">
           <p class="eyebrow">Project 2</p>
-          <h1>Data structures – working with JSON records</h1>
-          <p class="section-subtitle">
-            In this project you load a realistic JSON dataset of todo items and practice working with
-            lists, dictionaries, and sets to query, group, and analyze the data in memory.
+          <h1 class="project-hero-title">Data structures – working with JSON records</h1>
+          <p class="project-hero-subtitle">
+            In this project you move from plain text and pipes to JSON records. You will load a realistic todos dataset,
+            then practice using lists, dictionaries, and sets to filter, group, and build small indices in memory.
           </p>
-        </header>
 
+          <div class="project-hero-tags">
+            <span class="pill-tag"><span class="pill-tag-icon">📄</span> JSON records</span>
+            <span class="pill-tag"><span class="pill-tag-icon">[]</span> Lists &amp; loops</span>
+            <span class="pill-tag"><span class="pill-tag-icon">{}</span> Dicts &amp; indices</span>
+            <span class="pill-tag"><span class="pill-tag-icon">∈</span> Sets &amp; membership</span>
+          </div>
+
+          <div class="info-strip">
+            <span class="info-pill">Focus: lists, dicts, sets</span>
+            <span class="info-pill">Data: JSONPlaceholder todos</span>
+            <span class="info-pill">Goal: think in records before pandas</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Key concepts + study panel -->
+    <section class="section bg-light">
+      <div class="container section-inner">
         <div class="section-card-grid">
           <article class="info-card">
-            <h3>Learning goals</h3>
-            <ul>
-              <li>Load JSON data into native Python structures (lists and dictionaries).</li>
-              <li>Practice filtering, mapping, and aggregating records using lists and dicts.</li>
-              <li>Build simple in-memory indices to support faster and clearer queries.</li>
-              <li>Use sets to reason about uniqueness and membership (which users have which todos).</li>
+            <h3>Key concepts</h3>
+            <ul class="study-list">
+              <li>Loading JSON into native Python structures (lists and dicts).</li>
+              <li>Filtering and aggregating records with loops and list comprehensions.</li>
+              <li>Building simple indices (maps) keyed by <code>userId</code> or status.</li>
+              <li>Using sets to represent unique users and relationships.</li>
             </ul>
           </article>
 
           <article class="info-card">
-            <h3>Project context</h3>
-            <p>
-              You continue working inside the same personal repository you used for Project 1.
-              Each project lives in its own folder (<code>project01/</code>, <code>project02/</code>, …),
-              so you gradually build a coherent codebase.
-            </p>
-            <p>
-              In this project you work with a fake but realistic JSON dataset of todo items from
-              JSONPlaceholder, a free REST API for testing and prototyping.
-              You will download the data once, save it locally, and then focus on in-memory operations.
+            <h3>Study first (15–30 minutes)</h3>
+            <ul class="study-list">
+              <li>Python docs: built-in types (lists, dicts, sets).</li>
+              <li>Python docs: <code>json</code> module for loading and dumping JSON.</li>
+              <li>Quick recap of list comprehensions and <code>collections.Counter</code>.</li>
+              <li>Skim JSONPlaceholder’s description of the <code>/todos</code> resource.</li>
+            </ul>
+            <p class="section-subtitle">
+              Knowing how lists and dicts behave will make the tasks feel much more natural.
             </p>
           </article>
         </div>
@@ -68,7 +85,7 @@
     </section>
 
     <!-- Download instructions -->
-    <section class="section bg-light">
+    <section class="section">
       <div class="container section-inner">
         <header class="section-header">
           <h2>Download the todos dataset</h2>
@@ -83,9 +100,7 @@
             The dataset comes from JSONPlaceholder, a public fake REST API used for testing and prototyping.
             You will download the <code>/todos</code> resource and save it as a JSON file in your repository.
           </p>
-          <p>
-            API endpoint:
-          </p>
+          <p>API endpoint:</p>
           <pre><code>https://jsonplaceholder.typicode.com/todos</code></pre>
 
           <h4>Option 1 · Download with <code>curl</code> (recommended)</h4>
@@ -98,15 +113,13 @@ curl https://jsonplaceholder.typicode.com/todos -o project02/data/todos.json
           <p>Create a temporary script (for example <code>download_todos.py</code> at the repo root) and run it once:</p>
           <pre><code>import json
 import urllib.request
+import os
 
 url = "https://jsonplaceholder.typicode.com/todos"
 response = urllib.request.urlopen(url)
 data = json.loads(response.read().decode("utf-8"))
 
-# Ensure the project02/data folder exists
-import os
 os.makedirs("project02/data", exist_ok=True)
-
 with open("project02/data/todos.json", "w", encoding="utf-8") as f:
     json.dump(data, f, indent=2)
           </code></pre>
@@ -120,13 +133,12 @@ with open("project02/data/todos.json", "w", encoding="utf-8") as f:
     </section>
 
     <!-- Repository layout -->
-    <section class="section">
+    <section class="section bg-light">
       <div class="container section-inner">
         <header class="section-header">
           <h2>Your repository layout for Project 2</h2>
           <p class="section-subtitle">
-            Keep everything for this project inside <code>project02/</code>. You will reuse the same repository
-            across all projects.
+            Keep everything for this project inside <code>project02/</code>. You will reuse the same repository across all projects.
           </p>
         </header>
 
@@ -145,221 +157,210 @@ with open("project02/data/todos.json", "w", encoding="utf-8") as f:
 │   │   └── sets_playground.py
 │   └── project02-notes.md
 ├── project03/
+├── project04/
+├── project05/
 └── ...
           </code></pre>
-          <p>
+          <p class="section-subtitle">
             All core tasks in this project use <code>project02/data/todos.json</code> as the default dataset.
-            You will load this file into memory and then experiment with different data structures.
           </p>
         </article>
       </div>
     </section>
 
-    <!-- Task 0 -->
-    <section class="section bg-light">
-      <div class="container section-inner">
-        <header class="section-header">
-          <h2>Task 0 · load and inspect JSON</h2>
-          <p class="section-subtitle">
-            Bridge your file-handling skills from Project 1 into JSON and native Python structures.
-          </p>
-        </header>
-
-        <article class="info-card">
-          <h3>Requirements</h3>
-          <ul>
-            <li>Create <code>scripts/load_data.py</code> inside <code>project02/</code>.</li>
-            <li>Use the <code>json</code> module to load <code>data/todos.json</code> into a Python object.</li>
-            <li>Print:
-              <ul>
-                <li>The type of the top-level object (should be a list).</li>
-                <li>The total number of records.</li>
-                <li>The keys present in a typical record (for example from the first item).</li>
-              </ul>
-            </li>
-          </ul>
-          <h3>Hints</h3>
-          <ul>
-            <li>Reuse the pattern from Project 1: open the file, then parse it.</li>
-            <li>Check <code>type(data)</code> after loading, and inspect <code>data[0]</code> to see its fields.</li>
-            <li>Keep the loading logic in a function (for example <code>load_todos(path)</code>) so you can reuse it later.</li>
-          </ul>
-        </article>
-      </div>
-    </section>
-
-    <!-- Task 1 -->
+    <!-- Tasks -->
     <section class="section">
       <div class="container section-inner">
         <header class="section-header">
-          <h2>Task 1 · basic queries with lists and dicts</h2>
+          <h2>Tasks</h2>
           <p class="section-subtitle">
-            Practice filtering and aggregating records using lists and dictionaries.
+            Load the JSON once, then build up from inspection to queries, indices, and sets. The cards expand with details as you progress.
           </p>
         </header>
 
-        <article class="info-card">
-          <h3>Requirements</h3>
-          <ul>
-            <li>Create <code>scripts/queries.py</code>.</li>
-            <li>Import your loading function from <code>load_data.py</code> and work with the in-memory list of todos.</li>
-            <li>Implement functions such as:
+        <div class="tasks-grid">
+          <!-- Task 0 -->
+          <article class="task-card">
+            <div class="task-header">
+              <div class="task-header-main">
+                <h3 class="task-title">Task 0 · load and inspect JSON</h3>
+                <p class="task-subtitle">
+                  Bridge your file-handling skills from Project 1 into JSON and native Python structures.
+                </p>
+              </div>
+              <div class="task-toggle"></div>
+            </div>
+            <div class="task-body">
+              <h4>Requirements</h4>
               <ul>
-                <li><code>get_todos_by_user(todos, user_id)</code> – returns a list of todo items for a given <code>userId</code>.</li>
-                <li><code>count_completed_by_user(todos)</code> – returns a dictionary mapping <code>userId</code> to the number of completed todos.</li>
-                <li><code>get_users_with_all_completed(todos)</code> – returns a list or set of <code>userId</code> values where all todos are completed.</li>
+                <li>Create <code>scripts/load_data.py</code> inside <code>project02/</code>.</li>
+                <li>Implement a function <code>load_todos(path)</code> that:
+                  <ul>
+                    <li>Opens <code>todos.json</code>.</li>
+                    <li>Parses it with <code>json.load</code>.</li>
+                    <li>Returns the parsed Python object.</li>
+                  </ul>
+                </li>
+                <li>In a <code>main()</code> block, print:
+                  <ul>
+                    <li>The type of the top-level object (should be <code>list</code>).</li>
+                    <li>The total number of records.</li>
+                    <li>The keys present in the first item.</li>
+                  </ul>
+                </li>
               </ul>
-            </li>
-          </ul>
-          <h3>Suggested progression</h3>
-          <ul>
-            <li>1.1 – Start with a simple filter: todos for one user.</li>
-            <li>1.2 – Build a dictionary of counts per user.</li>
-            <li>1.3 – Derive the set of users whose todos are all completed using your previous results.</li>
-          </ul>
-          <h3>Hints</h3>
-          <ul>
-            <li>Use list comprehensions to filter records by <code>userId</code> or by <code>completed</code> status.</li>
-            <li>For counts, think in terms of “dictionary with <code>userId</code> as key and count as value”.</li>
-            <li>Reuse your functions later; avoid mixing printing and logic in the same function.</li>
-          </ul>
-        </article>
-      </div>
-    </section>
-
-    <!-- Task 2 -->
-    <section class="section bg-light">
-      <div class="container section-inner">
-        <header class="section-header">
-          <h2>Task 2 · building in-memory indices</h2>
-          <p class="section-subtitle">
-            Build small indices (maps) that make your queries clearer and more efficient.
-          </p>
-        </header>
-
-        <article class="info-card">
-          <h3>Requirements</h3>
-          <ul>
-            <li>Create <code>scripts/indexing.py</code>.</li>
-            <li>Implement functions such as:
+              <h4>Hints</h4>
               <ul>
-                <li><code>build_user_index(todos)</code> – returns a dict mapping <code>userId</code> to a list of todos.</li>
-                <li><code>build_completion_index(todos)</code> – returns a dict with keys like <code>"completed"</code> and <code>"pending"</code> mapping to lists of todos.</li>
+                <li>Check <code>type(data)</code> after loading, and inspect <code>data[0]</code> to see its fields.</li>
+                <li>Keep the loading logic in a reusable function so other scripts can call it.</li>
               </ul>
-            </li>
-            <li>Use these indices from <code>queries.py</code> to answer some questions more elegantly.</li>
-          </ul>
-          <h3>Suggested progression</h3>
-          <ul>
-            <li>2.1 – Build the user index and use it to re-implement <code>get_todos_by_user</code>.</li>
-            <li>2.2 – Build the completion index and use it to quickly get all completed or pending todos.</li>
-            <li>2.3 – Compare your code with and without indices (even just in terms of clarity).</li>
-          </ul>
-          <h3>Hints</h3>
-          <ul>
-            <li>Think of indices as “precomputed groupings” that you can reuse instead of scanning the full list every time.</li>
-            <li>Even if performance differences are small on this dataset, the pattern matters for larger data in ML contexts.</li>
-          </ul>
-        </article>
-      </div>
-    </section>
+            </div>
+          </article>
 
-    <!-- Task 3 -->
-    <section class="section">
-      <div class="container section-inner">
-        <header class="section-header">
-          <h2>Task 3 · sets and uniqueness</h2>
-          <p class="section-subtitle">
-            Use sets to reason about uniqueness and relationships between users and their todos.
-          </p>
-        </header>
-
-        <article class="info-card">
-          <h3>Requirements</h3>
-          <ul>
-            <li>Create <code>scripts/sets_playground.py</code>.</li>
-            <li>Load <code>todos.json</code> (either directly or via your existing loading function).</li>
-            <li>Perform operations such as:
+          <!-- Task 1 -->
+          <article class="task-card">
+            <div class="task-header">
+              <div class="task-header-main">
+                <h3 class="task-title">Task 1 · basic queries with lists and dicts</h3>
+                <p class="task-subtitle">
+                  Filter and aggregate todos by user and completion status using lists and dictionaries.
+                </p>
+              </div>
+              <div class="task-toggle"></div>
+            </div>
+            <div class="task-body">
+              <h4>Requirements</h4>
               <ul>
-                <li>Compute the set of all <code>userId</code> values.</li>
-                <li>Compute the set of users who have at least one pending todo.</li>
-                <li>Compute the set of users whose todos are all completed.</li>
-                <li>Use set operations (union, intersection, difference) to compare these sets.</li>
+                <li>Create <code>scripts/queries.py</code>.</li>
+                <li>Import <code>load_todos</code> from <code>load_data.py</code> and work with the in-memory list.</li>
+                <li>Implement functions such as:
+                  <ul>
+                    <li><code>get_todos_by_user(todos, user_id)</code> – returns a list of todo items for a given <code>userId</code>.</li>
+                    <li><code>count_completed_by_user(todos)</code> – returns a dictionary mapping <code>userId</code> to the number of completed todos.</li>
+                    <li><code>get_users_with_all_completed(todos)</code> – returns a list or set of <code>userId</code> values whose todos are all completed.</li>
+                  </ul>
+                </li>
               </ul>
-            </li>
-          </ul>
-          <h3>Suggested progression</h3>
-          <ul>
-            <li>3.1 – Start with a simple set of all <code>userId</code> values.</li>
-            <li>3.2 – Derive <code>users_with_pending</code> and <code>users_with_completed_only</code>.</li>
-            <li>3.3 – Use set difference and intersection to answer questions like “Who still has work to do?”</li>
-          </ul>
-          <h3>Hints</h3>
-          <ul>
-            <li>Sets are great when you care about membership and uniqueness rather than the exact order.</li>
-            <li>Relate this to ML scenarios where you might track unique labels, unique users, or intersections of conditions.</li>
-          </ul>
-        </article>
-      </div>
-    </section>
-
-    <!-- Optional Task 4 -->
-    <section class="section bg-light">
-      <div class="container section-inner">
-        <header class="section-header">
-          <h2>Optional · small query shell</h2>
-          <p class="section-subtitle">
-            Integrate your functions into a simple text-based “query shell” so you can explore the data interactively.
-          </p>
-        </header>
-
-        <article class="info-card">
-          <h3>Optional requirements</h3>
-          <ul>
-            <li>Create <code>scripts/query_shell.py</code> (optional).</li>
-            <li>On running, load <code>todos.json</code> once.</li>
-            <li>Present a simple menu in the terminal, for example:
+              <h4>Suggested progression</h4>
               <ul>
-                <li><code>1</code> – Show number of completed todos per user.</li>
-                <li><code>2</code> – Show users who completed all their todos.</li>
-                <li><code>3</code> – Show total todo count and unique users.</li>
+                <li>1.1 – Start with a simple filter: todos for one user.</li>
+                <li>1.2 – Build a dictionary of counts per user.</li>
+                <li>1.3 – Derive the set of users whose todos are all completed using your previous results.</li>
               </ul>
-            </li>
-            <li>Call the functions you already implemented in <code>queries.py</code> and <code>indexing.py</code>.</li>
-          </ul>
-          <h3>Hints</h3>
-          <ul>
-            <li>Keep the shell simple; focus on reusing your existing logic rather than building a full CLI tool.</li>
-            <li>This mirrors the “toolbox” idea from Project 1, but now you are working with JSON records.</li>
-          </ul>
-        </article>
-      </div>
-    </section>
+              <h4>Hints</h4>
+              <ul>
+                <li>Use list comprehensions to filter by <code>userId</code> or by <code>completed</code> status.</li>
+                <li>For counts, think in terms of “dict where key is <code>userId</code> and value is a count”.</li>
+                <li>Keep logic separate from printing; it will be easier to reuse and test.</li>
+              </ul>
+            </div>
+          </article>
 
-    <!-- Stretch goals -->
-    <section class="section">
-      <div class="container section-inner">
-        <header class="section-header">
-          <h2>Stretch goals (optional)</h2>
-          <p class="section-subtitle">
-            Extra challenges if you want to push your data-structure skills further.
-          </p>
-        </header>
+          <!-- Task 2 -->
+          <article class="task-card">
+            <div class="task-header">
+              <div class="task-header-main">
+                <h3 class="task-title">Task 2 · building in-memory indices</h3>
+                <p class="task-subtitle">
+                  Build small indices (maps) that make your queries clearer and more efficient.
+                </p>
+              </div>
+              <div class="task-toggle"></div>
+            </div>
+            <div class="task-body">
+              <h4>Requirements</h4>
+              <ul>
+                <li>Create <code>scripts/indexing.py</code>.</li>
+                <li>Implement functions such as:
+                  <ul>
+                    <li><code>build_user_index(todos)</code> – returns a dict mapping <code>userId</code> to a list of todos.</li>
+                    <li><code>build_completion_index(todos)</code> – returns a dict with keys like <code>"completed"</code> and <code>"pending"</code> mapping to lists of todos.</li>
+                  </ul>
+                </li>
+                <li>Use these indices from <code>queries.py</code> to re-implement or simplify some of your earlier functions.</li>
+              </ul>
+              <h4>Suggested progression</h4>
+              <ul>
+                <li>2.1 – Build the user index and use it to implement <code>get_todos_by_user</code>.</li>
+                <li>2.2 – Build the completion index and use it to get all completed or pending todos.</li>
+                <li>2.3 – Compare your code clarity with and without indices.</li>
+              </ul>
+              <h4>Hints</h4>
+              <ul>
+                <li>Think of indices as “precomputed groupings” you can reuse instead of scanning the list every time.</li>
+                <li>Even if performance differences are small here, the pattern matters for larger datasets.</li>
+              </ul>
+            </div>
+          </article>
 
-        <article class="info-card">
-          <h3>Optional extensions</h3>
-          <ul>
-            <li>
-              Sort users by number of completed todos and print a ranking (from most completed to least).
-            </li>
-            <li>
-              Implement a simple keyword search on todo titles, returning matching records for a given word.
-            </li>
-            <li>
-              Compute a “completion rate” per user (completed / total) and store the results in a dictionary.
-            </li>
-          </ul>
-        </article>
+          <!-- Task 3 -->
+          <article class="task-card">
+            <div class="task-header">
+              <div class="task-header-main">
+                <h3 class="task-title">Task 3 · sets and uniqueness</h3>
+                <p class="task-subtitle">
+                  Use sets to reason about unique users and relationships between completion and pending work.
+                </p>
+              </div>
+              <div class="task-toggle"></div>
+            </div>
+            <div class="task-body">
+              <h4>Requirements</h4>
+              <ul>
+                <li>Create <code>scripts/sets_playground.py</code>.</li>
+                <li>Load <code>todos.json</code> (either directly or via <code>load_todos</code>).</li>
+                <li>Perform operations such as:
+                  <ul>
+                    <li>Compute the set of all <code>userId</code> values.</li>
+                    <li>Compute the set of users who have at least one pending todo.</li>
+                    <li>Compute the set of users whose todos are all completed.</li>
+                    <li>Use set operations (union, intersection, difference) to compare these sets.</li>
+                  </ul>
+                </li>
+              </ul>
+              <h4>Suggested progression</h4>
+              <ul>
+                <li>3.1 – Start with a simple set of all <code>userId</code> values.</li>
+                <li>3.2 – Derive <code>users_with_pending</code> and <code>users_with_completed_only</code>.</li>
+                <li>3.3 – Use set difference and intersection to answer “Who still has work to do?”</li>
+              </ul>
+              <h4>Hints</h4>
+              <ul>
+                <li>Sets are ideal when you care about membership and uniqueness rather than order.</li>
+                <li>Relate this to ML scenarios where you track unique users or labels, even if we are not doing ML yet.</li>
+              </ul>
+            </div>
+          </article>
+
+          <!-- Optional: query shell -->
+          <article class="task-card">
+            <div class="task-header">
+              <div class="task-header-main">
+                <h3 class="task-title">Optional · small query shell</h3>
+                <p class="task-subtitle">
+                  Integrate your functions into a simple text-based “query shell” for exploring the data interactively.
+                </p>
+              </div>
+              <div class="task-toggle"></div>
+            </div>
+            <div class="task-body">
+              <span class="task-badge">Optional</span>
+              <h4>Ideas</h4>
+              <ul>
+                <li>Create <code>scripts/query_shell.py</code>.</li>
+                <li>On running, load <code>todos.json</code> once.</li>
+                <li>Present a simple menu, for example:
+                  <ul>
+                    <li><code>1</code> – show number of completed todos per user.</li>
+                    <li><code>2</code> – show users who completed all their todos.</li>
+                    <li><code>3</code> – show total todo count and unique users.</li>
+                  </ul>
+                </li>
+                <li>Reuse your functions from <code>queries.py</code> and <code>indexing.py</code> instead of writing new logic.</li>
+              </ul>
+            </div>
+          </article>
+        </div>
       </div>
     </section>
 
@@ -369,23 +370,22 @@ with open("project02/data/todos.json", "w", encoding="utf-8") as f:
         <header class="section-header">
           <h2>Reflection and notes</h2>
           <p class="section-subtitle">
-            Pause and think about how your choice of data structure affected your code and your thinking.
+            Capture how working with lists, dicts, and sets changed how you think about data, before moving to pipelines and pandas.
           </p>
         </header>
 
         <article class="info-card">
           <h3>Project notes</h3>
           <p>
-            Create a file <code>project02-notes.md</code> inside <code>project02/</code> and write short answers
-            to these questions:
+            Create a file <code>project02-notes.md</code> inside <code>project02/</code> and write short answers to questions like:
           </p>
-          <ul>
-            <li>Which data structure (list, dict, set) felt most natural to use on this dataset? Why?</li>
+          <ul class="study-list">
+            <li>Which data structure (list, dict, set) felt most natural for this dataset? Why?</li>
             <li>Where did you switch from scanning the whole list to building an index? What changed?</li>
-            <li>How might these patterns show up again when you work with ML datasets (for example grouping by label or by user)?</li>
+            <li>How might these patterns show up again when you work with larger datasets or ML inputs?</li>
           </ul>
-          <p>
-            These reflections help you connect “small code exercises” with the way data is handled in real ML pipelines.
+          <p class="section-subtitle">
+            These reflections help you connect small exercises to larger data workflows.
           </p>
         </article>
       </div>
@@ -405,5 +405,6 @@ with open("project02/data/todos.json", "w", encoding="utf-8") as f:
     </div>
   </footer>
 
+  <script src="../assets/js/main.js"></script>
 </body>
 </html>
