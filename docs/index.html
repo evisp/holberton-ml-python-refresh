@@ -30,16 +30,16 @@
   <main>
     <!-- Hero -->
     <section id="hero" class="hero hero-gradient">
-      <div class="container hero-inner">
-        <div class="hero-text">
+      <div class="container">
+        <div class="project-hero project-hero-inner">
           <p class="eyebrow">Python &amp; Data Foundations</p>
           <h1 class="hero-title">
-            Get ready for<br>
-            Holberton Machine Learning.
+            Get ready for Holberton<br>
+            Machine Learning.
           </h1>
           <p class="hero-subtitle">
             A self-paced, project-based prep path to refresh your Python, data structures,
-            and data skills using realistic files and JSON datasets.
+            and data skills using realistic text files and JSONPlaceholder datasets.
           </p>
 
           <div class="project-hero-tags">
@@ -51,25 +51,37 @@
 
           <div class="info-strip">
             <span class="info-pill">4 core projects + 1 capstone</span>
-            <span class="info-pill">Focus: Python, data structures, data handling</span>
-            <span class="info-pill">Approach: Study → Build → Reflect</span>
+            <span class="info-pill">Study → Build → Reflect</span>
+            <span class="info-pill">Designed for incoming Holberton ML students</span>
           </div>
 
           <div class="hero-actions">
             <a href="#projects" class="btn btn-primary">Start with Project 1</a>
-            <a href="#how" class="btn btn-ghost">How this prep works</a>
+            <a href="#how" class="btn btn-ghost">See how to use this prep</a>
           </div>
         </div>
 
-        <div class="hero-panel">
-          <div class="panel-card">
-            <h2 class="panel-title">What you’ll rebuild</h2>
-            <ul class="panel-list">
-              <li>Python scripting and command-line utilities</li>
-              <li>Core data structures: lists, dicts, sets</li>
-              <li>JSON &amp; CSV pipelines from scratch</li>
-              <li>Basic EDA with pandas on your own data</li>
-            </ul>
+        <!-- Compact "What you’ll build" row -->
+        <div class="section" style="padding-top: 1.5rem; padding-bottom: 0;">
+          <div class="section-card-grid">
+            <article class="info-card">
+              <h3>Python scripts</h3>
+              <p class="section-subtitle">
+                Rebuild your comfort with functions, modules, and command-line scripts on local files.
+              </p>
+            </article>
+            <article class="info-card">
+              <h3>Data handling</h3>
+              <p class="section-subtitle">
+                Work with JSON and CSV, build small pipelines, and practice grouping and aggregations.
+              </p>
+            </article>
+            <article class="info-card">
+              <h3>Data stories</h3>
+              <p class="section-subtitle">
+                Explore datasets with pandas, create simple plots, and summarize user-level activity.
+              </p>
+            </article>
           </div>
         </div>
       </div>
@@ -81,7 +93,7 @@
         <header class="section-header">
           <h2>Guided projects</h2>
           <p class="section-subtitle">
-            Each project focuses on one cluster of skills. Study the key concepts, skim the resources,
+            Each project focuses on one cluster of skills. Skim the concepts at the top of the project page,
             then build through progressive tasks.
           </p>
         </header>
@@ -98,7 +110,7 @@
               <span class="tag">CLI</span>
               <span class="tag">Files</span>
             </div>
-            <a href="projects/01-python-essentials.html" class="project-link">View project</a>
+            <a href="projects/01-python-essentials.html" class="btn btn-ghost project-link">Open project 1</a>
           </article>
 
           <article class="project-card">
@@ -112,7 +124,7 @@
               <span class="tag">Dicts</span>
               <span class="tag">JSON</span>
             </div>
-            <a href="projects/02-data-structures.html" class="project-link">View project</a>
+            <a href="projects/02-data-structures.html" class="btn btn-ghost project-link">Open project 2</a>
           </article>
 
           <article class="project-card">
@@ -126,7 +138,7 @@
               <span class="tag">CSV</span>
               <span class="tag">ETL</span>
             </div>
-            <a href="projects/03-data-pipelines.html" class="project-link">View project</a>
+            <a href="projects/03-data-pipelines.html" class="btn btn-ghost project-link">Open project 3</a>
           </article>
 
           <article class="project-card">
@@ -140,7 +152,7 @@
               <span class="tag">EDA</span>
               <span class="tag">Plots</span>
             </div>
-            <a href="projects/04-data-eda.html" class="project-link">View project</a>
+            <a href="projects/04-data-eda.html" class="btn btn-ghost project-link">Open project 4</a>
           </article>
 
           <article class="project-card">
@@ -154,7 +166,7 @@
               <span class="tag">Reporting</span>
               <span class="tag">JSONPlaceholder</span>
             </div>
-            <a href="projects/05-capstone.html" class="project-link">View project</a>
+            <a href="projects/05-capstone.html" class="btn btn-ghost project-link">Open capstone</a>
           </article>
         </div>
       </div>
@@ -166,45 +178,54 @@
         <header class="section-header">
           <h2>How to work with this prep</h2>
           <p class="section-subtitle">
-            Follow a simple Study → Build → Reflect loop on each project. The goal is to rebuild skills
+            Use a simple Study → Build → Reflect loop on each project. The goal is to rebuild skills
             in a way that matches Holberton’s learning style.
           </p>
         </header>
 
-        <div class="study-panel">
-          <div class="study-panel-left">
+        <div class="section-card-grid">
+          <!-- Step 1 -->
+          <article class="info-card">
             <h3><span class="icon-circle">1</span> Study the concepts</h3>
-            <p>
-              Before you start coding, skim the “Key concepts” and “Study first” section at the top of each project page.
-              Spend 15–30 minutes revisiting the ideas and links that matter for that project.
+            <p class="section-subtitle">
+              Before you start coding, skim the “Key concepts” and “Study first” sections
+              at the top of each project page.
             </p>
-          </div>
-          <div class="study-panel-right">
-            <h3>Quick checklist</h3>
             <ul class="study-list">
-              <li>Clone this repository into your own account.</li>
-              <li>Create a virtual environment and install any dependencies you need.</li>
-              <li>Open the project page, read all tasks, and skim the suggested resources.</li>
+              <li>Open the project page and read the short overview.</li>
+              <li>Review the core ideas listed under “Key concepts”.</li>
+              <li>Spend 15–30 minutes with 1–2 of the suggested links.</li>
             </ul>
-          </div>
-        </div>
+          </article>
 
-        <ol class="steps-list">
-          <li>
+          <!-- Step 2 -->
+          <article class="info-card">
             <h3><span class="icon-circle">2</span> Build the projects</h3>
-            <p>
-              Start from Project 1 or jump straight to the area you want to strengthen most.
-              Implement the tasks one by one, keeping each project inside its own folder in your repository.
+            <p class="section-subtitle">
+              Implement the tasks step by step, keeping each project inside its own folder
+              in your repository.
             </p>
-          </li>
-          <li>
+            <ul class="study-list">
+              <li>Clone this repository into your own GitHub account.</li>
+              <li>Create a virtual environment and install any dependencies.</li>
+              <li>Work through tasks in order, using the expandable cards as checkpoints.</li>
+            </ul>
+          </article>
+
+          <!-- Step 3 -->
+          <article class="info-card">
             <h3><span class="icon-circle">3</span> Reflect and iterate</h3>
-            <p>
-              For each project, keep a short notes file (for example <code>project01-notes.md</code>) where you capture
-              what you refreshed, what tripped you up, and what you want to revisit before starting the ML program.
+            <p class="section-subtitle">
+              Capture what you refreshed, what tripped you up, and what to revisit before
+              starting the ML program.
             </p>
-          </li>
-        </ol>
+            <ul class="study-list">
+              <li>Keep a short notes file in each project (for example <code>project01-notes.md</code>).</li>
+              <li>Write down patterns you rediscovered or struggled with.</li>
+              <li>Review your notes before moving to the next project or to ML content.</li>
+            </ul>
+          </article>
+        </div>
       </div>
     </section>
 
@@ -214,16 +235,43 @@
         <header class="section-header">
           <h2>Resources</h2>
           <p class="section-subtitle">
-            A few starting points if you want to review Python and data topics before or during the projects.
+            Optional references if you want to refresh specific topics while you work through the projects.
           </p>
         </header>
-        <ul class="resource-list">
-          <li><a href="https://docs.python.org/3/tutorial/" target="_blank" rel="noreferrer">Python official tutorial</a></li>
-          <li><a href="https://docs.python.org/3/library/json.html" target="_blank" rel="noreferrer">Python <code>json</code> module</a></li>
-          <li><a href="https://pandas.pydata.org/docs/user_guide/index.html" target="_blank" rel="noreferrer">pandas user guide</a></li>
-          <li><a href="https://jsonplaceholder.typicode.com/" target="_blank" rel="noreferrer">JSONPlaceholder API</a></li>
-          <li><a href="https://holberton.al" target="_blank" rel="noreferrer">Holberton Albania</a></li>
-        </ul>
+
+        <div class="section-card-grid">
+          <article class="info-card">
+            <h3>Python basics</h3>
+            <p class="section-subtitle">
+              Core language features, control flow, and standard library modules.
+            </p>
+            <ul class="study-list">
+              <li><a href="https://docs.python.org/3/tutorial/" target="_blank" rel="noreferrer">Python official tutorial</a></li>
+              <li><a href="https://docs.python.org/3/library/json.html" target="_blank" rel="noreferrer">Python <code>json</code> module</a></li>
+            </ul>
+          </article>
+
+          <article class="info-card">
+            <h3>Data handling &amp; pandas</h3>
+            <p class="section-subtitle">
+              Working with tabular data, CSV files, and basic exploratory analysis.
+            </p>
+            <ul class="study-list">
+              <li><a href="https://pandas.pydata.org/docs/user_guide/index.html" target="_blank" rel="noreferrer">pandas user guide</a></li>
+              <li><a href="https://pandas.pydata.org/docs/getting_started/intro_tutorials/index.html" target="_blank" rel="noreferrer">pandas intro tutorials</a></li>
+            </ul>
+          </article>
+
+          <article class="info-card">
+            <h3>Sample data &amp; APIs</h3>
+            <p class="section-subtitle">
+              Fake JSON APIs you can use for practice beyond this prep.
+            </p>
+            <ul class="study-list">
+              <li><a href="https://jsonplaceholder.typicode.com/" target="_blank" rel="noreferrer">JSONPlaceholder API</a></li>
+            </ul>
+          </article>
+        </div>
       </div>
     </section>
   </main>
@@ -232,10 +280,10 @@
     <div class="container footer-inner">
       <div>
         <span class="footer-title">Holberton Albania · Machine Learning Prep</span>
-        <p class="footer-text">Python &amp; data refresh for the ML program.</p>
+        <p class="footer-text">Python &amp; data refresh projects to support your ML journey.</p>
       </div>
       <div class="footer-links">
-        <a href="https://holberton.al" target="_blank" rel="noreferrer">Holberton Albania</a>
+        <a href="https://hbtn.dev" target="_blank" rel="noreferrer">Holberton</a>
         <a href="#hero">Back to top</a>
       </div>
     </div>
