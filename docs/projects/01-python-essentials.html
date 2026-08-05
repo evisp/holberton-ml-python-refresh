@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Project 1 · Python essentials – Utility scripts</title>
+  <title>Project 1 · Python essentials – utility scripts on tabular data</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="../assets/css/main.css">
 </head>
@@ -27,82 +27,122 @@
   </header>
 
   <main>
-    <!-- Intro -->
-    <section class="section">
-      <div class="container section-inner">
-        <header class="section-header">
+    <!-- Project hero -->
+    <section class="section bg-white">
+      <div class="container">
+        <div class="project-hero project-hero-inner">
           <p class="eyebrow">Project 1</p>
-          <h1>Python essentials – utility scripts</h1>
-          <p class="section-subtitle">
-            In this project you build a small toolbox of command-line scripts that read local files,
-            compute simple statistics, and prepare you for more data-heavy projects.
+          <h1 class="project-hero-title">Python essentials – utility scripts on tabular data</h1>
+          <p class="project-hero-subtitle">
+            In this first project you get comfortable running Python scripts from the command line,
+            working with simple tabular files, and writing small, clean functions. No heavy data structures yet—
+            just foundations you will reuse in every later project.
           </p>
-        </header>
 
+          <div class="project-hero-tags">
+            <span class="pill-tag"><span class="pill-tag-icon">🐍</span> Python scripts</span>
+            <span class="pill-tag"><span class="pill-tag-icon">📁</span> File I/O</span>
+            <span class="pill-tag"><span class="pill-tag-icon">⌨️</span> Command-line</span>
+            <span class="pill-tag"><span class="pill-tag-icon">⚠️</span> Error handling</span>
+          </div>
+
+          <div class="info-strip">
+            <span class="info-pill">Focus: functions, modules, file reading</span>
+            <span class="info-pill">Data: small pipe-delimited sample file</span>
+            <span class="info-pill">Goal: confidence before JSON &amp; pandas</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Key concepts + study panel -->
+    <section class="section bg-light">
+      <div class="container section-inner">
         <div class="section-card-grid">
           <article class="info-card">
-            <h3>Learning goals</h3>
-            <ul>
-              <li>Refresh Python basics: functions, loops, conditionals, modules</li>
-              <li>Practice reading and writing files with clear error handling</li>
-              <li>Use command-line arguments to make scripts reusable</li>
-              <li>Organize a small project inside a larger repository structure</li>
+            <h3>Key concepts</h3>
+            <ul class="study-list">
+              <li>Writing and calling functions from scripts.</li>
+              <li>Using <code>if __name__ == "__main__":</code> as an entry point.</li>
+              <li>Reading text files safely with <code>with open(...)</code>.</li>
+              <li>Using command-line arguments (<code>sys.argv</code> or <code>argparse</code>).</li>
+              <li>Handling common errors (missing files, bad numbers).</li>
             </ul>
           </article>
 
           <article class="info-card">
-            <h3>Project context</h3>
-            <p>
-              All projects in this refresh path live inside a single repository that you own.
-              Each project uses its own folder (for example <code>project01/</code>, <code>project02/</code>),
-              so you can grow a coherent codebase over time.
-            </p>
-            <p>
-              For this project, you will work with a public-domain essay from Project Gutenberg:
-              <em>Short Stories and Essays (from Literature and Life)</em> by William Dean Howells
-              (Project Gutenberg ID 3379).
+            <h3>Study first (15–30 minutes)</h3>
+            <ul class="study-list">
+              <li>Python docs: tutorial chapters on functions and modules.</li>
+              <li>Python docs: file I/O and the <code>with</code> statement.</li>
+              <li>Quick overview of <code>sys.argv</code> and <code>argparse</code> for arguments.</li>
+            </ul>
+            <p class="section-subtitle">
+              Skim these before you start coding. The tasks assume you know the basics, but they reinforce them through practice.
             </p>
           </article>
         </div>
       </div>
     </section>
 
-    <!-- Download instructions -->
-    <section class="section bg-light">
+    <!-- Sample data setup -->
+    <section class="section">
       <div class="container section-inner">
         <header class="section-header">
-          <h2>Download the sample text</h2>
+          <h2>Sample data – pipe-delimited orders file</h2>
           <p class="section-subtitle">
-            You will use one shared text file for all tasks in this project. Everyone works from the same source.
+            All tasks in this project use a small, pipe-separated text file representing orders. The exact values do not matter,
+            but the structure does.
           </p>
         </header>
 
         <article class="info-card">
-          <h3>Public-domain essay from Project Gutenberg</h3>
+          <h3>File structure</h3>
           <p>
-            Download the plain text UTF-8 version of
-            <em>Short Stories and Essays (from Literature and Life)</em> by William Dean Howells
-            from Project Gutenberg:
+            You will work with a file called <code>project01/data/sample_orders.txt</code> containing one header row and multiple
+            data rows. Columns are separated by the pipe character <code>|</code>.
           </p>
+          <p>Expected columns:</p>
+          <pre><code>order_id|customer|product|quantity|price
+123|Alice|Notebook|2|4.50
+124|Bob|Pen|10|1.20
+125|Alice|Backpack|1|29.99
+...
+          </code></pre>
           <p>
-            <a href="https://www.gutenberg.org/ebooks/3379.txt.utf-8" target="_blank" rel="noreferrer">
-              https://www.gutenberg.org/ebooks/3379.txt.utf-8
-            </a>
+            Each data row has:
           </p>
+          <ul class="study-list">
+            <li><code>order_id</code>: integer.</li>
+            <li><code>customer</code>: short name.</li>
+            <li><code>product</code>: short name.</li>
+            <li><code>quantity</code>: integer.</li>
+            <li><code>price</code>: decimal number (float).</li>
+          </ul>
+
+          <h3>How to create the file</h3>
+          <p>You have two options:</p>
+          <ul class="study-list">
+            <li>
+              <strong>Option 1 – download a prepared file:</strong> use any small pipe-delimited sample file you trust,
+              and save it as <code>project01/data/sample_orders.txt</code>.
+            </li>
+            <li>
+              <strong>Option 2 – generate with an AI tool:</strong> ask your AI assistant something like:<br>
+              <em>“Generate a small pipe-delimited text file with columns order_id, customer, product, quantity, price.
+              Include a header row and about 20–30 rows of realistic but fake data. Use <code>|</code> as the separator.”</em><br>
+              Then copy the output into <code>project01/data/sample_orders.txt</code>.
+            </li>
+          </ul>
           <p>
-            Save this file in your own repository as:
-          </p>
-          <pre><code>project01/data/sample.txt</code></pre>
-          <p>
-            Project Gutenberg texts include a header and footer describing the project and license.
-            You can keep them as part of the text; they will simply be included in your counts and statistics.
+            Once you have the file, you are ready to start the tasks.
           </p>
         </article>
       </div>
     </section>
 
     <!-- Repository layout -->
-    <section class="section">
+    <section class="section bg-light">
       <div class="container section-inner">
         <header class="section-header">
           <h2>Your repository layout</h2>
@@ -113,235 +153,209 @@
 
         <article class="info-card">
           <h3>Suggested structure</h3>
-          <p>A possible structure in your personal repository:</p>
           <pre><code>your-repo/
 ├── project01/
 │   ├── data/
-│   │   └── sample.txt
+│   │   └── sample_orders.txt
 │   ├── scripts/
-│   │   ├── file_preview.py
-│   │   ├── file_stats.py
-│   │   ├── word_count.py
-│   │   └── filter_lines.py
+│   │   ├── print_file_info.py
+│   │   ├── order_stats.py
+│   │   └── order_stats_cli.py   (optional, or part of order_stats.py)
 │   ├── toolbox.py
 │   └── project01-notes.md
 ├── project02/
 ├── project03/
+├── project04/
+├── project05/
 └── ...
           </code></pre>
-          <p>
-            All core tasks (0, 1, and 2) use <code>project01/data/sample.txt</code> as their default input file.
-            Task 3 can reuse the same file or another text file you choose.
-          </p>
-        </article>
-      </div>
-    </section>
-
-    <!-- Task 0 -->
-    <section class="section bg-light">
-      <div class="container section-inner">
-        <header class="section-header">
-          <h2>Task 0 · warm-up – preview a file</h2>
           <p class="section-subtitle">
-            Make sure your environment is ready and get comfortable reading files from the command line.
+            You will reuse this repository in later projects, so keep it clean and consistent from the start.
           </p>
-        </header>
-
-        <article class="info-card">
-          <h3>Requirements</h3>
-          <ul>
-            <li>Create a script <code>scripts/file_preview.py</code> inside <code>project01/</code>.</li>
-            <li>The script takes a file path as a required argument.</li>
-            <li>Use <code>project01/data/sample.txt</code> as your default test file.</li>
-            <li>Print the first N lines (default 10) of the file to the terminal.</li>
-            <li>If the file does not exist, print a clear error message and exit with a non-zero code.</li>
-          </ul>
-          <h3>Hints</h3>
-          <ul>
-            <li>Use <code>sys.argv</code> or <code>argparse</code> to handle command-line arguments.</li>
-            <li>Use a <code>with open(path)</code> block to read the file safely.</li>
-            <li>Start with a hardcoded path to <code>data/sample.txt</code>, then refactor to use arguments.</li>
-          </ul>
         </article>
       </div>
     </section>
 
-    <!-- Task 1 -->
+    <!-- Tasks (expandable cards) -->
     <section class="section">
       <div class="container section-inner">
         <header class="section-header">
-          <h2>Task 1 · file statistics</h2>
+          <h2>Tasks</h2>
           <p class="section-subtitle">
-            Build a script that computes simple statistics about a text file: lines, characters, and non-empty lines.
+            Start with simple scripts, then layer arguments and error handling. Use the expandable cards as checkpoints.
           </p>
         </header>
 
-        <article class="info-card">
-          <h3>Requirements</h3>
-          <ul>
-            <li>Create <code>scripts/file_stats.py</code>.</li>
-            <li>Implement a function <code>compute_file_stats(path)</code> that returns a dictionary of stats.</li>
-            <li>The script should:
+        <div class="tasks-grid">
+          <!-- Task 0 -->
+          <article class="task-card">
+            <div class="task-header">
+              <div class="task-header-main">
+                <h3 class="task-title">Task 0 · warm-up – print file summary</h3>
+                <p class="task-subtitle">
+                  Read a pipe-delimited file and print basic information: header, line count, and a few sample rows.
+                </p>
+              </div>
+              <div class="task-toggle"></div>
+            </div>
+            <div class="task-body">
+              <h4>Requirements</h4>
               <ul>
-                <li>Take a file path from the command line (start with <code>data/sample.txt</code>).</li>
-                <li>Print the number of lines, characters, and non-empty lines.</li>
+                <li>Create <code>scripts/print_file_info.py</code> inside <code>project01/</code>.</li>
+                <li>The script should accept a file path as a command-line argument (for example using <code>sys.argv</code>).</li>
+                <li>Use <code>project01/data/sample_orders.txt</code> as your default test file.</li>
+                <li>Print:
+                  <ul>
+                    <li>The total number of lines in the file.</li>
+                    <li>The header row.</li>
+                    <li>The first 3 data rows.</li>
+                  </ul>
+                </li>
+                <li>If the file does not exist, print a clear error message and exit with a non-zero code.</li>
               </ul>
-            </li>
-            <li>Handle invalid paths and unreadable files gracefully.</li>
-          </ul>
-          <h3>Suggested progression</h3>
-          <ul>
-            <li>1.1 – Start with a hardcoded path to <code>data/sample.txt</code> and print the stats.</li>
-            <li>1.2 – Add command-line arguments so you can pass any path.</li>
-            <li>1.3 – Wrap file access in <code>try/except</code> and return a non-zero exit code on error.</li>
-          </ul>
-        </article>
-      </div>
-    </section>
-
-    <!-- Task 2 -->
-    <section class="section bg-light">
-      <div class="container section-inner">
-        <header class="section-header">
-          <h2>Task 2 · word count and frequencies</h2>
-          <p class="section-subtitle">
-            Count how often each word appears in <code>sample.txt</code> and explore different ways to implement it.
-          </p>
-        </header>
-
-        <article class="info-card">
-          <h3>Requirements</h3>
-          <ul>
-            <li>Create <code>scripts/word_count.py</code>.</li>
-            <li>Implement a function <code>count_words(text)</code> that returns a dictionary mapping words to counts.</li>
-            <li>The script should:
+              <h4>Hints</h4>
               <ul>
-                <li>Read the contents of a text file passed as an argument (start with <code>data/sample.txt</code>).</li>
-                <li>Normalize text (for example, lowercase and strip basic punctuation).</li>
-                <li>Print the top N words (default 10) and their counts.</li>
+                <li>Start with a hardcoded path to <code>data/sample_orders.txt</code>, then refactor to use arguments.</li>
+                <li>Use a <code>with open(path)</code> block to read the file safely.</li>
+                <li>You can use <code>enumerate</code> when iterating over lines to detect header vs data rows.</li>
               </ul>
-            </li>
-            <li>Add an optional argument <code>--top N</code> to control how many results to show.</li>
-          </ul>
-          <h3>Suggested progression</h3>
-          <ul>
-            <li>2.1 – Implement <code>count_words</code> with a plain dictionary and loops.</li>
-            <li>2.2 – Rewrite it using <code>collections.Counter</code> and compare both versions.</li>
-            <li>2.3 – Add a <code>--min-length</code> argument to ignore very short words.</li>
-          </ul>
-          <h3>Hints</h3>
-          <ul>
-            <li>Keep your counting logic separate from printing; this makes testing easier.</li>
-            <li>Use the same <code>sample.txt</code> so you can compare results with other students.</li>
-          </ul>
-        </article>
-      </div>
-    </section>
+            </div>
+          </article>
 
-    <!-- Task 3 -->
-    <section class="section">
-      <div class="container section-inner">
-        <header class="section-header">
-          <h2>Task 3 · filter lines by pattern</h2>
-          <p class="section-subtitle">
-            Build a script that reads lines from a file, keeps only the ones that match a pattern, and writes them to a new file.
-          </p>
-        </header>
-
-        <article class="info-card">
-          <h3>Requirements</h3>
-          <ul>
-            <li>Create <code>scripts/filter_lines.py</code>.</li>
-            <li>The script should accept:
+          <!-- Task 1 -->
+          <article class="task-card">
+            <div class="task-header">
+              <div class="task-header-main">
+                <h3 class="task-title">Task 1 · basic stats – totals from tabular data</h3>
+                <p class="task-subtitle">
+                  Compute simple statistics (counts, totals) by looping over rows and doing basic arithmetic.
+                </p>
+              </div>
+              <div class="task-toggle"></div>
+            </div>
+            <div class="task-body">
+              <h4>Requirements</h4>
               <ul>
-                <li><code>--input FILE</code> – path to the input file (start with <code>data/sample.txt</code>).</li>
-                <li><code>--output FILE</code> – path to the output file (for example <code>data/filtered.txt</code>).</li>
-                <li><code>--contains STRING</code> – keep only lines that contain this substring.</li>
+                <li>Create <code>scripts/order_stats.py</code>.</li>
+                <li>Read <code>data/sample_orders.txt</code> line by line.</li>
+                <li>Skip the header row.</li>
+                <li>For each data row:
+                  <ul>
+                    <li>Split the line on <code>"|"</code> into columns.</li>
+                    <li>Parse <code>quantity</code> and <code>price</code> as numbers.</li>
+                  </ul>
+                </li>
+                <li>Compute and print:
+                  <ul>
+                    <li>Total number of orders.</li>
+                    <li>Total quantity ordered (sum of <code>quantity</code>).</li>
+                    <li>Total revenue (sum of <code>quantity * price</code>).</li>
+                  </ul>
+                </li>
               </ul>
-            </li>
-            <li>Read the input file line by line and write only matching lines to the output file.</li>
-            <li>At the end, print a short summary: “Kept X / Y lines”.</li>
-          </ul>
-          <h3>Suggested progression</h3>
-          <ul>
-            <li>3.1 – Implement filtering by substring with required arguments.</li>
-            <li>3.2 – Add a <code>--ignore-case</code> flag so that matching is case-insensitive.</li>
-            <li>3.3 – Decide what to do if the output file already exists (warn, prompt, or overwrite).</li>
-          </ul>
-          <h3>Hints</h3>
-          <ul>
-            <li>Reuse <code>data/sample.txt</code> to avoid downloading a new file.</li>
-            <li>Track total lines and kept lines to compute your summary.</li>
-          </ul>
-        </article>
-      </div>
-    </section>
-
-    <!-- Task 4 -->
-    <section class="section bg-light">
-      <div class="container section-inner">
-        <header class="section-header">
-          <h2>Task 4 · toolbox entry point</h2>
-          <p class="section-subtitle">
-            Expose your scripts through a single command-line “toolbox” that routes to the functionality you built.
-          </p>
-        </header>
-
-        <article class="info-card">
-          <h3>Requirements</h3>
-          <ul>
-            <li>Create <code>toolbox.py</code> in the root of <code>project01/</code>.</li>
-            <li>The toolbox should support subcommands, for example:
+              <h4>Hints</h4>
               <ul>
-                <li><code>python toolbox.py stats data/sample.txt</code></li>
-                <li><code>python toolbox.py preview data/sample.txt</code></li>
-                <li><code>python toolbox.py wc data/sample.txt --top 5</code></li>
+                <li>You can keep counters (integers and floats) and update them inside your loop.</li>
+                <li>Use a small helper function (for example <code>parse_order_line(line)</code>) to keep your code organized.</li>
+                <li>Start with a few rows to test your logic before trusting the totals.</li>
               </ul>
-            </li>
-            <li>Reuse the functions you wrote in the previous tasks instead of duplicating logic.</li>
-            <li>Use a clear <code>main()</code> function and <code>if __name__ == "__main__":</code> guard.</li>
-          </ul>
-          <h3>Suggested progression</h3>
-          <ul>
-            <li>4.1 – Implement <code>stats</code> and <code>preview</code> subcommands.</li>
-            <li>4.2 – Add a <code>wc</code> subcommand that calls your word count logic.</li>
-            <li>4.3 – Make sure <code>python toolbox.py -h</code> prints helpful usage text.</li>
-          </ul>
-          <h3>Hints</h3>
-          <ul>
-            <li><code>argparse</code> supports subparsers for subcommands; explore this pattern.</li>
-            <li>Keep the routing logic in <code>toolbox.py</code> thin: import and call functions from <code>scripts/</code>.</li>
-          </ul>
-        </article>
-      </div>
-    </section>
+            </div>
+          </article>
 
-    <!-- Stretch goals -->
-    <section class="section">
-      <div class="container section-inner">
-        <header class="section-header">
-          <h2>Stretch goals (optional)</h2>
-          <p class="section-subtitle">
-            These are optional challenges for when you want to push a bit further or prepare for later projects.
-          </p>
-        </header>
+          <!-- Task 2 -->
+          <article class="task-card">
+            <div class="task-header">
+              <div class="task-header-main">
+                <h3 class="task-title">Task 2 · command-line options &amp; error handling</h3>
+                <p class="task-subtitle">
+                  Add arguments and defensive checks so your script behaves well when inputs are missing or invalid.
+                </p>
+              </div>
+              <div class="task-toggle"></div>
+            </div>
+            <div class="task-body">
+              <h4>Requirements</h4>
+              <ul>
+                <li>Extend <code>order_stats.py</code> or create <code>order_stats_cli.py</code> that wraps your stats logic.</li>
+                <li>Use <code>argparse</code> (or <code>sys.argv</code> + manual parsing) to add options such as:
+                  <ul>
+                    <li><code>--file PATH</code> – path to the input file (default <code>data/sample_orders.txt</code>).</li>
+                    <li><code>--limit N</code> – maximum number of data rows to process (optional).</li>
+                  </ul>
+                </li>
+                <li>Add basic error handling:
+                  <ul>
+                    <li>If the file cannot be opened, print a clear message and exit with a non-zero code.</li>
+                    <li>If a row has invalid numbers for <code>quantity</code> or <code>price</code>, handle it gracefully
+                      (for example, skip the row and count it as “invalid”).</li>
+                  </ul>
+                </li>
+                <li>Print a short summary at the end, including how many rows were processed and how many were invalid.</li>
+              </ul>
+              <h4>Hints</h4>
+              <ul>
+                <li>Wrap file opening and numeric conversion in <code>try/except</code> blocks.</li>
+                <li>Use default values for arguments so you can run the script without always specifying options.</li>
+                <li>Keep your core calculation logic separate from the argument parsing so you can reuse it later.</li>
+              </ul>
+            </div>
+          </article>
 
-        <article class="info-card">
-          <h3>Optional extensions</h3>
-          <ul>
-            <li>
-              Add a <code>--json</code> flag to <code>file_stats.py</code> to output stats as JSON.
-              This will prepare you for later projects that chain tools together.
-            </li>
-            <li>
-              Create a <code>tests/</code> folder inside <code>project01/</code> and write a few simple
-              tests (for example with <code>pytest</code>) for <code>count_words</code> and <code>compute_file_stats</code>.
-            </li>
-            <li>
-              Add basic logging to <code>filter_lines.py</code> to log the start, end, and number of lines processed.
-            </li>
-          </ul>
-        </article>
+          <!-- Task 3 -->
+          <article class="task-card">
+            <div class="task-header">
+              <div class="task-header-main">
+                <h3 class="task-title">Task 3 · toolbox entry point</h3>
+                <p class="task-subtitle">
+                  Expose your utilities through a single command-line “toolbox” script that routes to the functionality you built.
+                </p>
+              </div>
+              <div class="task-toggle"></div>
+            </div>
+            <div class="task-body">
+              <h4>Requirements</h4>
+              <ul>
+                <li>Create <code>toolbox.py</code> in the root of <code>project01/</code>.</li>
+                <li>The toolbox should support simple subcommands, for example:
+                  <ul>
+                    <li><code>python toolbox.py info data/sample_orders.txt</code> – calls your file info script.</li>
+                    <li><code>python toolbox.py stats --file data/sample_orders.txt</code> – calls your stats logic.</li>
+                  </ul>
+                </li>
+                <li>Reuse the functions you wrote in the previous tasks instead of duplicating logic.</li>
+                <li>Use a clear <code>main()</code> function and <code>if __name__ == "__main__":</code> guard.</li>
+              </ul>
+              <h4>Hints</h4>
+              <ul>
+                <li>You can implement subcommands using <code>argparse</code> subparsers or simple <code>sys.argv[1]</code> checks.</li>
+                <li>Keep the routing logic in <code>toolbox.py</code> thin: import and call functions from <code>scripts/</code>.</li>
+              </ul>
+            </div>
+          </article>
+
+          <!-- Stretch -->
+          <article class="task-card">
+            <div class="task-header">
+              <div class="task-header-main">
+                <h3 class="task-title">Stretch · structured rows</h3>
+                <p class="task-subtitle">
+                  Refactor row parsing into small data structures to prepare for later JSON projects.
+                </p>
+              </div>
+              <div class="task-toggle"></div>
+            </div>
+            <div class="task-body">
+              <span class="task-badge">Optional</span>
+              <h4>Ideas</h4>
+              <ul>
+                <li>Implement a helper <code>parse_order_line(line)</code> that returns a dictionary with keys
+                  <code>order_id</code>, <code>customer</code>, <code>product</code>, <code>quantity</code>, <code>price</code>.</li>
+                <li>Use this dictionary in your stats functions instead of working with bare lists of strings.</li>
+                <li>Think about how this pattern relates to JSON records in Project 2.</li>
+              </ul>
+            </div>
+          </article>
+        </div>
       </div>
     </section>
 
@@ -351,7 +365,7 @@
         <header class="section-header">
           <h2>Reflection and notes</h2>
           <p class="section-subtitle">
-            Holberton projects are not just about code. Take a few minutes to reflect on what you did and what you want to improve.
+            Capture what you refreshed here before moving on to data structures and JSON.
           </p>
         </header>
 
@@ -359,16 +373,15 @@
           <h3>Project notes</h3>
           <p>
             Create a file <code>project01-notes.md</code> inside <code>project01/</code> and write short answers
-            to these questions:
+            to questions like:
           </p>
-          <ul>
-            <li>Which script did you find most useful or interesting? Why?</li>
-            <li>What error or bug took you the longest to understand? How did you fix it?</li>
-            <li>Which Python concept do you want to revisit before moving to the next project?</li>
+          <ul class="study-list">
+            <li>Which parts of basic Python (functions, loops, modules) felt solid? Which felt rusty?</li>
+            <li>How comfortable are you with reading files and handling file-related errors now?</li>
+            <li>What would you like to revisit or deepen before working with JSON and pandas in later projects?</li>
           </ul>
-          <p>
-            These notes are for you. They will help you see progress over time and prepare you for
-            the pace of the Machine Learning program.
+          <p class="section-subtitle">
+            These notes are for you. They will help you track progress and decide what to review before the ML program.
           </p>
         </article>
       </div>
@@ -379,7 +392,7 @@
     <div class="container footer-inner">
       <div>
         <span class="footer-title">Holberton Albania · Machine Learning Prep</span>
-        <p class="footer-text">Project 1 · Python essentials – utility scripts.</p>
+        <p class="footer-text">Project 1 · Python essentials – utility scripts on tabular data.</p>
       </div>
       <div class="footer-links">
         <a href="../index.html#projects">Back to projects</a>
@@ -388,5 +401,6 @@
     </div>
   </footer>
 
+  <script src="../assets/js/main.js"></script>
 </body>
 </html>
