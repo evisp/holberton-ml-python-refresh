@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Project 3 · Data pipelines – from JSON to clean CSV</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body class="bg-light text-main">
+
+  <header class="site-header bg-white shadow-sm">
+    <div class="container header-inner">
+      <div class="brand">
+        <div class="brand-logo-circle bg-cherry text-on-primary">H</div>
+        <div class="brand-text">
+          <span class="brand-name">Holberton Albania</span>
+          <span class="brand-tagline">Python &amp; Data Refresh</span>
+        </div>
+      </div>
+      <nav class="nav">
+        <a href="../index.html#hero" class="nav-link">Home</a>
+        <a href="../index.html#projects" class="nav-link">Projects</a>
+        <a href="../index.html#how" class="nav-link">How it works</a>
+        <a href="../index.html#resources" class="nav-link">Resources</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- Intro -->
+    <section class="section">
+      <div class="container section-inner">
+        <header class="section-header">
+          <p class="eyebrow">Project 3</p>
+          <h1>Data pipelines – from JSON to clean CSV</h1>
+          <p class="section-subtitle">
+            In this project you design a small data pipeline that takes the todo records from Project 2,
+            applies simple transformations, and writes a clean CSV file with a stable schema.
+          </p>
+        </header>
+
+        <div class="section-card-grid">
+          <article class="info-card">
+            <h3>Learning goals</h3>
+            <ul>
+              <li>Organize code into clear extract, transform, and load steps.</li>
+              <li>Use Python data structures to shape and clean records.</li>
+              <li>Practice reading JSON and writing CSV with the standard library.</li>
+              <li>Build a small pipeline script that ties multiple steps together.</li>
+            </ul>
+          </article>
+
+          <article class="info-card">
+            <h3>Project context</h3>
+            <p>
+              You keep working inside the same personal repository as Projects 1 and 2.
+              Each project lives in its own folder (<code>project01/</code>, <code>project02/</code>, <code>project03/</code>, …),
+              so your codebase grows in a structured way.
+            </p>
+            <p>
+              This project reuses the <code>todos.json</code> dataset from Project 2. You will copy it into
+              <code>project03/data/raw_todos.json</code> and treat that file as the raw input for your pipeline.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Prepare raw data -->
+    <section class="section bg-light">
+      <div class="container section-inner">
+        <header class="section-header">
+          <h2>Prepare the raw input file</h2>
+          <p class="section-subtitle">
+            Copy the todos dataset from Project 2 into this project’s data folder. This keeps each project self-contained.
+          </p>
+        </header>
+
+        <article class="info-card">
+          <h3>Copy from Project 2</h3>
+          <p>
+            In Project 2 you downloaded the JSONPlaceholder todos dataset as
+            <code>project02/data/todos.json</code>.
+          </p>
+          <p>
+            For this project, copy that file into <code>project03/data/raw_todos.json</code>.
+            From the root of your repository:
+          </p>
+          <pre><code>mkdir -p project03/data
+cp project02/data/todos.json project03/data/raw_todos.json
+          </code></pre>
+          <p>
+            All steps in this project will use <code>project03/data/raw_todos.json</code> as the raw input file
+            and produce a cleaned CSV file as output.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <!-- Repository layout -->
+    <section class="section">
+      <div class="container section-inner">
+        <header class="section-header">
+          <h2>Your repository layout for Project 3</h2>
+          <p class="section-subtitle">
+            Keep everything for this project inside <code>project03/</code>. The pipeline will read JSON and write CSV.
+          </p>
+        </header>
+
+        <article class="info-card">
+          <h3>Suggested structure</h3>
+          <pre><code>your-repo/
+├── project01/
+│   └── ...
+├── project02/
+│   └── ...
+├── project03/
+│   ├── data/
+│   │   ├── raw_todos.json
+│   │   ├── todos_clean.json      (optional intermediate)
+│   │   └── todos_clean.csv       (final output)
+│   ├── scripts/
+│   │   ├── extract.py
+│   │   ├── transform.py
+│   │   ├── load.py
+│   │   └── pipeline.py
+│   └── project03-notes.md
+└── ...
+          </code></pre>
+          <p>
+            Each script has a focused responsibility: extract from raw JSON, transform records in memory,
+            load to CSV, and orchestrate the full pipeline.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <!-- Task 1: extract -->
+    <section class="section bg-light">
+      <div class="container section-inner">
+        <header class="section-header">
+          <h2>Task 1 · extract – select and reshape fields</h2>
+          <p class="section-subtitle">
+            Implement the first step of the pipeline that reads raw JSON and produces a simplified list of records.
+          </p>
+        </header>
+
+        <article class="info-card">
+          <h3>Requirements</h3>
+          <ul>
+            <li>Create <code>scripts/extract.py</code> inside <code>project03/</code>.</li>
+            <li>Implement a function <code>extract_todos(input_path)</code> that:
+              <ul>
+                <li>Reads <code>raw_todos.json</code> using the <code>json</code> module.</li>
+                <li>Returns a list of dictionaries containing only selected fields, for example:
+                  <ul>
+                    <li><code>id</code></li>
+                    <li><code>userId</code></li>
+                    <li><code>title</code></li>
+                    <li><code>completed</code></li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+            <li>Optionally write this simplified list to <code>data/todos_clean.json</code> to inspect.</li>
+          </ul>
+          <h3>Hints</h3>
+          <ul>
+            <li>Use <code>json.load</code> to parse the file and then a list comprehension to keep only the fields you need.</li>
+            <li>Keeping <code>extract_todos</code> focused on reading and selecting fields makes later steps easier to reason about.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <!-- Task 2: transform -->
+    <section class="section">
+      <div class="container section-inner">
+        <header class="section-header">
+          <h2>Task 2 · transform – clean and normalize records</h2>
+          <p class="section-subtitle">
+            Apply simple cleaning and normalization rules to the extracted records to prepare them for CSV output.
+          </p>
+        </header>
+
+        <article class="info-card">
+          <h3>Requirements</h3>
+          <ul>
+            <li>Create <code>scripts/transform.py</code>.</li>
+            <li>Implement a function <code>transform_todos(records)</code> where <code>records</code> is the list returned by <code>extract_todos</code>.</li>
+            <li>Apply transformations such as:
+              <ul>
+                <li>Normalize <code>title</code>:
+                  <ul>
+                    <li>Strip leading and trailing whitespace.</li>
+                    <li>Optionally lowercase or keep the original case, but be consistent.</li>
+                  </ul>
+                </li>
+                <li>Convert <code>completed</code> into a more explicit representation, for example:
+                  <ul>
+                    <li>Keep a boolean but ensure it is always <code>True</code> or <code>False</code>.</li>
+                    <li>Or create a new field <code>completed_int</code> with values <code>0</code> or <code>1</code>.</li>
+                  </ul>
+                </li>
+                <li>Add a derived field such as <code>title_length</code> (the length of the title string).</li>
+              </ul>
+            </li>
+            <li>Return a new list of dictionaries with the cleaned structure.</li>
+          </ul>
+          <h3>Hints</h3>
+          <ul>
+            <li>Keep <code>transform_todos</code> pure: it should not read or write files, only transform data.</li>
+            <li>Think of this step as “data preparation” where you ensure fields are consistent and ready for downstream use.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <!-- Task 3: load -->
+    <section class="section bg-light">
+      <div class="container section-inner">
+        <header class="section-header">
+          <h2>Task 3 · load – write clean CSV</h2>
+          <p class="section-subtitle">
+            Implement the final step that writes the cleaned records to a CSV file with a fixed schema.
+          </p>
+        </header>
+
+        <article class="info-card">
+          <h3>Requirements</h3>
+          <ul>
+            <li>Create <code>scripts/load.py</code>.</li>
+            <li>Implement a function <code>load_to_csv(records, output_path)</code> that:
+              <ul>
+                <li>Uses <code>csv.DictWriter</code> from the standard library.</li>
+                <li>Defines explicit <code>fieldnames</code>, for example:
+                  <ul>
+                    <li><code>["id", "user_id", "title", "completed", "title_length"]</code></li>
+                  </ul>
+                </li>
+                <li>Writes a header row and then all records to <code>todos_clean.csv</code>.</li>
+              </ul>
+            </li>
+            <li>Call this function to produce <code>project03/data/todos_clean.csv</code> as the final output.</li>
+          </ul>
+          <h3>Hints</h3>
+          <ul>
+            <li>Open the CSV file with <code>newline=""</code> to avoid extra blank lines on some systems.</li>
+            <li>Map <code>userId</code> to <code>user_id</code> or a similar naming convention to keep your CSV schema clear.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <!-- Task 4: pipeline orchestrator -->
+    <section class="section">
+      <div class="container section-inner">
+        <header class="section-header">
+          <h2>Task 4 · pipeline – orchestrate the steps</h2>
+          <p class="section-subtitle">
+            Wire up the extract, transform, and load steps into a single script that runs the pipeline end-to-end.
+          </p>
+        </header>
+
+        <article class="info-card">
+          <h3>Requirements</h3>
+          <ul>
+            <li>Create <code>scripts/pipeline.py</code> inside <code>project03/</code>.</li>
+            <li>In a <code>main()</code> function:
+              <ul>
+                <li>Define <code>input_path = "project03/data/raw_todos.json"</code>.</li>
+                <li>Define <code>output_path = "project03/data/todos_clean.csv"</code>.</li>
+                <li>Call your functions in order:
+                  <ul>
+                    <li><code>records = extract_todos(input_path)</code></li>
+                    <li><code>clean_records = transform_todos(records)</code></li>
+                    <li><code>load_to_csv(clean_records, output_path)</code></li>
+                  </ul>
+                </li>
+                <li>Print a short summary, for example:
+                  <ul>
+                    <li>Number of records processed.</li>
+                    <li>Location of the output CSV file.</li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+            <li>Use <code>if __name__ == "__main__":</code> to run <code>main()</code> when the script is executed.</li>
+          </ul>
+          <h3>Optional extension</h3>
+          <ul>
+            <li>Add basic argument parsing so you can specify input and output paths from the command line.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <!-- Stretch goals -->
+    <section class="section bg-light">
+      <div class="container section-inner">
+        <header class="section-header">
+          <h2>Stretch goals (optional)</h2>
+          <p class="section-subtitle">
+            Extra challenges for when you want to push your data-pipeline skills a bit further.
+          </p>
+        </header>
+
+        <article class="info-card">
+          <h3>Optional extensions</h3>
+          <ul>
+            <li>
+              Add basic logging using the <code>logging</code> module to record the start and end of each step,
+              along with the number of records processed.
+            </li>
+            <li>
+              Implement simple validation in the transform step:
+              check that all required keys are present in each record and collect any invalid records
+              into a separate list or file.
+            </li>
+            <li>
+              Add an option in the pipeline to keep only completed todos or only todos for a specific <code>userId</code>.
+            </li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <!-- Reflection -->
+    <section class="section">
+      <div class="container section-inner">
+        <header class="section-header">
+          <h2>Reflection and notes</h2>
+          <p class="section-subtitle">
+            Slow down and think about how separating steps changes the way you design and read your code.
+          </p>
+        </header>
+
+        <article class="info-card">
+          <h3>Project notes</h3>
+          <p>
+            Create a file <code>project03-notes.md</code> inside <code>project03/</code> and write short answers
+            to these questions:
+          </p>
+          <ul>
+            <li>How did separating extract, transform, and load affect your code organization?</li>
+            <li>Which step felt most straightforward and which required more decisions?</li>
+            <li>If you had to plug another JSON dataset into this pipeline, what would you need to change?</li>
+          </ul>
+          <p>
+            These reflections help you connect small pipeline exercises to larger data workflows you may
+            encounter in future projects.
+          </p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer bg-midnight text-on-primary">
+    <div class="container footer-inner">
+      <div>
+        <span class="footer-title">Holberton Albania · Machine Learning Prep</span>
+        <p class="footer-text">Project 3 · Data pipelines – from JSON to clean CSV.</p>
+      </div>
+      <div class="footer-links">
+        <a href="../index.html#projects">Back to projects</a>
+        <a href="#top" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;">Back to top</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
