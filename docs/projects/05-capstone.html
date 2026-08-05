@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Project 5 · Capstone – user activity report from JSON data</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body class="bg-light text-main">
+
+  <header class="site-header bg-white shadow-sm">
+    <div class="container header-inner">
+      <div class="brand">
+        <div class="brand-logo-circle bg-cherry text-on-primary">H</div>
+        <div class="brand-text">
+          <span class="brand-name">Holberton Albania</span>
+          <span class="brand-tagline">Python &amp; Data Refresh</span>
+        </div>
+      </div>
+      <nav class="nav">
+        <a href="../index.html#hero" class="nav-link">Home</a>
+        <a href="../index.html#projects" class="nav-link">Projects</a>
+        <a href="../index.html#how" class="nav-link">How it works</a>
+        <a href="../index.html#resources" class="nav-link">Resources</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- Intro -->
+    <section class="section">
+      <div class="container section-inner">
+        <header class="section-header">
+          <p class="eyebrow">Project 5</p>
+          <h1>Capstone – user activity report from JSON data</h1>
+          <p class="section-subtitle">
+            In this capstone project you combine multiple JSONPlaceholder datasets (users, posts, comments, todos)
+            to build a small user activity report. You will load data, link records together, compute metrics,
+            and generate a simple report and a few plots.
+          </p>
+        </header>
+
+        <div class="section-card-grid">
+          <article class="info-card">
+            <h3>Learning goals</h3>
+            <ul>
+              <li>Work with multiple related JSON files in a single project.</li>
+              <li>Use Python data structures (lists, dicts, sets) to create user-centric views of the data.</li>
+              <li>Compute simple user-level metrics from raw records.</li>
+              <li>Generate a text-based report and basic visualizations.</li>
+            </ul>
+          </article>
+
+          <article class="info-card">
+            <h3>Project context</h3>
+            <p>
+              This capstone builds on all previous projects: file handling, data structures, simple pipelines,
+              and basic exploratory analysis. You will reuse patterns and ideas you have already practiced.
+            </p>
+            <p>
+              The data comes from JSONPlaceholder, a public fake REST API for testing and prototyping.
+              You will download four resources once, save them locally, and work entirely from files.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Download data -->
+    <section class="section bg-light">
+      <div class="container section-inner">
+        <header class="section-header">
+          <h2>Download the JSONPlaceholder data</h2>
+          <p class="section-subtitle">
+            You will work with users, posts, comments, and todos. Each resource is stored as a local JSON file.
+          </p>
+        </header>
+
+        <article class="info-card">
+          <h3>Data sources</h3>
+          <p>
+            JSONPlaceholder provides several related resources. In this project you will use:
+          </p>
+          <ul>
+            <li><code>/users</code> – user profiles</li>
+            <li><code>/posts</code> – blog posts</li>
+            <li><code>/comments</code> – comments on posts</li>
+            <li><code>/todos</code> – todo items</li>
+          </ul>
+          <p>API endpoints:</p>
+          <pre><code>https://jsonplaceholder.typicode.com/users
+https://jsonplaceholder.typicode.com/posts
+https://jsonplaceholder.typicode.com/comments
+https://jsonplaceholder.typicode.com/todos
+          </code></pre>
+
+          <h4>Download with <code>curl</code></h4>
+          <p>From the root of your repository, run:</p>
+          <pre><code>mkdir -p project05/data
+
+curl https://jsonplaceholder.typicode.com/users    -o project05/data/users.json
+curl https://jsonplaceholder.typicode.com/posts    -o project05/data/posts.json
+curl https://jsonplaceholder.typicode.com/comments -o project05/data/comments.json
+curl https://jsonplaceholder.typicode.com/todos    -o project05/data/todos.json
+          </code></pre>
+          <p>
+            After this step, you should have four JSON files in <code>project05/data/</code>.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <!-- Repository layout -->
+    <section class="section">
+      <div class="container section-inner">
+        <header class="section-header">
+          <h2>Your repository layout for the capstone</h2>
+          <p class="section-subtitle">
+            Keep everything for this project inside <code>project05/</code>. Scripts will load data, compute metrics, and create plots.
+          </p>
+        </header>
+
+        <article class="info-card">
+          <h3>Suggested structure</h3>
+          <pre><code>your-repo/
+├── project01/
+│   └── ...
+├── project02/
+│   └── ...
+├── project03/
+│   └── ...
+├── project04/
+│   └── ...
+├── project05/
+│   ├── data/
+│   │   ├── users.json
+│   │   ├── posts.json
+│   │   ├── comments.json
+│   │   └── todos.json
+│   ├── scripts/
+│   │   ├── load_data.py
+│   │   ├── user_metrics.py
+│   │   ├── report.py
+│   │   └── plots.py
+│   ├── figures/
+│   │   ├── user_activity_bar.png
+│   │   └── completion_rate_bar.png
+│   └── project05-notes.md
+└── ...
+          </code></pre>
+          <p>
+            You can optionally add a notebook later for experimentation, but the core of this project
+            is script-based.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <!-- Task 0: load all resources -->
+    <section class="section bg-light">
+      <div class="container section-inner">
+        <header class="section-header">
+          <h2>Task 0 · load all resources</h2>
+          <p class="section-subtitle">
+            Create a small module that knows how to load all four JSON files into memory.
+          </p>
+        </header>
+
+        <article class="info-card">
+          <h3>Requirements</h3>
+          <ul>
+            <li>Create <code>scripts/load_data.py</code> inside <code>project05/</code>.</li>
+            <li>Implement functions such as:
+              <ul>
+                <li><code>load_users(path)</code></li>
+                <li><code>load_posts(path)</code></li>
+                <li><code>load_comments(path)</code></li>
+                <li><code>load_todos(path)</code></li>
+              </ul>
+            </li>
+            <li>Each function should:
+              <ul>
+                <li>Open the JSON file.</li>
+                <li>Parse it with the <code>json</code> module.</li>
+                <li>Return a list of dictionaries.</li>
+              </ul>
+            </li>
+            <li>Optionally add a convenience function <code>load_all(data_dir)</code> that returns a dictionary
+              containing all four lists.</li>
+          </ul>
+          <h3>Hints</h3>
+          <ul>
+            <li>Reuse patterns from Projects 2 and 3 for loading JSON.</li>
+            <li>Keep <code>load_data.py</code> focused on I/O so other modules can assume they receive Python objects.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <!-- Task 1: build user-centric structures -->
+    <section class="section">
+      <div class="container section-inner">
+        <header class="section-header">
+          <h2>Task 1 · build user-centric data structures</h2>
+          <p class="section-subtitle">
+            Create in-memory mappings from users to their posts, comments, and todos.
+          </p>
+        </header>
+
+        <article class="info-card">
+          <h3>Requirements</h3>
+          <ul>
+            <li>Create <code>scripts/user_metrics.py</code>.</li>
+            <li>In this script:
+              <ul>
+                <li>Import your loading functions from <code>load_data.py</code>.</li>
+                <li>Build indices such as:
+                  <ul>
+                    <li><code>user_posts</code>: dictionary mapping <code>userId</code> to a list of posts.</li>
+                    <li><code>user_todos</code>: dictionary mapping <code>userId</code> to a list of todos.</li>
+                    <li><code>user_comments</code>: dictionary mapping <code>userId</code> to comments made on that user’s posts.</li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+            <li>Use these indices to compute, for each user:
+              <ul>
+                <li><code>num_posts</code></li>
+                <li><code>num_comments_on_posts</code> (total comments on their posts)</li>
+                <li><code>num_todos</code></li>
+                <li><code>completion_rate</code> (completed todos / total todos)</li>
+              </ul>
+            </li>
+          </ul>
+          <h3>Hints</h3>
+          <ul>
+            <li>Start by building a mapping from <code>postId</code> to owner <code>userId</code>, then use it to
+              assign comments to the correct user.</li>
+            <li>Focus on clear loops and dictionary updates; your goal is to practice data structure design more than performance optimization.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <!-- Task 2: compute metrics and summary table -->
+    <section class="section bg-light">
+      <div class="container section-inner">
+        <header class="section-header">
+          <h2>Task 2 · compute user metrics and summary table</h2>
+          <p class="section-subtitle">
+            Combine your indices into a small table of user-level metrics.
+          </p>
+        </header>
+
+        <article class="info-card">
+          <h3>Requirements</h3>
+          <ul>
+            <li>Extend <code>user_metrics.py</code> with a function such as
+              <code>compute_user_metrics(users, posts, comments, todos)</code>.</li>
+            <li>This function should return a list of dictionaries, each representing one user, with fields such as:
+              <ul>
+                <li><code>user_id</code></li>
+                <li><code>user_name</code></li>
+                <li><code>num_posts</code></li>
+                <li><code>num_comments_on_posts</code></li>
+                <li><code>num_todos</code></li>
+                <li><code>completion_rate</code></li>
+              </ul>
+            </li>
+            <li>Keep this implementation in pure Python (lists and dictionaries). Optionally,
+              you may convert the result to a pandas DataFrame later for analysis or plotting.</li>
+          </ul>
+          <h3>Hints</h3>
+          <ul>
+            <li>Use the indices you built earlier to avoid scanning the entire dataset repeatedly.</li>
+            <li>Think of this summary as a mini “user activity table” that you can reuse in the report and plots.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <!-- Task 3: generate report -->
+    <section class="section">
+      <div class="container section-inner">
+        <header class="section-header">
+          <h2>Task 3 · generate a simple user activity report</h2>
+          <p class="section-subtitle">
+            Use your metrics to build a text-based report and optionally a CSV file of user metrics.
+          </p>
+        </header>
+
+        <article class="info-card">
+          <h3>Requirements</h3>
+          <ul>
+            <li>Create <code>scripts/report.py</code>.</li>
+            <li>In this script:
+              <ul>
+                <li>Load all data using <code>load_data.py</code>.</li>
+                <li>Compute user metrics using <code>compute_user_metrics</code>.</li>
+                <li>Print a summary to the terminal, including:
+                  <ul>
+                    <li>Overall average completion rate (across all users).</li>
+                    <li>The user with the most posts.</li>
+                    <li>The user with the most comments on their posts.</li>
+                    <li>The user with the highest completion rate.</li>
+                  </ul>
+                </li>
+                <li>Optionally write a CSV file <code>project05/data/user_metrics.csv</code>
+                  containing one row per user with the metrics you computed.</li>
+              </ul>
+            </li>
+          </ul>
+          <h3>Hints</h3>
+          <ul>
+            <li>If you use pandas, you can convert your list of dictionaries to a DataFrame and use
+              methods like <code>df.sort_values()</code> to find top users.</li>
+            <li>Even without pandas, sorting a list of dictionaries by a key (using <code>sorted</code> and a <code>key</code> function) works well.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <!-- Task 4: plots -->
+    <section class="section bg-light">
+      <div class="container section-inner">
+        <header class="section-header">
+          <h2>Task 4 · plots – visualize user metrics</h2>
+          <p class="section-subtitle">
+            Create simple visualizations for your user metrics and save them to image files.
+          </p>
+        </header>
+
+        <article class="info-card">
+          <h3>Requirements</h3>
+          <ul>
+            <li>Create <code>scripts/plots.py</code>.</li>
+            <li>In this script:
+              <ul>
+                <li>Load or compute the user metrics table.</li>
+                <li>Use matplotlib or pandas plotting to create:
+                  <ul>
+                    <li>A bar chart of number of posts per user, saved as <code>figures/user_activity_bar.png</code>.</li>
+                    <li>A bar chart of completion rate per user, saved as <code>figures/completion_rate_bar.png</code>.</li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+            <li>Make sure the <code>figures/</code> folder exists before saving plots.</li>
+          </ul>
+          <h3>Hints</h3>
+          <ul>
+            <li>Use <code>plt.savefig("project05/figures/filename.png", dpi=150)</code> to save your plots.</li>
+            <li>Label axes clearly (for example, “User” on the x-axis and “Number of posts” on the y-axis).</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <!-- Stretch goals -->
+    <section class="section">
+      <div class="container section-inner">
+        <header class="section-header">
+          <h2>Stretch goals (optional)</h2>
+          <p class="section-subtitle">
+            Extra challenges if you want to deepen your understanding of data relationships and metrics.
+          </p>
+        </header>
+
+        <article class="info-card">
+          <h3>Optional extensions</h3>
+          <ul>
+            <li>
+              Define a simple “engagement score” for each user (for example,
+              <code>num_comments_on_posts / max(num_posts, 1)</code>) and add it to your metrics.
+            </li>
+            <li>
+              Compute and print the top 3 users for each metric (posts, comments, completion rate, engagement).
+            </li>
+            <li>
+              Create a tiny CLI “dashboard” script (for example <code>scripts/dashboard.py</code>) that lets you choose
+              which metric to display in a table or print to the terminal.
+            </li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <!-- Reflection -->
+    <section class="section bg-light">
+      <div class="container section-inner">
+        <header class="section-header">
+          <h2>Reflection and notes</h2>
+          <p class="section-subtitle">
+            Connect this capstone project to how you think about data and future work.
+          </p>
+        </header>
+
+        <article class="info-card">
+          <h3>Project notes</h3>
+          <p>
+            Create a file <code>project05-notes.md</code> inside <code>project05/</code> and write short answers
+            to these questions:
+          </p>
+          <ul>
+            <li>Which metric do you think best captures “user activity” in this dataset? Why?</li>
+            <li>How did building indices (user → posts → comments → todos) change how you think about data relationships?</li>
+            <li>If you swapped JSONPlaceholder for a real dataset, which parts of your capstone would you keep exactly the same?</li>
+          </ul>
+          <p>
+            These reflections help you see how small, structured projects can scale to more complex data work,
+            including—but not limited to—machine learning.
+          </p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer bg-midnight text-on-primary">
+    <div class="container footer-inner">
+      <div>
+        <span class="footer-title">Holberton Albania · Machine Learning Prep</span>
+        <p class="footer-text">Project 5 · Capstone – user activity report from JSON data.</p>
+      </div>
+      <div class="footer-links">
+        <a href="../index.html#projects">Back to projects</a>
+        <a href="#top" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;">Back to top</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
