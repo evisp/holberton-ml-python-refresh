@@ -590,16 +590,21 @@ body {
 
 /* Collapsible body */
 .task-body {
-  max-height: 0;
+  display: grid;
+  grid-template-rows: 0fr;
   overflow: hidden;
   padding: 0 1.2rem;
   border-top: 1px solid #EDEFF7;
-  transition: max-height 0.18s ease-out, padding 0.18s ease-out;
+  transition: grid-template-rows 0.18s ease-out, padding 0.18s ease-out;
 }
 
 .task-card.is-open .task-body {
-  max-height: 500px; /* enough for typical content */
+  grid-template-rows: 1fr;
   padding: 0.8rem 1.2rem 1rem;
+}
+
+.task-body > * {
+  min-width: 0;
 }
 
 .task-body h4 {
@@ -654,4 +659,51 @@ body {
     flex-direction: column;
     align-items: flex-start;
   }
+}
+
+
+/* Inline code — currently unstyled, hard to spot inside prose */
+code {
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.86em;
+  padding: 0.1rem 0.35rem;
+  border-radius: 5px;
+  background-color: #F1F2F6;
+  color: var(--color-midnight);
+}
+
+/* Code blocks */
+pre {
+  margin: 0.75rem 0;
+  padding: 0.9rem 1.1rem;
+  border-radius: 10px;
+  background-color: #FBFBFD;
+  border: 1px solid #EDEFF7;
+  border-left: 3px solid var(--color-cherry);
+  overflow-x: auto;
+  line-height: 1.5;
+}
+
+/* Reset the inline treatment inside blocks */
+pre code {
+  padding: 0;
+  background: none;
+  font-size: 0.84rem;
+}
+
+/* Links inside content lists, so anchors match the brand */
+.study-list a,
+.info-card p a {
+  color: var(--color-cherry);
+  text-decoration: none;
+}
+
+.study-list a:hover,
+.info-card p a:hover {
+  text-decoration: underline;
+}
+
+/* Task bodies hold more on tutorial pages than on project pages */
+.task-card.is-open .task-body {
+  max-height: 900px;
 }

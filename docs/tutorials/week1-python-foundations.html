@@ -1,0 +1,1118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Week 1 · Python foundations – from your first script to Project 1</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body class="bg-light text-main">
+
+  <header class="site-header bg-white shadow-sm">
+    <div class="container header-inner">
+      <div class="brand">
+        <div class="brand-logo-circle bg-cherry text-on-primary">H</div>
+        <div class="brand-text">
+          <span class="brand-name">Holberton Albania</span>
+          <span class="brand-tagline">Python &amp; Data Refresh</span>
+        </div>
+      </div>
+      <nav class="nav">
+        <a href="../index.html#hero" class="nav-link">Home</a>
+        <a href="../index.html#projects" class="nav-link">Projects</a>
+        <a href="../index.html#tutorials" class="nav-link">Tutorials</a>
+        <a href="../index.html#how" class="nav-link">How it works</a>
+        <a href="../index.html#resources" class="nav-link">Resources</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- Tutorial hero -->
+    <section class="section bg-white">
+      <div class="container">
+        <div class="project-hero project-hero-inner">
+          <p class="eyebrow">Week 1 tutorial</p>
+          <h1 class="project-hero-title">Python foundations – from your first script to Project 1</h1>
+          <p class="project-hero-subtitle">
+            Everything Project 1 assumes you already know, explained from the ground up and in the order you
+            will need it. Read it top to bottom the first time; after that, use it as a lookup table.
+          </p>
+
+          <div class="project-hero-tags">
+            <span class="pill-tag"><span class="pill-tag-icon">🔤</span> Types &amp; strings</span>
+            <span class="pill-tag"><span class="pill-tag-icon">🔁</span> Loops &amp; conditions</span>
+            <span class="pill-tag"><span class="pill-tag-icon">🧩</span> Functions &amp; modules</span>
+            <span class="pill-tag"><span class="pill-tag-icon">📁</span> Files</span>
+            <span class="pill-tag"><span class="pill-tag-icon">⚠️</span> Errors</span>
+            <span class="pill-tag"><span class="pill-tag-icon">⌨️</span> Command line</span>
+          </div>
+
+          <div class="info-strip">
+            <span class="info-pill">Reading time: 25–30 minutes</span>
+            <span class="info-pill">No prior setup needed beyond Python 3</span>
+            <span class="info-pill">Prepares you for: Project 1</span>
+          </div>
+
+          <div class="hero-actions">
+            <a href="#setup" class="btn btn-primary">Start at the beginning</a>
+            <a href="../projects/01-python-essentials.html" class="btn btn-ghost">Go straight to Project 1</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- How to use + contents -->
+    <section class="section bg-light">
+      <div class="container section-inner">
+        <div class="section-card-grid">
+          <article class="info-card">
+            <h3>How to use this tutorial</h3>
+            <p class="section-subtitle">
+              Every section follows the same four beats, so you always know where you are.
+            </p>
+            <ul class="study-list">
+              <li><strong>The idea</strong> – what the concept is, in plain language.</li>
+              <li><strong>Show it</strong> – a short piece of code you can run as-is.</li>
+              <li><strong>Why you need it</strong> – the Project 1 task it unlocks.</li>
+              <li><strong>Try it</strong> – a two-minute exercise, in a card you can expand.</li>
+            </ul>
+            <p class="section-subtitle">
+              Type the examples out rather than copying them. It is slower, and it works better.
+            </p>
+          </article>
+
+          <article class="info-card">
+            <h3>What is in here</h3>
+            <ul class="study-list">
+              <li><a href="#setup">0 · Before you start</a></li>
+              <li><a href="#types">1 · Values and types</a></li>
+              <li><a href="#strings">2 · Strings</a></li>
+              <li><a href="#lists">3 · Lists</a></li>
+              <li><a href="#flow">4 · Making decisions and repeating work</a></li>
+              <li><a href="#functions">5 · Functions</a></li>
+              <li><a href="#modules">6 · Modules and the <code>main()</code> pattern</a></li>
+              <li><a href="#files">7 · Reading files</a></li>
+              <li><a href="#errors">8 · When things go wrong</a></li>
+              <li><a href="#cli">9 · Command-line arguments</a></li>
+              <li><a href="#together">10 · Putting it together</a></li>
+              <li><a href="#map">11 · Concept → task map</a></li>
+              <li><a href="#checklist">12 · Are you ready?</a></li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 0 · Before you start -->
+    <section id="setup" class="section">
+      <div class="container section-inner">
+        <header class="section-header">
+          <h2><span class="icon-circle">0</span> Before you start</h2>
+          <p class="section-subtitle">
+            A few minutes here saves an hour later. Most early frustration is not Python — it is the terminal.
+          </p>
+        </header>
+
+        <article class="info-card">
+          <h3>Check that you have Python 3</h3>
+          <p>Open a terminal and run:</p>
+          <pre><code>python3 --version</code></pre>
+          <p>
+            You should see something like <code>Python 3.11.4</code>. Any version starting with 3 is fine.
+            If the command is not found, install Python from python.org first.
+          </p>
+
+          <h3>Two ways to run Python</h3>
+          <p>
+            Typing <code>python3</code> on its own opens the <strong>REPL</strong> — an interactive prompt where each
+            line runs as soon as you press Enter. It is perfect for trying one small thing. Type <code>exit()</code> to leave.
+          </p>
+          <p>
+            Everything you hand in is a <strong>script</strong> instead: a file ending in <code>.py</code> that you run in one go.
+          </p>
+          <pre><code>python3 hello.py</code></pre>
+
+          <h3>Your terminal is standing somewhere</h3>
+          <p>
+            When you run <code>python3 hello.py</code>, the terminal looks for <code>hello.py</code> in the folder it is
+            currently standing in. <code>pwd</code> tells you where that is, <code>ls</code> lists what is there, and
+            <code>cd</code> moves you. If Python says it cannot find your file, you are almost always in the wrong folder.
+          </p>
+
+          <h3>A virtual environment</h3>
+          <p>
+            Later projects install packages such as pandas. A virtual environment keeps those installs inside your
+            project instead of spreading them across your computer. Create and activate one now:
+          </p>
+          <pre><code>python3 -m venv venv
+source venv/bin/activate     # macOS / Linux
+venv\Scripts\activate        # Windows</code></pre>
+          <p class="section-subtitle">
+            Your prompt now starts with <code>(venv)</code>. Run <code>deactivate</code> when you are done for the day.
+          </p>
+        </article>
+
+        <div class="tasks-grid">
+          <article class="task-card">
+            <div class="task-header">
+              <div class="task-header-main">
+                <h3 class="task-title">Try it · your first script</h3>
+                <p class="task-subtitle">Two minutes, and you have confirmed your whole setup works.</p>
+              </div>
+              <div class="task-toggle"></div>
+            </div>
+            <div class="task-body">
+              <ul>
+                <li>Create a folder called <code>warmup</code> and <code>cd</code> into it.</li>
+                <li>Create a file <code>hello.py</code> containing one line: <code>print("Ready for week 1")</code>.</li>
+                <li>Run it with <code>python3 hello.py</code>.</li>
+                <li>Now <code>cd ..</code> and run it again. Read the error you get, then fix it by pointing at
+                  <code>warmup/hello.py</code>.</li>
+              </ul>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 1 · Values and types -->
+    <section id="types" class="section bg-light">
+      <div class="container section-inner">
+        <header class="section-header">
+          <h2><span class="icon-circle">1</span> Values and types</h2>
+          <p class="section-subtitle">
+            Every value in Python has a type, and the type decides what the value can do.
+          </p>
+        </header>
+
+        <article class="info-card">
+          <h3>The four you need this week</h3>
+          <ul class="study-list">
+            <li><code>int</code> – a whole number: <code>10</code></li>
+            <li><code>float</code> – a decimal number: <code>1.20</code></li>
+            <li><code>str</code> – text, always in quotes: <code>"Pen"</code></li>
+            <li><code>bool</code> – <code>True</code> or <code>False</code></li>
+          </ul>
+          <p>
+            A <strong>variable</strong> is just a name pointing at a value. You do not declare its type; Python works it out.
+            <code>type()</code> tells you what you actually have:
+          </p>
+          <pre><code>quantity = 10
+price = 1.20
+product = "Pen"
+
+print(type(quantity))   # &lt;class 'int'&gt;
+print(type(price))      # &lt;class 'float'&gt;
+print(type(product))    # &lt;class 'str'&gt;</code></pre>
+
+          <h3>The one sentence to remember</h3>
+          <p>
+            <strong>Everything you read from a file is a string.</strong> Even when it looks like a number.
+            This is the single most common cause of wrong answers in Project 1:
+          </p>
+          <pre><code>quantity = "10"          # straight from a file
+print(quantity * 3)      # 101010  ← repeated the text three times
+
+quantity = int("10")     # converted to a number
+print(quantity * 3)      # 30      ← that is more like it</code></pre>
+          <p>
+            Convert with <code>int()</code>, <code>float()</code> and <code>str()</code>. If the text is not a valid number,
+            <code>int("abc")</code> raises an error — which is exactly the situation Task 2 asks you to handle.
+          </p>
+          <p class="section-subtitle">
+            <strong>Why you need it:</strong> Task 1 sums <code>quantity</code> and <code>quantity * price</code>. Without
+            <code>int()</code> and <code>float()</code>, neither total is a number.
+          </p>
+        </article>
+
+        <div class="tasks-grid">
+          <article class="task-card">
+            <div class="task-header">
+              <div class="task-header-main">
+                <h3 class="task-title">Try it · predict, then check</h3>
+                <p class="task-subtitle">Guess the output before you run each line in the REPL.</p>
+              </div>
+              <div class="task-toggle"></div>
+            </div>
+            <div class="task-body">
+              <ul>
+                <li><code>print("3" + "4")</code></li>
+                <li><code>print(3 + 4)</code></li>
+                <li><code>print(int("3") + int("4"))</code></li>
+                <li><code>print(float("2.5") * 4)</code></li>
+                <li><code>print(type(2.5 * 4))</code> — is the result an int or a float?</li>
+              </ul>
+              <p class="section-subtitle">
+                Any line where your guess was wrong is worth two minutes of your attention.
+              </p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2 · Strings -->
+    <section id="strings" class="section">
+      <div class="container section-inner">
+        <header class="section-header">
+          <h2><span class="icon-circle">2</span> Strings</h2>
+          <p class="section-subtitle">
+            Your data arrives as text, so text handling is most of the work in Project 1.
+          </p>
+        </header>
+
+        <article class="info-card">
+          <h3>Building output with f-strings</h3>
+          <p>
+            Put an <code>f</code> before the quotes and you can drop variables straight into the text using
+            curly braces. This is how you print readable summaries:
+          </p>
+          <pre><code>customer = "Alice"
+total = 38.99
+
+print(f"{customer} spent {total} in total")
+print(f"{customer} spent {total:.2f} in total")   # two decimal places</code></pre>
+
+          <h3>Three methods that do most of the work</h3>
+          <p>A line read from a file looks like this, invisible newline included:</p>
+          <pre><code>line = "124|Bob|Pen|10|1.20\n"</code></pre>
+          <p><code>.strip()</code> removes whitespace and that trailing newline from both ends:</p>
+          <pre><code>clean = line.strip()        # "124|Bob|Pen|10|1.20"</code></pre>
+          <p><code>.split("|")</code> cuts the text wherever it finds a pipe and hands you back a list of pieces:</p>
+          <pre><code>fields = clean.split("|")
+print(fields)               # ['124', 'Bob', 'Pen', '10', '1.20']</code></pre>
+          <p><code>.lower()</code> makes comparison reliable, since <code>"Pen"</code> and <code>"pen"</code> are not equal:</p>
+          <pre><code>print("Pen".lower() == "pen")   # True</code></pre>
+
+          <h3>Length, indexing, slicing</h3>
+          <pre><code>product = "Notebook"
+
+print(len(product))     # 8
+print(product[0])       # N        ← counting starts at 0
+print(product[-1])      # k        ← negative counts from the end
+print(product[0:4])     # Note     ← from 0 up to, not including, 4</code></pre>
+          <p class="section-subtitle">
+            <strong>Why you need it:</strong> Tasks 0 and 1 both live on <code>.strip()</code> followed by
+            <code>.split("|")</code>. Every printed summary is an f-string.
+          </p>
+        </article>
+
+        <div class="tasks-grid">
+          <article class="task-card">
+            <div class="task-header">
+              <div class="task-header-main">
+                <h3 class="task-title">Try it · take a line apart</h3>
+                <p class="task-subtitle">One line of raw data, five clean fields.</p>
+              </div>
+              <div class="task-toggle"></div>
+            </div>
+            <div class="task-body">
+              <ul>
+                <li>Start from <code>row = "  201|Ana|Lamp|3|12.50  \n"</code>.</li>
+                <li>Strip it, split it on <code>"|"</code>, and print the resulting list.</li>
+                <li>Print just the product name, using its position in the list.</li>
+                <li>Print a sentence with an f-string: <code>Ana ordered 3 Lamp</code>.</li>
+                <li>What happens if you split before you strip? Look closely at the last item.</li>
+              </ul>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3 · Lists -->
+    <section id="lists" class="section bg-light">
+      <div class="container section-inner">
+        <header class="section-header">
+          <h2><span class="icon-circle">3</span> Lists</h2>
+          <p class="section-subtitle">
+            An ordered collection of values. <code>.split()</code> gives you one, so you already have them.
+          </p>
+        </header>
+
+        <article class="info-card">
+          <h3>Creating and reaching into a list</h3>
+          <pre><code>fields = ["124", "Bob", "Pen", "10", "1.20"]
+
+print(len(fields))      # 5
+print(fields[1])        # Bob
+print(fields[-1])       # 1.20
+
+fields.append("extra")  # add to the end</code></pre>
+
+          <h3>Unpacking</h3>
+          <p>
+            When you know exactly how many pieces there are, give them all names at once. This is far easier to read
+            than <code>fields[0]</code>, <code>fields[1]</code>, <code>fields[2]</code> scattered through your code:
+          </p>
+          <pre><code>order_id, customer, product, quantity, price = fields
+
+print(customer)     # Bob</code></pre>
+          <p>
+            Unpacking fails loudly if the line has the wrong number of fields — which is useful, because a malformed
+            row is something you want to notice rather than silently miscount.
+          </p>
+
+          <h3>Tuples, in one line</h3>
+          <p>
+            A tuple is a list you cannot change, written with round brackets: <code>(3, 12.50)</code>. You will meet
+            them returned from functions. That is all you need for now.
+          </p>
+          <p class="section-subtitle">
+            Dictionaries — the other big one — are the subject of Project 2. The stretch task at the end of Project 1
+            gives you an early taste, and that is deliberate.
+          </p>
+        </article>
+
+        <div class="tasks-grid">
+          <article class="task-card">
+            <div class="task-header">
+              <div class="task-header-main">
+                <h3 class="task-title">Try it · name your fields</h3>
+                <p class="task-subtitle">Turn positions into names.</p>
+              </div>
+              <div class="task-toggle"></div>
+            </div>
+            <div class="task-body">
+              <ul>
+                <li>Split <code>"201|Ana|Lamp|3|12.50"</code> and unpack it into five named variables.</li>
+                <li>Convert <code>quantity</code> to an int and <code>price</code> to a float.</li>
+                <li>Print the line total using an f-string, formatted to two decimals.</li>
+                <li>Now try unpacking a line with only four fields. Read the error message carefully.</li>
+              </ul>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4 · Control flow -->
+    <section id="flow" class="section">
+      <div class="container section-inner">
+        <header class="section-header">
+          <h2><span class="icon-circle">4</span> Making decisions and repeating work</h2>
+          <p class="section-subtitle">
+            Conditions choose between paths. Loops repeat a path once per item.
+          </p>
+        </header>
+
+        <article class="info-card">
+          <h3>Conditions</h3>
+          <p>
+            Python groups code by indentation. Everything indented under an <code>if</code> belongs to it — there are
+            no braces, so the spacing is the structure:
+          </p>
+          <pre><code>quantity = 10
+
+if quantity &gt; 5:
+    print("bulk order")
+elif quantity == 5:
+    print("exactly five")
+else:
+    print("small order")</code></pre>
+          <p>
+            Compare with <code>==</code>, <code>!=</code>, <code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code>,
+            <code>&gt;=</code>. Note that <code>=</code> assigns a value while <code>==</code> asks a question.
+            Combine conditions with <code>and</code>, <code>or</code> and <code>not</code>:
+          </p>
+          <pre><code>if quantity &gt; 0 and price &gt; 0:
+    print("valid row")</code></pre>
+
+          <h3>Loops</h3>
+          <p>A <code>for</code> loop runs its body once for each item:</p>
+          <pre><code>products = ["Notebook", "Pen", "Backpack"]
+
+for product in products:
+    print(product)</code></pre>
+          <p>
+            <code>range(3)</code> gives you 0, 1, 2 when you need a count rather than a collection. More usefully for
+            Project 1, <code>enumerate()</code> gives you the position <em>and</em> the item together:
+          </p>
+          <pre><code>for index, product in enumerate(products):
+    print(index, product)
+
+# 0 Notebook
+# 1 Pen
+# 2 Backpack</code></pre>
+          <p>
+            That index is how you tell the header row apart from the data rows: row 0 is the header, everything after
+            it is data.
+          </p>
+
+          <h3>Accumulating a total</h3>
+          <p>
+            Start a counter at zero outside the loop, add to it inside. This pattern is the whole of Task 1:
+          </p>
+          <pre><code>total = 0
+
+for quantity in [2, 10, 1]:
+    total = total + quantity      # or: total += quantity
+
+print(total)    # 13</code></pre>
+          <p>
+            <code>break</code> leaves the loop early; <code>continue</code> skips to the next item. <code>continue</code>
+            is how you skip a bad row without abandoning the file.
+          </p>
+          <p class="section-subtitle">
+            <strong>Why you need it:</strong> Task 0 uses <code>enumerate()</code> to find the header and the first three
+            data rows. Task 1 is a loop with counters.
+          </p>
+        </article>
+
+        <div class="tasks-grid">
+          <article class="task-card">
+            <div class="task-header">
+              <div class="task-header-main">
+                <h3 class="task-title">Try it · count and total</h3>
+                <p class="task-subtitle">The core loop of Project 1, on a list instead of a file.</p>
+              </div>
+              <div class="task-toggle"></div>
+            </div>
+            <div class="task-body">
+              <ul>
+                <li>Make a list of five rows as strings, each like <code>"201|Ana|Lamp|3|12.50"</code>.</li>
+                <li>Loop over it and keep two counters: how many rows, and total quantity.</li>
+                <li>Add a third counter for revenue: quantity times price, summed.</li>
+                <li>Use <code>enumerate()</code> to skip the first row as if it were a header.</li>
+              </ul>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5 · Functions -->
+    <section id="functions" class="section bg-light">
+      <div class="container section-inner">
+        <header class="section-header">
+          <h2><span class="icon-circle">5</span> Functions</h2>
+          <p class="section-subtitle">
+            A named piece of work you can run again. Functions are what make Task 3 possible instead of painful.
+          </p>
+        </header>
+
+        <article class="info-card">
+          <h3>Defining and calling</h3>
+          <pre><code>def line_total(quantity, price):
+    """Return the total value of one order line."""
+    return quantity * price
+
+
+print(line_total(10, 1.20))     # 12.0</code></pre>
+          <p>
+            The values in the brackets are <strong>parameters</strong> going in; <code>return</code> sends one value back out.
+            The text in triple quotes is a <strong>docstring</strong> — one sentence saying what the function does.
+          </p>
+
+          <h3>Default values</h3>
+          <p>Give a parameter a default and callers can leave it out:</p>
+          <pre><code>def parse_row(line, separator="|"):
+    return line.strip().split(separator)
+
+
+parse_row("124|Bob|Pen")            # uses "|"
+parse_row("124,Bob,Pen", ",")       # uses ","</code></pre>
+
+          <h3>Return, do not print</h3>
+          <p>
+            This distinction matters more than it looks. A function that <code>print</code>s has done its work and thrown
+            the result away. A function that <code>return</code>s hands the result to the caller, who can print it,
+            add it up, or pass it somewhere else:
+          </p>
+          <pre><code>def total_revenue(rows):        # returns — reusable
+    return sum(rows)
+
+def show_revenue(rows):         # prints — a dead end
+    print(sum(rows))</code></pre>
+          <p>
+            Keep calculation and printing separate. Calculate in one function, print in another.
+          </p>
+
+          <h3>Scope</h3>
+          <p>
+            A variable created inside a function only exists inside it. That is a feature: it means two functions cannot
+            quietly interfere with each other. Anything a function needs should come in as a parameter.
+          </p>
+          <p class="section-subtitle">
+            <strong>Why you need it:</strong> Task 1 suggests <code>parse_order_line(line)</code>, and Task 3 requires
+            <code>toolbox.py</code> to reuse your earlier functions rather than duplicate them. That only works if they
+            return values.
+          </p>
+        </article>
+
+        <div class="tasks-grid">
+          <article class="task-card">
+            <div class="task-header">
+              <div class="task-header-main">
+                <h3 class="task-title">Try it · one job each</h3>
+                <p class="task-subtitle">Split your loop into small named pieces.</p>
+              </div>
+              <div class="task-toggle"></div>
+            </div>
+            <div class="task-body">
+              <ul>
+                <li>Write <code>parse_row(line)</code> that strips, splits, and returns the list of fields.</li>
+                <li>Write <code>row_total(fields)</code> that converts and returns quantity times price.</li>
+                <li>Write <code>summarise(rows)</code> that returns the count and the revenue.</li>
+                <li>Print the summary from outside the functions, not inside them.</li>
+              </ul>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6 · Modules -->
+    <section id="modules" class="section">
+      <div class="container section-inner">
+        <header class="section-header">
+          <h2><span class="icon-circle">6</span> Modules and the <code>main()</code> pattern</h2>
+          <p class="section-subtitle">
+            Every <code>.py</code> file is a module. Files can borrow code from each other.
+          </p>
+        </header>
+
+        <article class="info-card">
+          <h3>Importing</h3>
+          <p>The standard library comes with Python — nothing to install:</p>
+          <pre><code>import sys
+import os
+
+print(sys.argv)
+print(os.path.exists("data/sample_orders.txt"))</code></pre>
+          <p>Or bring in just the piece you want:</p>
+          <pre><code>from os.path import exists
+
+print(exists("data/sample_orders.txt"))</code></pre>
+
+          <h3>Importing your own files</h3>
+          <p>
+            If <code>toolbox.py</code> sits next to <code>order_stats.py</code>, it can use its functions by name:
+          </p>
+          <pre><code>from order_stats import parse_order_line
+
+fields = parse_order_line("124|Bob|Pen|10|1.20")</code></pre>
+
+          <h3>What <code>if __name__ == "__main__":</code> actually does</h3>
+          <p>
+            Here is the problem it solves. When you import a file, Python <em>runs</em> that file top to bottom to find
+            out what is in it. Any loose code at the bottom therefore executes during the import — which you almost
+            never want.
+          </p>
+          <p>
+            Python sets a variable <code>__name__</code> in every module. It equals <code>"__main__"</code> when the file
+            is the one you launched, and the module's own name when it was imported. So this line means:
+            <em>run the following only when I am the script, not when someone imports me.</em>
+          </p>
+          <pre><code>def main():
+    print("doing the real work")
+
+
+if __name__ == "__main__":
+    main()</code></pre>
+          <p class="section-subtitle">
+            <strong>Why you need it:</strong> Task 3 imports your scripts from <code>toolbox.py</code>. Without this guard,
+            importing them would run them.
+          </p>
+        </article>
+
+        <div class="tasks-grid">
+          <article class="task-card">
+            <div class="task-header">
+              <div class="task-header-main">
+                <h3 class="task-title">Try it · see the guard work</h3>
+                <p class="task-subtitle">Prove to yourself what the guard prevents.</p>
+              </div>
+              <div class="task-toggle"></div>
+            </div>
+            <div class="task-body">
+              <ul>
+                <li>Create <code>helper.py</code> with a function and, at the bottom, a bare
+                  <code>print("helper is running")</code>.</li>
+                <li>Create <code>runner.py</code> that imports the function from <code>helper</code>.</li>
+                <li>Run <code>python3 runner.py</code>. Notice the helper's print appears anyway.</li>
+                <li>Wrap the print in a <code>main()</code> plus the guard, and run it again.</li>
+              </ul>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7 · Files -->
+    <section id="files" class="section bg-light">
+      <div class="container section-inner">
+        <header class="section-header">
+          <h2><span class="icon-circle">7</span> Reading files</h2>
+          <p class="section-subtitle">
+            The bridge between everything above and the actual data in Project 1.
+          </p>
+        </header>
+
+        <article class="info-card">
+          <h3>Open it the safe way</h3>
+          <p>
+            <code>open()</code> gives you a file object; <code>with</code> guarantees it gets closed again, even if
+            something fails partway through. Always use <code>with</code>:
+          </p>
+          <pre><code>with open("data/sample_orders.txt") as f:
+    contents = f.read()
+
+print(contents)</code></pre>
+          <p>
+            The default mode is read. You will also see <code>"w"</code> for write and <code>"a"</code> for append,
+            but Project 1 only reads.
+          </p>
+
+          <h3>Line by line</h3>
+          <p>Reading the whole file at once is fine for small files; looping is the habit to build:</p>
+          <pre><code>with open("data/sample_orders.txt") as f:
+    for line in f:
+        print(line.strip())</code></pre>
+          <p>
+            Every line still carries its <code>\n</code> at the end, which is why <code>.strip()</code> appears in
+            almost every example. Forget it and your last field ends up as <code>"1.20\n"</code>, which
+            <code>float()</code> handles but comparisons do not.
+          </p>
+
+          <h3>Header plus data, together at last</h3>
+          <pre><code>with open("data/sample_orders.txt") as f:
+    for index, line in enumerate(f):
+        if index == 0:
+            print("header:", line.strip())
+            continue
+
+        fields = line.strip().split("|")
+        print(fields)</code></pre>
+
+          <h3>Where is the file?</h3>
+          <p>
+            <code>"data/sample_orders.txt"</code> is a <strong>relative path</strong> — relative to wherever you ran the
+            command, not to where the script lives. Running from your repo root and from inside
+            <code>project01/</code> will give different results. Pick one and be consistent; the project pages assume
+            you run from the repo root.
+          </p>
+          <p class="section-subtitle">
+            <strong>Why you need it:</strong> this is Task 0 in full, and the first half of Task 1.
+          </p>
+        </article>
+
+        <div class="tasks-grid">
+          <article class="task-card">
+            <div class="task-header">
+              <div class="task-header-main">
+                <h3 class="task-title">Try it · read a real file</h3>
+                <p class="task-subtitle">Make your own tiny data file and take it apart.</p>
+              </div>
+              <div class="task-toggle"></div>
+            </div>
+            <div class="task-body">
+              <ul>
+                <li>Create <code>books.txt</code> with a header <code>title|author|pages</code> and four rows.</li>
+                <li>Print the header, then the number of data rows.</li>
+                <li>Print the total number of pages across all books.</li>
+                <li>Print the title of the longest book.</li>
+              </ul>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8 · Errors -->
+    <section id="errors" class="section">
+      <div class="container section-inner">
+        <header class="section-header">
+          <h2><span class="icon-circle">8</span> When things go wrong</h2>
+          <p class="section-subtitle">
+            Errors are information, not failure. Learning to read them is a real skill.
+          </p>
+        </header>
+
+        <article class="info-card">
+          <h3>Read the traceback from the bottom</h3>
+          <p>
+            The last line names the error type and describes the problem. The lines above it show how Python got there,
+            most recent last. Start at the bottom and work up only if you need to:
+          </p>
+          <pre><code>Traceback (most recent call last):
+  File "order_stats.py", line 12, in &lt;module&gt;
+    quantity = int(fields[3])
+ValueError: invalid literal for int() with base 10: 'ten'</code></pre>
+          <p>That message tells you exactly what happened: something said <code>ten</code> where a number belonged.</p>
+
+          <h3>The four you will meet this week</h3>
+          <ul class="study-list">
+            <li><code>FileNotFoundError</code> – wrong path, or wrong folder.</li>
+            <li><code>ValueError</code> – <code>int()</code> or <code>float()</code> got text it cannot convert.</li>
+            <li><code>IndexError</code> – you asked for <code>fields[4]</code> and the row only had four fields.</li>
+            <li><code>TypeError</code> – you tried to do arithmetic on a string you forgot to convert.</li>
+          </ul>
+
+          <h3>Handling instead of crashing</h3>
+          <p>
+            <code>try</code> runs the risky code; <code>except</code> catches one specific type of failure and decides
+            what to do about it. Catch the specific error, not everything:
+          </p>
+          <pre><code>invalid = 0
+
+for line in lines:
+    fields = line.strip().split("|")
+    try:
+        quantity = int(fields[3])
+        price = float(fields[4])
+    except (ValueError, IndexError):
+        invalid += 1
+        continue
+
+    total += quantity * price</code></pre>
+          <p>The row is counted as invalid, skipped, and the file keeps going. That is exactly what Task 2 asks for.</p>
+
+          <h3>Failing on purpose</h3>
+          <p>
+            Some problems are not recoverable. If the file does not exist, say so clearly and stop with a non-zero
+            exit code, which is how command-line tools signal failure:
+          </p>
+          <pre><code>import sys
+
+try:
+    with open(path) as f:
+        ...
+except FileNotFoundError:
+    print(f"Error: could not open {path}")
+    sys.exit(1)</code></pre>
+          <p class="section-subtitle">
+            <strong>Why you need it:</strong> Task 0 requires a clear message and a non-zero exit. Task 2 requires
+            counting invalid rows without crashing.
+          </p>
+        </article>
+
+        <div class="tasks-grid">
+          <article class="task-card">
+            <div class="task-header">
+              <div class="task-header-main">
+                <h3 class="task-title">Try it · break it deliberately</h3>
+                <p class="task-subtitle">Cause each error, then handle it.</p>
+              </div>
+              <div class="task-toggle"></div>
+            </div>
+            <div class="task-body">
+              <ul>
+                <li>Point your script at a filename that does not exist. Read the traceback.</li>
+                <li>Add a row to <code>books.txt</code> where pages says <code>many</code>.</li>
+                <li>Add a row missing its last field entirely.</li>
+                <li>Handle both bad rows, count them, and print
+                  <code>Processed 4 rows, skipped 2 invalid</code>.</li>
+              </ul>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 9 · CLI -->
+    <section id="cli" class="section bg-light">
+      <div class="container section-inner">
+        <header class="section-header">
+          <h2><span class="icon-circle">9</span> Command-line arguments</h2>
+          <p class="section-subtitle">
+            Stop editing your script to change which file it reads. Tell it from outside.
+          </p>
+        </header>
+
+        <article class="info-card">
+          <h3>The simple way: <code>sys.argv</code></h3>
+          <p>
+            <code>sys.argv</code> is a plain list of what you typed. Position 0 is the script name; everything after
+            is an argument:
+          </p>
+          <pre><code>import sys
+
+print(sys.argv)
+
+# $ python3 info.py data/sample_orders.txt
+# ['info.py', 'data/sample_orders.txt']</code></pre>
+          <pre><code>if len(sys.argv) &lt; 2:
+    print("Usage: python3 info.py PATH")
+    sys.exit(1)
+
+path = sys.argv[1]</code></pre>
+          <p>
+            Notice the length check. Reaching for <code>sys.argv[1]</code> when nothing was typed is an
+            <code>IndexError</code>.
+          </p>
+
+          <h3>The grown-up way: <code>argparse</code></h3>
+          <p>
+            <code>argparse</code> handles named options, defaults, type conversion and a generated
+            <code>--help</code> screen for you:
+          </p>
+          <pre><code>import argparse
+
+parser = argparse.ArgumentParser(description="Summarise an orders file")
+parser.add_argument("--file", default="data/sample_orders.txt")
+parser.add_argument("--limit", type=int, default=None)
+
+args = parser.parse_args()
+
+print(args.file)
+print(args.limit)</code></pre>
+          <pre><code>python3 order_stats.py
+python3 order_stats.py --file data/other.txt --limit 5
+python3 order_stats.py --help</code></pre>
+          <p>
+            <code>default=</code> means the script runs with no arguments at all. <code>type=int</code> means
+            <code>args.limit</code> arrives as a number, already converted.
+          </p>
+
+          <h3>Subcommands, briefly</h3>
+          <p>
+            Task 3 wants <code>toolbox.py info ...</code> and <code>toolbox.py stats ...</code>. You can do this by
+            checking <code>sys.argv[1]</code> against the word <code>"info"</code> or <code>"stats"</code> and calling
+            the matching function — that is enough. If you want the polished version, look up
+            <code>parser.add_subparsers()</code>.
+          </p>
+          <p class="section-subtitle">
+            <strong>Why you need it:</strong> Task 0 takes a path argument, Task 2 adds <code>--file</code> and
+            <code>--limit</code>, Task 3 routes subcommands.
+          </p>
+        </article>
+
+        <div class="tasks-grid">
+          <article class="task-card">
+            <div class="task-header">
+              <div class="task-header-main">
+                <h3 class="task-title">Try it · make your reader configurable</h3>
+                <p class="task-subtitle">Same script, different inputs, no editing.</p>
+              </div>
+              <div class="task-toggle"></div>
+            </div>
+            <div class="task-body">
+              <ul>
+                <li>Take your books script and accept the path via <code>sys.argv</code>.</li>
+                <li>Handle the case where no path is given: usage message, exit code 1.</li>
+                <li>Rewrite it with <code>argparse</code>, defaulting to <code>books.txt</code>.</li>
+                <li>Add <code>--limit</code> and stop after that many data rows.</li>
+                <li>Run <code>--help</code> and read what argparse built for you.</li>
+              </ul>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 10 · Putting it together -->
+    <section id="together" class="section">
+      <div class="container section-inner">
+        <header class="section-header">
+          <h2><span class="icon-circle">10</span> Putting it together</h2>
+          <p class="section-subtitle">
+            One script using every idea above. It is the shape of Project 1, on different data — so read it as a
+            pattern, not an answer to copy.
+          </p>
+        </header>
+
+        <article class="info-card">
+          <h3>The data: <code>books.txt</code></h3>
+          <pre><code>title|author|pages
+The Hobbit|Tolkien|310
+Dune|Herbert|412
+Sula|Morrison|174
+Broken Glass|Unknown|many</code></pre>
+
+          <h3>The script: <code>book_stats.py</code></h3>
+          <pre><code>import argparse
+import sys
+
+
+def parse_book_line(line):
+    """Turn one raw line into (title, author, pages)."""
+    title, author, pages = line.strip().split("|")
+    return title, author, int(pages)
+
+
+def summarise(path):
+    """Return counts and totals for the file at path."""
+    books = 0
+    invalid = 0
+    total_pages = 0
+
+    with open(path) as f:
+        for index, line in enumerate(f):
+            if index == 0:
+                continue
+
+            try:
+                title, author, pages = parse_book_line(line)
+            except ValueError:
+                invalid += 1
+                continue
+
+            books += 1
+            total_pages += pages
+
+    return books, invalid, total_pages
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Summarise a books file")
+    parser.add_argument("--file", default="books.txt")
+    args = parser.parse_args()
+
+    try:
+        books, invalid, total_pages = summarise(args.file)
+    except FileNotFoundError:
+        print(f"Error: could not open {args.file}")
+        sys.exit(1)
+
+    print(f"Books read:   {books}")
+    print(f"Invalid rows: {invalid}")
+    print(f"Total pages:  {total_pages}")
+
+
+if __name__ == "__main__":
+    main()</code></pre>
+
+          <h3>What to notice</h3>
+          <ul class="study-list">
+            <li><code>parse_book_line</code> does one job and returns a value. Nothing prints inside it.</li>
+            <li><code>summarise</code> returns three numbers. It does not know or care that they will be printed.</li>
+            <li><code>main</code> is the only place that talks to the user.</li>
+            <li>The bad row is caught, counted, and skipped — the file still finishes.</li>
+            <li>Both the unpacking failure and the <code>int()</code> failure raise <code>ValueError</code>, so one
+              <code>except</code> covers both.</li>
+          </ul>
+          <p class="section-subtitle">
+            That separation is why Task 3 is easy: <code>toolbox.py</code> can import <code>summarise</code> and use
+            it without inheriting any printing.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <!-- 11 · Concept to task map -->
+    <section id="map" class="section bg-light">
+      <div class="container section-inner">
+        <header class="section-header">
+          <h2><span class="icon-circle">11</span> Concept → task map</h2>
+          <p class="section-subtitle">
+            Stuck on a task? This is where to come back to.
+          </p>
+        </header>
+
+        <div class="section-card-grid">
+          <article class="info-card">
+            <h3>Task 0 · print file summary</h3>
+            <ul class="study-list">
+              <li><a href="#files">7 · Reading files</a></li>
+              <li><a href="#flow">4 · <code>enumerate()</code></a></li>
+              <li><a href="#cli">9 · <code>sys.argv</code></a></li>
+              <li><a href="#errors">8 · <code>FileNotFoundError</code>, <code>sys.exit(1)</code></a></li>
+            </ul>
+          </article>
+
+          <article class="info-card">
+            <h3>Task 1 · basic stats</h3>
+            <ul class="study-list">
+              <li><a href="#strings">2 · <code>.strip()</code> and <code>.split("|")</code></a></li>
+              <li><a href="#types">1 · <code>int()</code> and <code>float()</code></a></li>
+              <li><a href="#flow">4 · loops and counters</a></li>
+              <li><a href="#functions">5 · a helper that returns</a></li>
+            </ul>
+          </article>
+
+          <article class="info-card">
+            <h3>Task 2 · options and error handling</h3>
+            <ul class="study-list">
+              <li><a href="#cli">9 · <code>argparse</code>, <code>--file</code>, <code>--limit</code></a></li>
+              <li><a href="#errors">8 · <code>try</code> / <code>except</code>, counting invalid rows</a></li>
+              <li><a href="#functions">5 · separating logic from printing</a></li>
+            </ul>
+          </article>
+
+          <article class="info-card">
+            <h3>Task 3 · toolbox entry point</h3>
+            <ul class="study-list">
+              <li><a href="#modules">6 · imports and <code>__name__</code></a></li>
+              <li><a href="#functions">5 · returning instead of printing</a></li>
+              <li><a href="#cli">9 · subcommands</a></li>
+            </ul>
+          </article>
+
+          <article class="info-card">
+            <h3>Stretch · structured rows</h3>
+            <ul class="study-list">
+              <li><a href="#lists">3 · lists and unpacking</a></li>
+              <li><a href="#functions">5 · <code>parse_order_line()</code></a></li>
+              <li>Then continue into Project 2, where dictionaries take over.</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 12 · Checklist -->
+    <section id="checklist" class="section">
+      <div class="container section-inner">
+        <header class="section-header">
+          <h2><span class="icon-circle">12</span> Are you ready?</h2>
+          <p class="section-subtitle">
+            You are ready for Project 1 when you can do each of these without looking anything up.
+          </p>
+        </header>
+
+        <article class="info-card">
+          <h3>Self-check</h3>
+          <ul class="study-list">
+            <li>Run a script from the terminal and explain why a path failed.</li>
+            <li>Say why <code>"10" * 3</code> and <code>10 * 3</code> give different answers.</li>
+            <li>Turn <code>"124|Bob|Pen|10|1.20\n"</code> into five clean, correctly typed values.</li>
+            <li>Write a <code>for</code> loop that keeps a running total.</li>
+            <li>Use <code>enumerate()</code> to skip a header row.</li>
+            <li>Write a function that returns a value, and explain why that beats printing.</li>
+            <li>Explain what <code>if __name__ == "__main__":</code> prevents.</li>
+            <li>Read a file with <code>with open(...)</code> and handle a missing file cleanly.</li>
+            <li>Catch a <code>ValueError</code>, count it, and carry on with the next row.</li>
+            <li>Add a <code>--file</code> option with a sensible default.</li>
+          </ul>
+          <p class="section-subtitle">
+            Anything you hesitated on: go back to that section, then write the smallest script that proves you have it.
+          </p>
+
+          <div class="hero-actions">
+            <a href="../projects/01-python-essentials.html" class="btn btn-primary">Start Project 1</a>
+            <a href="#setup" class="btn btn-ghost">Back to the top</a>
+          </div>
+        </article>
+
+        <article class="info-card">
+          <h3>If you want to read further</h3>
+          <ul class="study-list">
+            <li><a href="https://docs.python.org/3/tutorial/" target="_blank" rel="noreferrer">Python official tutorial</a> – chapters 3 to 7 cover most of this page.</li>
+            <li><a href="https://docs.python.org/3/tutorial/inputoutput.html" target="_blank" rel="noreferrer">Input and output</a> – files and formatting.</li>
+            <li><a href="https://docs.python.org/3/tutorial/errors.html" target="_blank" rel="noreferrer">Errors and exceptions</a> – tracebacks and <code>try</code> / <code>except</code>.</li>
+            <li><a href="https://docs.python.org/3/library/argparse.html" target="_blank" rel="noreferrer">argparse documentation</a> – including subparsers.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer bg-midnight text-on-primary">
+    <div class="container footer-inner">
+      <div>
+        <span class="footer-title">Holberton Albania · Machine Learning Prep</span>
+        <p class="footer-text">Week 1 · Python foundations – from your first script to Project 1.</p>
+      </div>
+      <div class="footer-links">
+        <a href="../index.html#tutorials">Back to tutorials</a>
+        <a href="../projects/01-python-essentials.html">Project 1</a>
+        <a href="#top" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;">Back to top</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../assets/js/main.js"></script>
+</body>
+</html>
