@@ -711,6 +711,81 @@ pre::-webkit-scrollbar-thumb {
   border-radius: var(--radius-pill);
 }
 
+/* --- Copy button ------------------------------------------------------
+   main.js wraps every <pre> in .code-block and injects the button, so
+   nothing needs adding to the HTML. Without JS the code blocks render
+   exactly as before.                                                     */
+
+.code-block {
+  position: relative;
+  margin: var(--space-4) 0;
+}
+
+.code-block > pre {
+  margin: 0;
+  padding-right: 5rem;   /* keeps the first line clear of the button */
+}
+
+.code-copy {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.28rem 0.62rem;
+  border-radius: var(--radius-xs);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background-color: rgba(255, 255, 255, 0.07);
+  color: rgba(255, 255, 255, 0.72);
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  opacity: 1;
+  transition: opacity 0.15s ease-out, background-color 0.15s ease-out,
+              color 0.15s ease-out, border-color 0.15s ease-out;
+}
+
+.code-copy:hover {
+  background-color: rgba(255, 255, 255, 0.14);
+  color: var(--color-ice-white);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.code-copy:focus-visible {
+  outline: 2px solid var(--color-ice-white);
+  outline-offset: 2px;
+}
+
+/* Confirmed state */
+.code-copy.is-copied {
+  background-color: var(--color-peach);
+  border-color: var(--color-peach);
+  color: var(--color-midnight);
+}
+
+.code-copy.is-copied::before {
+  content: "✓";
+  font-size: 0.95em;
+  line-height: 1;
+}
+
+/* On pointer devices the button stays out of the way until it's wanted.
+   Touch devices have no hover, so there it is always visible. */
+@media (hover: hover) and (pointer: fine) {
+  .code-copy {
+    opacity: 0;
+  }
+
+  .code-block:hover .code-copy,
+  .code-copy:focus-visible,
+  .code-copy.is-copied {
+    opacity: 1;
+  }
+}
+
 /* Inline code sitting inside a heading shouldn't shrink the heading */
 h1 code, h2 code, h3 code, h4 code,
 .task-title code,

@@ -154,6 +154,90 @@
   }
 
   /* ========================================================================
+     Copy buttons on code blocks
+
+     Wraps each <pre> and injects a button. Uses the async Clipboard API
+     where it exists, and falls back to a hidden textarea — which matters
+     because the Clipboard API is unavailable on file:// pages, so the
+     button would silently do nothing when previewing locally.
+     ====================================================================== */
+
+  function initCodeCopy() {
+    var blocks = document.querySelectorAll("pre");
+
+    Array.prototype.forEach.call(blocks, function (pre) {
+      if (pre.parentNode && pre.parentNode.classList.contains("code-block")) return;
+
+      var wrapper = document.createElement("div");
+      wrapper.className = "code-block";
+      pre.parentNode.insertBefore(wrapper, pre);
+      wrapper.appendChild(pre);
+
+      var button = document.createElement("button");
+      button.type = "button";
+      button.className = "code-copy";
+      button.textContent = "Copy";
+      button.setAttribute("aria-label", "Copy this code to the clipboard");
+      wrapper.appendChild(button);
+
+      button.addEventListener("click", function () {
+        copyText(getCodeText(pre), button);
+      });
+    });
+  }
+
+  function getCodeText(pre) {
+    var code = pre.querySelector("code");
+    var text = (code || pre).textContent || "";
+    return text.replace(/\s+$/, "");
+  }
+
+  function copyText(text, button) {
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(text).then(
+        function () { confirmCopy(button, true); },
+        function () { legacyCopy(text, button); }
+      );
+      return;
+    }
+
+    legacyCopy(text, button);
+  }
+
+  function legacyCopy(text, button) {
+    var field = document.createElement("textarea");
+    field.value = text;
+    field.setAttribute("readonly", "");
+    field.style.position = "fixed";
+    field.style.top = "-1000px";
+    field.style.opacity = "0";
+
+    document.body.appendChild(field);
+    field.select();
+
+    var succeeded = false;
+    try {
+      succeeded = document.execCommand("copy");
+    } catch (error) {
+      succeeded = false;
+    }
+
+    document.body.removeChild(field);
+    confirmCopy(button, succeeded);
+  }
+
+  function confirmCopy(button, succeeded) {
+    button.textContent = succeeded ? "Copied" : "Press Ctrl+C";
+    button.classList.add("is-copied");
+
+    window.clearTimeout(button.resetTimer);
+    button.resetTimer = window.setTimeout(function () {
+      button.textContent = "Copy";
+      button.classList.remove("is-copied");
+    }, 1800);
+  }
+
+  /* ========================================================================
      In-page navigation
      ====================================================================== */
 
@@ -222,6 +306,7 @@
 
   document.addEventListener("DOMContentLoaded", function () {
     initTaskCards();
+    initCodeCopy();
     initAnchorLinks();
     handleInitialHash();
   });
