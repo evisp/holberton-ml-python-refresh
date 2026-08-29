@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Week 2 · JSON records – dictionaries, sets, and thinking in data</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body class="bg-light text-main">
+
+  <header class="site-header bg-white shadow-sm">
+    <div class="container header-inner">
+      <div class="brand">
+        <div class="brand-logo-circle bg-cherry text-on-primary">H</div>
+        <div class="brand-text">
+          <span class="brand-name">Holberton Albania</span>
+          <span class="brand-tagline">Python &amp; Data Refresh</span>
+        </div>
+      </div>
+      <nav class="nav">
+        <a href="../index.html#hero" class="nav-link">Home</a>
+        <a href="../index.html#projects" class="nav-link">Projects</a>
+        <a href="../index.html#tutorials" class="nav-link">Tutorials</a>
+        <a href="../index.html#how" class="nav-link">How it works</a>
+        <a href="../index.html#resources" class="nav-link">Resources</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero -->
+    <section class="section bg-white">
+      <div class="container">
+        <div class="project-hero project-hero-inner">
+          <p class="eyebrow">Week 2 tutorial</p>
+          <h1 class="project-hero-title">JSON records – dictionaries, sets, and thinking in data</h1>
+          <p class="project-hero-subtitle">
+            Project 2 hands you the function names and the progression, so this tutorial is mostly concepts.
+            Read it with a REPL open and the dataset loaded; there are three short checkpoints along the way,
+            and the real practice is the project itself.
+          </p>
+
+          <div class="project-hero-tags">
+            <span class="pill-tag"><span class="pill-tag-icon">📄</span> JSON</span>
+            <span class="pill-tag"><span class="pill-tag-icon">🔑</span> Dictionaries</span>
+            <span class="pill-tag"><span class="pill-tag-icon">📋</span> Comprehensions</span>
+            <span class="pill-tag"><span class="pill-tag-icon">🗂️</span> Indices</span>
+            <span class="pill-tag"><span class="pill-tag-icon">🧩</span> Sets</span>
+          </div>
+
+          <div class="info-strip">
+            <span class="info-pill">Reading time: 20–25 minutes</span>
+            <span class="info-pill">Assumes: Week 1 tutorial</span>
+            <span class="info-pill">Prepares you for: Project 2</span>
+          </div>
+
+          <div class="hero-actions">
+            <a href="#data" class="btn btn-primary">Start with the data</a>
+            <a href="../projects/02-data-structures.html" class="btn btn-ghost">Go straight to Project 2</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- How to use + contents -->
+    <section class="section bg-light">
+      <div class="container section-inner">
+        <div class="section-card-grid">
+          <article class="info-card">
+            <h3>How this one differs</h3>
+            <p class="section-subtitle">
+              Week 1 was heavy on exercises because Project 1 left the shape of the code up to you. Project 2
+              already gives you function names and a step-by-step progression, so this page concentrates on
+              the ideas behind them.
+            </p>
+            <ul class="study-list">
+              <li>Every example runs against the real <code>todos.json</code>.</li>
+              <li>Three checkpoints, five lines of typing each.</li>
+              <li>The hands-on work is Project 2 itself.</li>
+            </ul>
+            <p class="section-subtitle">
+              Because we work on the real dataset, one or two answers to Task 1 become visible. That is a
+              deliberate trade: seeing the shape of a correct result on data you know matters more here than
+              keeping every answer hidden.
+            </p>
+          </article>
+
+          <article class="info-card">
+            <h3>What is in here</h3>
+            <ul class="study-list">
+              <li><a href="#data">0 · Get the data</a></li>
+              <li><a href="#records">1 · From lines to records</a></li>
+              <li><a href="#dicts">2 · Dictionaries</a></li>
+              <li><a href="#lists-of-dicts">3 · Lists of dictionaries</a></li>
+              <li><a href="#json">4 · JSON and Python, side by side</a></li>
+              <li><a href="#comprehensions">5 · Comprehensions</a></li>
+              <li><a href="#counting">6 · Counting and grouping</a></li>
+              <li><a href="#indices">7 · Indices, and why they matter</a></li>
+              <li><a href="#sets">8 · Sets</a></li>
+              <li><a href="#questions">9 · Asking questions of a collection</a></li>
+              <li><a href="#together">10 · Putting it together</a></li>
+              <li><a href="#gotchas">11 · Gotchas</a></li>
+              <li><a href="#menu">12 · Optional: a menu loop</a></li>
+              <li><a href="#map">13 · Concept → task map</a></li>
+              <li><a href="#checklist">14 · Are you ready?</a></li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 0 · Get the data -->
+    <section id="data" class="section">
+      <div class="container section-inner">
+        <header class="section-header">
+          <h2><span class="icon-circle">0</span> Get the data</h2>
+          <p class="section-subtitle">
+            Two minutes now, and every example on this page is something you can run rather than read.
+          </p>
+        </header>
+
+        <article class="info-card">
+          <h3>Download it once</h3>
+          <p>From the root of your repository:</p>
+          <pre><code>mkdir -p project02/data
+curl https://jsonplaceholder.typicode.com/todos -o project02/data/todos.json</code></pre>
+          <p>
+            The data comes from JSONPlaceholder, a public fake API meant for exactly this kind of practice.
+            You download it once and work offline from then on.
+          </p>
+
+          <h3>Open a REPL with it loaded</h3>
+          <p>
+            Keep this session open while you read. Everything below assumes <code>todos</code> exists:
+          </p>
+          <pre><code>python3</code></pre>
+          <pre><code>&gt;&gt;&gt; import json
+&gt;&gt;&gt; with open("project02/data/todos.json") as f:
+...     todos = json.load(f)
+...
+&gt;&gt;&gt; len(todos)
+200</code></pre>
+          <p>
+            If you see 200, you are ready. If you get a <code>FileNotFoundError</code>, you are in the wrong
+            folder — the same lesson from Week 1, and it will keep coming back.
+          </p>
+
+          <h3>What one record looks like</h3>
+          <pre><code>&gt;&gt;&gt; todos[0]
+{'userId': 1, 'id': 1, 'title': 'delectus aut autem', 'completed': False}</code></pre>
+          <p>
+            Four fields, and the whole file is 200 of these. Ten users, twenty todos each. The titles are
+            filler Latin, which is fine — the structure is the point, not the content.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <!-- 1 · From lines to records -->
+    <section id="records" class="section bg-light">
+      <div class="container section-inner">
+        <header class="section-header">
+          <h2><span class="icon-circle">1</span> From lines to records</h2>
+          <p class="section-subtitle">
+            The single idea that separates Project 2 from Project 1.
+          </p>
+        </header>
+
+        <article class="info-card">
+          <h3>Last week you counted positions</h3>
+          <p>In Project 1 a row of data became a list, and you had to remember what each slot meant:</p>
+          <pre><code>fields = "124|Bob|Pen|10|1.20".split("|")
+
+quantity = int(fields[3])     # …the fourth one is quantity. Probably.</code></pre>
+          <p>
+            That works, but it is fragile. Add a column and every index shifts. Come back in a month and
+            <code>fields[3]</code> means nothing to you.
+          </p>
+
+          <h3>This week the fields have names</h3>
+          <pre><code>todo = {"userId": 1, "id": 1, "title": "delectus aut autem", "completed": False}
+
+print(todo["completed"])     # False</code></pre>
+          <p>
+            A <strong>record</strong> is a single thing — one todo, one order, one patient, one row — with its
+            fields addressed by name instead of position. The name travels with the data, so the code stops
+            depending on column order.
+          </p>
+
+          <h3>Why JSON</h3>
+          <p>
+            JSON is how records travel between systems. Almost every API returns it, most config files use it,
+            and it maps directly onto Python's own lists and dictionaries, so loading it needs no translation
+            layer. That is why Project 2 uses it as the bridge.
+          </p>
+          <p>
+            One sentence looking ahead: when you reach pandas in Project 4, a DataFrame is essentially a list
+            of records with a fast engine underneath. Everything you learn this week about grouping, indexing
+            and filtering reappears there with different syntax. Learning it by hand first is the point.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <!-- 2 · Dictionaries -->
+    <section id="dicts" class="section">
+      <div class="container section-inner">
+        <header class="section-header">
+          <h2><span class="icon-circle">2</span> Dictionaries</h2>
+          <p class="section-subtitle">
+            A collection of key → value pairs. The workhorse of the whole project.
+          </p>
+        </header>
+
+        <article class="info-card">
+          <h3>Creating and reading</h3>
+          <pre><code>todo = {
+    "userId": 1,
+    "id": 1,
+    "title": "delectus aut autem",
+    "completed": False,
+}
+
+print(todo["title"])        # delectus aut autem
+print(len(todo))            # 4</code></pre>
+          <p>
+            Keys are usually strings. Values can be anything — including other dictionaries and lists, which is
+            how nested data gets built.
+          </p>
+
+          <h3><code>[]</code> versus <code>.get()</code></h3>
+          <p>
+            Square brackets raise a <code>KeyError</code> if the key is missing. <code>.get()</code> returns
+            <code>None</code> instead, or a default you choose:
+          </p>
+          <pre><code>print(todo["priority"])            # KeyError: 'priority'
+print(todo.get("priority"))        # None
+print(todo.get("priority", "n/a")) # n/a</code></pre>
+          <p>
+            Which one you want depends on the situation, and the choice is not automatic. If a missing field
+            means your data is broken, let the <code>KeyError</code> happen — a loud failure is better than a
+            silent <code>None</code> spreading through your results. If a missing field is normal, use
+            <code>.get()</code> with a sensible default.
+          </p>
+
+          <h3>Adding, updating, checking</h3>
+          <pre><code>todo["priority"] = "high"       # adds it
+todo["completed"] = True        # overwrites it
+
+print("title" in todo)          # True   ← checks keys, not values
+print("delectus" in todo)       # False</code></pre>
+
+          <h3>Looping over one</h3>
+          <pre><code>for key in todo:                 # keys by default
+    print(key)
+
+for key, value in todo.items():  # both at once — the useful one
+    print(key, "=", value)
+
+print(list(todo.keys()))         # ['userId', 'id', 'title', 'completed']
+print(list(todo.values()))       # [1, 1, 'delectus aut autem', True]</code></pre>
+
+          <h3>Nesting</h3>
+          <p>
+            The todos are flat, which makes them a gentle start. Real API data rarely is, and you reach into it
+            one step at a time:
+          </p>
+          <pre><code>user = {
+    "id": 1,
+    "name": "Leanne",
+    "address": {"city": "Gwenborough", "zipcode": "92998"},
+}
+
+print(user["address"]["city"])              # Gwenborough
+print(user.get("address", {}).get("city"))  # safe if address might be missing</code></pre>
+        </article>
+      </div>
+    </section>
+
+    <!-- 3 · Lists of dicts -->
+    <section id="lists-of-dicts" class="section bg-light">
+      <div class="container section-inner">
+        <header class="section-header">
+          <h2><span class="icon-circle">3</span> Lists of dictionaries</h2>
+          <p class="section-subtitle">
+            The shape of almost every dataset you will meet. Worth slowing down for.
+          </p>
+        </header>
+
+        <article class="info-card">
+          <h3>Two levels, not one</h3>
+          <p>
+            <code>todos</code> is a list. Each item in it is a dictionary. So reaching a single value means two
+            steps — pick the record, then pick the field:
+          </p>
+          <pre><code>&gt;&gt;&gt; type(todos)
+&lt;class 'list'&gt;
+
+&gt;&gt;&gt; type(todos[0])
+&lt;class 'dict'&gt;
+
+&gt;&gt;&gt; todos[0]["title"]
+'delectus aut autem'</code></pre>
+          <p>
+            Read <code>todos[0]["title"]</code> left to right: the first record, then its title. Almost every
+            error in this project comes from confusing the two levels — asking a list for a field name, or a
+            dictionary for position 0.
+          </p>
+
+          <h3>Looping over records</h3>
+          <pre><code>for todo in todos:
+    print(todo["title"])</code></pre>
+          <p>
+            Inside the loop, <code>todo</code> is one dictionary. That is the mental picture to hold for the
+            rest of the project: <em>the loop hands me one record at a time, and I ask it questions by name.</em>
+          </p>
+
+          <h3>Filtering with a loop</h3>
+          <pre><code>completed = []
+
+for todo in todos:
+    if todo["completed"]:
+        completed.append(todo)
+
+print(len(completed))      # 90</code></pre>
+          <p>
+            Ninety of the two hundred todos are done. Note that <code>todo["completed"]</code> is already
+            <code>True</code> or <code>False</code>, so it goes straight into the <code>if</code> — no
+            comparison needed. Writing <code>if todo["completed"] == True</code> works but reads worse.
+          </p>
+        </article>
+
+        <div class="tasks-grid">
+          <article class="task-card">
+            <div class="task-header">
+              <div class="task-header-main">
+                <h3 class="task-title">Checkpoint 1 · get comfortable with the two levels</h3>
+                <p class="task-subtitle">Five lines in the REPL. Do these before reading on.</p>
+              </div>
+              <div class="task-toggle"></div>
+            </div>
+            <div class="task-body">
+              <ul>
+                <li>Print the title of the last todo in the list.</li>
+                <li>Print how many todos belong to user 3.</li>
+                <li>Print the <code>id</code> of the first todo that is already completed.</li>
+                <li>Now try <code>todos["title"]</code> on purpose, and read the error. That message is one
+                  you will see again.</li>
+              </ul>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4 · JSON and Python -->
+    <section id="json" class="section">
+      <div class="container section-inner">
+        <header class="section-header">
+          <h2><span class="icon-circle">4</span> JSON and Python, side by side</h2>
+          <p class="section-subtitle">
+            What the <code>json</code> module actually does when it loads a file.
+          </p>
+        </header>
+
+        <article class="info-card">
+          <h3>Four functions, two pairs</h3>
+          <ul class="study-list">
+            <li><code>json.load(f)</code> – read from an open <strong>f</strong>ile</li>
+            <li><code>json.loads(text)</code> – read from a <strong>s</strong>tring</li>
+            <li><code>json.dump(data, f)</code> – write to a file</li>
+            <li><code>json.dumps(data)</code> – write to a string</li>
+          </ul>
+          <p>
+            The <code>s</code> is the only difference and it stands for string. Mixing them up is a rite of
+            passage; the error message will mention a <code>str</code> where a file was expected, or the reverse.
+          </p>
+          <pre><code>import json
+
+with open("project02/data/todos.json") as f:
+    todos = json.load(f)
+
+with open("out.json", "w", encoding="utf-8") as f:
+    json.dump(todos[:5], f, indent=2)</code></pre>
+          <p>
+            <code>indent=2</code> makes the output readable instead of one enormous line. Always pass
+            <code>encoding="utf-8"</code> when writing, so names with accents survive the trip.
+          </p>
+
+          <h3>How the types translate</h3>
+          <ul class="study-list">
+            <li>JSON object <code>{...}</code> → Python <code>dict</code></li>
+            <li>JSON array <code>[...]</code> → Python <code>list</code></li>
+            <li>JSON string → <code>str</code></li>
+            <li>JSON number → <code>int</code> or <code>float</code></li>
+            <li>JSON <code>true</code> / <code>false</code> → <code>True</code> / <code>False</code></li>
+            <li>JSON <code>null</code> → <code>None</code></li>
+          </ul>
+          <p>
+            This is the quiet win of Week 2 over Week 1. Reading a text file gave you strings and nothing else,
+            so you converted everything by hand. <code>json.load</code> hands back numbers as numbers and
+            booleans as booleans — no <code>int()</code> anywhere in this project.
+          </p>
+
+          <h3>The one that catches people</h3>
+          <p>
+            JSON object keys are always strings. Python dictionary keys need not be. So if you build a
+            dictionary keyed by <code>userId</code> — an integer — and write it to JSON, those keys come back
+            as strings:
+          </p>
+          <pre><code>counts = {1: 11, 2: 8}
+
+restored = json.loads(json.dumps(counts))
+print(restored)          # {'1': 11, '2': 8}   ← keys are strings now
+print(restored[1])       # KeyError: 1</code></pre>
+          <p>
+            It will not bite you inside Project 2, since you only read JSON. It will bite you the first time you
+            save an index and load it back, so it is worth knowing the shape of the surprise in advance.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <!-- 5 · Comprehensions -->
+    <section id="comprehensions" class="section bg-light">
+      <div class="container section-inner">
+        <header class="section-header">
+          <h2><span class="icon-circle">5</span> Comprehensions</h2>
+          <p class="section-subtitle">
+            Not new logic — a shorter way to write a loop you already understand.
+          </p>
+        </header>
+
+        <article class="info-card">
+          <h3>The same thing, twice</h3>
+          <p>Here is the filter from section 3, written the long way:</p>
+          <pre><code>completed = []
+
+for todo in todos:
+    if todo["completed"]:
+        completed.append(todo)</code></pre>
+          <p>And here it is as a comprehension:</p>
+          <pre><code>completed = [todo for todo in todos if todo["completed"]]</code></pre>
+          <p>
+            Identical result. Read it in the same order you wrote the loop: <em>for each todo in todos, if it is
+            completed, keep the todo.</em> The expression at the front is what lands in the new list; the
+            <code>for</code> and <code>if</code> follow in loop order.
+          </p>
+
+          <h3>Keeping one field instead of the record</h3>
+          <p>Change the front of the comprehension and you get a list of values rather than records:</p>
+          <pre><code>titles = [todo["title"] for todo in todos]
+user_ids = [todo["userId"] for todo in todos]
+
+print(len(titles))            # 200
+print(user_ids[:5])           # [1, 1, 1, 1, 1]</code></pre>
+
+          <h3>Filtering by a value</h3>
+          <pre><code>user_3 = [todo for todo in todos if todo["userId"] == 3]
+
+print(len(user_3))            # 20</code></pre>
+          <p>
+            That one line is most of <code>get_todos_by_user</code> from Task 1. Wrapping it in a function with
+            <code>user_id</code> as a parameter is the actual task.
+          </p>
+
+          <h3>Sets and dicts too</h3>
+          <p>Curly braces build a set; curly braces with a colon build a dictionary:</p>
+          <pre><code>user_ids = {todo["userId"] for todo in todos}
+print(sorted(user_ids))       # [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+by_id = {todo["id"]: todo["title"] for todo in todos}
+print(by_id[7])               # illo expedita consequatur quia in</code></pre>
+
+          <h3>When not to use one</h3>
+          <p>
+            A comprehension that needs a second condition, a nested loop, and a conditional expression is
+            harder to read than the loop it replaced. If you find yourself squinting at your own line, write
+            the loop. Clarity beats compression, and nobody is scoring you on line count.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <!-- 6 · Counting and grouping -->
+    <section id="counting" class="section">
+      <div class="container section-inner">
+        <header class="section-header">
+          <h2><span class="icon-circle">6</span> Counting and grouping</h2>
+          <p class="section-subtitle">
+            Four routes to the same answer. Knowing all four is more useful than picking a favourite.
+          </p>
+        </header>
+
+        <article class="info-card">
+          <h3>The problem</h3>
+          <p>
+            Count how many todos each user has completed. The result should be a dictionary mapping
+            <code>userId</code> to a number.
+          </p>
+
+          <h3>Route 1 · by hand with <code>.get()</code></h3>
+          <pre><code>counts = {}
+
+for todo in todos:
+    if todo["completed"]:
+        user = todo["userId"]
+        counts[user] = counts.get(user, 0) + 1
+
+print(counts)</code></pre>
+          <pre><code>{1: 11, 2: 8, 3: 7, 4: 6, 5: 12, 6: 6, 7: 9, 8: 11, 9: 8, 10: 12}</code></pre>
+          <p>
+            The <code>.get(user, 0)</code> is the whole trick: the first time a user appears there is no entry
+            yet, so we start from zero instead of crashing. Write this version at least once — it is the one
+            that teaches the idea.
+          </p>
+
+          <h3>Route 2 · <code>setdefault</code></h3>
+          <pre><code>counts = {}
+
+for todo in todos:
+    if todo["completed"]:
+        counts.setdefault(todo["userId"], 0)
+        counts[todo["userId"]] += 1</code></pre>
+          <p>Same idea, stated differently. Useful to recognise; rarely the clearest choice.</p>
+
+          <h3>Route 3 · <code>defaultdict</code></h3>
+          <pre><code>from collections import defaultdict
+
+counts = defaultdict(int)
+
+for todo in todos:
+    if todo["completed"]:
+        counts[todo["userId"]] += 1</code></pre>
+          <p>
+            A <code>defaultdict(int)</code> invents a zero the moment you touch a missing key, so the special
+            case disappears. It really is a dictionary — but note that merely reading a missing key creates it,
+            which occasionally surprises people. <code>dict(counts)</code> converts back if you want a plain one.
+          </p>
+
+          <h3>Route 4 · <code>Counter</code></h3>
+          <pre><code>from collections import Counter
+
+counts = Counter(todo["userId"] for todo in todos if todo["completed"])
+
+print(counts.most_common(3))    # [(5, 12), (10, 12), (1, 11)]</code></pre>
+          <p>
+            <code>Counter</code> counts things for you and adds <code>most_common()</code> on top. Shortest to
+            write, and the right tool when counting is genuinely all you need.
+          </p>
+
+          <h3>Grouping is the same move</h3>
+          <p>
+            Counting keeps a number per key. Grouping keeps a <em>list</em> per key. Structurally identical:
+          </p>
+          <pre><code>from collections import defaultdict
+
+by_user = defaultdict(list)
+
+for todo in todos:
+    by_user[todo["userId"]].append(todo)
+
+print(len(by_user))        # 10
+print(len(by_user[3]))     # 20</code></pre>
+          <p>
+            Hold on to that symmetry. Once you see counting and grouping as the same loop with a different
+            accumulator, Task 2 stops being a new problem.
+          </p>
+        </article>
+
+        <div class="tasks-grid">
+          <article class="task-card">
+            <div class="task-header">
+              <div class="task-header-main">
+                <h3 class="task-title">Checkpoint 2 · count something else</h3>
+                <p class="task-subtitle">Same pattern, different question.</p>
+              </div>
+              <div class="task-toggle"></div>
+            </div>
+            <div class="task-body">
+              <ul>
+                <li>Count how many todos each user has <em>not</em> completed. The ten numbers should each be
+                  20 minus the completed count above.</li>
+                <li>Do it once with <code>.get()</code> and once with <code>Counter</code>.</li>
+                <li>Build a dictionary mapping <code>userId</code> to the list of that user's unfinished
+                  titles.</li>
+                <li>Which user has the most unfinished work? (<code>most_common(1)</code> will tell you.)</li>
+              </ul>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7 · Indices -->
+    <section id="indices" class="section bg-light">
+      <div class="container section-inner">
+        <header class="section-header">
+          <h2><span class="icon-circle">7</span> Indices, and why they matter</h2>
+          <p class="section-subtitle">
+            Task 2 is built on one distinction. Here it is.
+          </p>
+        </header>
+
+        <article class="info-card">
+          <h3>The problem with scanning</h3>
+          <p>Finding a todo by its id means walking the list until you hit it:</p>
+          <pre><code>def find_todo(todos, todo_id):
+    for todo in todos:
+        if todo["id"] == todo_id:
+            return todo
+    return None</code></pre>
+          <p>
+            Fine once. But do it for every id and you are walking 200 records 200 times. With 200 items nobody
+            notices; with 200,000 you do, and the fix is the same at both sizes.
+          </p>
+
+          <h3>A lookup index: one key, one record</h3>
+          <pre><code>by_id = {todo["id"]: todo for todo in todos}
+
+print(by_id[42]["title"])      # rerum perferendis error quia ut eveniet
+print(len(by_id))              # 200</code></pre>
+          <p>
+            Build it once, then every lookup is instant. This works because <code>id</code> is unique — one key,
+            exactly one record. If you build a lookup index on a field that repeats, later records silently
+            overwrite earlier ones and you lose data without an error.
+          </p>
+
+          <h3>A group index: one key, many records</h3>
+          <p>When the key repeats, the value has to be a list:</p>
+          <pre><code>from collections import defaultdict
+
+by_user = defaultdict(list)
+
+for todo in todos:
+    by_user[todo["userId"]].append(todo)
+
+print(len(by_user[7]))         # 20</code></pre>
+          <p>
+            <code>userId</code> appears twenty times, so grouping is the only correct choice here. Asking
+            "is this key unique?" is what decides which of the two you build.
+          </p>
+
+          <h3>The trade you are making</h3>
+          <p>
+            An index costs memory and has to be built before it is useful. It pays off when you query the same
+            data repeatedly. One question — scan. Many questions — index once, then ask freely.
+          </p>
+          <p class="section-subtitle">
+            Project 2's notes file asks where you switched from scanning to indexing and what changed. This
+            paragraph is the answer it is looking for, but write it in your own words once you have felt it.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <!-- 8 · Sets -->
+    <section id="sets" class="section">
+      <div class="container section-inner">
+        <header class="section-header">
+          <h2><span class="icon-circle">8</span> Sets</h2>
+          <p class="section-subtitle">
+            Unordered collections of unique things. Small idea, surprisingly sharp tool.
+          </p>
+        </header>
+
+        <article class="info-card">
+          <h3>Uniqueness for free</h3>
+          <pre><code>user_ids = {todo["userId"] for todo in todos}
+
+print(len(user_ids))          # 10
+print(sorted(user_ids))       # [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]</code></pre>
+          <p>
+            Two hundred todos, ten distinct users. Duplicates are dropped on the way in, with no checking on
+            your part. Note the empty set is written <code>set()</code>, because <code>{}</code> already means
+            an empty dictionary.
+          </p>
+
+          <h3>Membership, fast</h3>
+          <pre><code>print(3 in user_ids)          # True</code></pre>
+          <p>
+            Checking <code>in</code> on a list walks it item by item; on a set it is effectively instant,
+            however large. If you are repeatedly asking "have I seen this before?", a set is the answer.
+          </p>
+
+          <h3>Comparing two groups</h3>
+          <p>
+            This is where sets earn their place. Build one set of users with finished work and another of users
+            with unfinished work, then ask how they relate:
+          </p>
+          <pre><code>has_completed = {t["userId"] for t in todos if t["completed"]}
+has_pending   = {t["userId"] for t in todos if not t["completed"]}
+
+print(has_completed &amp; has_pending)     # intersection — in both
+print(has_completed - has_pending)     # difference — finished everything
+print(has_completed | has_pending)     # union — in either</code></pre>
+          <p>
+            Run that and the middle line prints <code>set()</code>. Every one of the ten users has at least one
+            unfinished todo, so nobody has completed all twenty.
+          </p>
+          <p>
+            <strong>Do not treat that as a bug.</strong> Task 1.3 asks for users who completed everything, and
+            the correct answer on this dataset is an empty result. Students lose real time assuming working code
+            is broken. Test your logic by lowering the bar — say, users with more than ten completed — and
+            confirm it returns something sensible before trusting the empty answer.
+          </p>
+
+          <h3>Also useful</h3>
+          <pre><code>seen = set()
+seen.add(4)
+seen.add(4)          # no effect, already there
+print(len(seen))     # 1
+
+print({1, 2} &lt;= {1, 2, 3})    # True — subset</code></pre>
+          <p>
+            Sets have no order, so there is no <code>my_set[0]</code>. Wrap in <code>sorted()</code> when you
+            want to print them predictably.
+          </p>
+        </article>
+
+        <div class="tasks-grid">
+          <article class="task-card">
+            <div class="task-header">
+              <div class="task-header-main">
+                <h3 class="task-title">Checkpoint 3 · reason with sets</h3>
+                <p class="task-subtitle">The last checkpoint before the project.</p>
+              </div>
+              <div class="task-toggle"></div>
+            </div>
+            <div class="task-body">
+              <ul>
+                <li>Build the set of users who have more than ten completed todos.</li>
+                <li>Build the set of users who have more than ten unfinished todos.</li>
+                <li>Is there any overlap? Should there be, given each user has exactly twenty?</li>
+                <li>Build a set of the first word of every title. How many distinct opening words are there?</li>
+              </ul>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 9 · Asking questions -->
+    <section id="questions" class="section bg-light">
+      <div class="container section-inner">
+        <header class="section-header">
+          <h2><span class="icon-circle">9</span> Asking questions of a collection</h2>
+          <p class="section-subtitle">
+            Four built-ins that turn a list into an answer.
+          </p>
+        </header>
+
+        <article class="info-card">
+          <h3><code>all()</code> and <code>any()</code></h3>
+          <pre><code>user_1 = [t for t in todos if t["userId"] == 1]
+
+print(all(t["completed"] for t in user_1))    # False — not every one
+print(any(t["completed"] for t in user_1))    # True  — at least one</code></pre>
+          <p>
+            <code>all()</code> is exactly what Task 1.3 needs and is hard to guess if you have not met it.
+            One caution worth knowing: <code>all()</code> of an empty collection is <code>True</code>, which is
+            logically correct and occasionally produces a surprising answer for a user with no todos at all.
+          </p>
+
+          <h3><code>sorted()</code> with a key</h3>
+          <pre><code>counts = {1: 11, 2: 8, 3: 7, 4: 6, 5: 12, 6: 6, 7: 9, 8: 11, 9: 8, 10: 12}
+
+ranked = sorted(counts.items(), key=lambda pair: pair[1], reverse=True)
+print(ranked[:3])       # [(5, 12), (10, 12), (1, 11)]</code></pre>
+          <p>
+            <code>key=</code> takes a small function saying <em>what to sort on</em>. A <code>lambda</code> is
+            just a function written inline: <code>lambda pair: pair[1]</code> means "given a pair, sort by its
+            second element". You can always write a normal <code>def</code> instead if that reads better to you.
+          </p>
+
+          <h3><code>max()</code> and <code>min()</code></h3>
+          <pre><code>busiest = max(counts, key=counts.get)
+print(busiest)          # 5
+
+quietest = min(counts, key=counts.get)
+print(quietest)         # 4</code></pre>
+          <p>
+            Same <code>key=</code> idea: <code>counts.get</code> is passed as the function to look up each
+            key's value. It works on records too — <code>max(todos, key=lambda t: len(t["title"]))</code>
+            returns the todo with the longest title.
+          </p>
+          <p>
+            One caution: <code>max</code> returns a single winner even when there is a tie. Users 5 and 10 both
+            have twelve completed, and only user 5 comes back — whichever the iteration reaches first. If ties
+            matter, sort and look at the top of the list instead.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <!-- 10 · Putting it together -->
+    <section id="together" class="section">
+      <div class="container section-inner">
+        <header class="section-header">
+          <h2><span class="icon-circle">10</span> Putting it together</h2>
+          <p class="section-subtitle">
+            Shorter than Week 1's, because by now you have the vocabulary.
+          </p>
+        </header>
+
+        <article class="info-card">
+          <h3><code>overview.py</code></h3>
+          <pre><code>import json
+from collections import Counter, defaultdict
+
+
+def load_todos(path):
+    """Load the todos file and return the list of records."""
+    with open(path, encoding="utf-8") as f:
+        return json.load(f)
+
+
+def summarise(todos):
+    """Return a few headline facts about the collection."""
+    completed = Counter(t["userId"] for t in todos if t["completed"])
+
+    by_user = defaultdict(list)
+    for todo in todos:
+        by_user[todo["userId"]].append(todo)
+
+    finished_everything = {
+        user_id for user_id, items in by_user.items()
+        if all(t["completed"] for t in items)
+    }
+
+    return {
+        "records": len(todos),
+        "users": len(by_user),
+        "completed": sum(completed.values()),
+        "top_user": completed.most_common(1)[0],
+        "finished_everything": finished_everything,
+    }
+
+
+def main():
+    todos = load_todos("project02/data/todos.json")
+    facts = summarise(todos)
+
+    print(f"Records:             {facts['records']}")
+    print(f"Users:               {facts['users']}")
+    print(f"Completed todos:     {facts['completed']}")
+    print(f"Most completed:      user {facts['top_user'][0]} ({facts['top_user'][1]})")
+    print(f"Finished everything: {facts['finished_everything'] or 'nobody'}")
+
+
+if __name__ == "__main__":
+    main()</code></pre>
+
+          <h3>What it prints</h3>
+          <pre><code>Records:             200
+Users:               10
+Completed todos:     90
+Most completed:      user 5 (12)
+Finished everything: nobody</code></pre>
+
+          <h3>What to notice</h3>
+          <ul class="study-list">
+            <li><code>load_todos</code> and <code>summarise</code> both return; only <code>main</code> prints.
+              Same discipline as Week 1, and the reason Task 1 can import your work.</li>
+            <li><code>summarise</code> returns a dictionary rather than five loose values — easier to extend
+              later without breaking every caller.</li>
+            <li>Counting and grouping sit side by side, doing the same loop with different accumulators.</li>
+            <li><code>facts['finished_everything'] or 'nobody'</code> works because an empty set is falsy.</li>
+            <li>The <code>if __name__</code> guard is here for the same reason as last week: Task 1 imports
+              <code>load_todos</code>, and importing should not run anything.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <!-- 11 · Gotchas -->
+    <section id="gotchas" class="section bg-light">
+      <div class="container section-inner">
+        <header class="section-header">
+          <h2><span class="icon-circle">11</span> Gotchas</h2>
+          <p class="section-subtitle">
+            Five things that will cost you an evening if you meet them cold.
+          </p>
+        </header>
+
+        <article class="info-card">
+          <h3>Two names, one dictionary</h3>
+          <pre><code>a = {"completed": False}
+b = a                      # not a copy — the same dictionary
+b["completed"] = True
+
+print(a["completed"])      # True  ← a changed too</code></pre>
+          <p>
+            Assignment gives a second name to the same object. When you loop over <code>todos</code> and modify
+            a record, you are modifying the one in the list. Use <code>dict(a)</code> or
+            <code>a.copy()</code> when you want an independent copy — and note that copies are shallow, so
+            nested dictionaries are still shared.
+          </p>
+
+          <h3>Changing a collection while looping over it</h3>
+          <pre><code>for todo in todos:
+    if todo["completed"]:
+        todos.remove(todo)     # skips items, gives wrong results</code></pre>
+          <p>
+            Build a new list instead — which is exactly what a comprehension does. Same rule applies to adding
+            keys to a dictionary while iterating it.
+          </p>
+
+          <h3>Sets have no order</h3>
+          <p>
+            Printing a set twice can give two different orders, and there is no index. Wrap in
+            <code>sorted()</code> before printing anything a human will read or compare.
+          </p>
+
+          <h3>Dictionaries do have order</h3>
+          <p>
+            Since Python 3.7, dictionaries keep insertion order. So iterating a dictionary built from the todos
+            gives users in the order first encountered — 1 to 10 here, but only because the file happens to be
+            sorted. Do not rely on it for correctness; sort explicitly when order matters.
+          </p>
+
+          <h3><code>KeyError</code> is not always a bug</h3>
+          <p>
+            Reaching for a missing key raises loudly, and that is often what you want. Reflexively wrapping
+            everything in <code>.get()</code> turns a clear crash into <code>None</code> flowing quietly through
+            your program until it fails somewhere far away.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <!-- 12 · Menu loop -->
+    <section id="menu" class="section">
+      <div class="container section-inner">
+        <header class="section-header">
+          <h2><span class="icon-circle">12</span> Optional: a menu loop</h2>
+          <p class="section-subtitle">
+            Only needed for the project's optional query shell. Skip it without guilt.
+          </p>
+        </header>
+
+        <article class="info-card">
+          <h3>The shape</h3>
+          <pre><code>def main():
+    todos = load_todos("project02/data/todos.json")
+
+    while True:
+        print("\n1 - completed per user")
+        print("2 - users who finished everything")
+        print("q - quit")
+
+        choice = input("&gt; ").strip()
+
+        if choice == "1":
+            print(count_completed_by_user(todos))
+        elif choice == "2":
+            print(users_with_all_completed(todos))
+        elif choice in ("q", "quit"):
+            break
+        else:
+            print("Unknown option")</code></pre>
+          <p>
+            <code>input()</code> returns a string, always — so <code>choice == 1</code> is never true and
+            <code>choice == "1"</code> is what you want. <code>.strip()</code> forgives a stray space.
+            <code>break</code> is the only way out of <code>while True</code>, so make sure there is one.
+          </p>
+          <p class="section-subtitle">
+            The point of the exercise is that the menu contains no logic — every branch calls a function you
+            already wrote. If you find yourself writing new calculations in here, they belong somewhere else.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <!-- 13 · Concept to task map -->
+    <section id="map" class="section bg-light">
+      <div class="container section-inner">
+        <header class="section-header">
+          <h2><span class="icon-circle">13</span> Concept → task map</h2>
+          <p class="section-subtitle">
+            Stuck on a task? Come back here first.
+          </p>
+        </header>
+
+        <div class="section-card-grid">
+          <article class="info-card">
+            <h3>Task 0 · load and inspect</h3>
+            <ul class="study-list">
+              <li><a href="#json">4 · <code>json.load</code> and the type mapping</a></li>
+              <li><a href="#lists-of-dicts">3 · list versus dict, and <code>type()</code></a></li>
+              <li><a href="#dicts">2 · <code>.keys()</code></a></li>
+            </ul>
+          </article>
+
+          <article class="info-card">
+            <h3>Task 1 · basic queries</h3>
+            <ul class="study-list">
+              <li><a href="#comprehensions">5 · filtering with comprehensions</a></li>
+              <li><a href="#counting">6 · counting per key</a></li>
+              <li><a href="#questions">9 · <code>all()</code></a></li>
+              <li><a href="#sets">8 · why the answer to 1.3 is empty</a></li>
+            </ul>
+          </article>
+
+          <article class="info-card">
+            <h3>Task 2 · in-memory indices</h3>
+            <ul class="study-list">
+              <li><a href="#indices">7 · lookup index versus group index</a></li>
+              <li><a href="#counting">6 · <code>defaultdict(list)</code></a></li>
+              <li><a href="#gotchas">11 · shared references when you modify records</a></li>
+            </ul>
+          </article>
+
+          <article class="info-card">
+            <h3>Task 3 · sets and uniqueness</h3>
+            <ul class="study-list">
+              <li><a href="#sets">8 · union, intersection, difference</a></li>
+              <li><a href="#comprehensions">5 · set comprehensions</a></li>
+            </ul>
+          </article>
+
+          <article class="info-card">
+            <h3>Optional · query shell</h3>
+            <ul class="study-list">
+              <li><a href="#menu">12 · the menu loop</a></li>
+              <li><a href="#together">10 · keeping logic out of the interface</a></li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 14 · Checklist -->
+    <section id="checklist" class="section">
+      <div class="container section-inner">
+        <header class="section-header">
+          <h2><span class="icon-circle">14</span> Are you ready?</h2>
+          <p class="section-subtitle">
+            You are ready for Project 2 when you can do each of these without looking them up.
+          </p>
+        </header>
+
+        <article class="info-card">
+          <h3>Self-check</h3>
+          <ul class="study-list">
+            <li>Explain the difference between <code>fields[3]</code> and <code>todo["quantity"]</code>, and
+              why the second is safer.</li>
+            <li>Say when you want <code>[]</code> and when you want <code>.get()</code>.</li>
+            <li>Loop over a dictionary's keys and values together.</li>
+            <li>Explain why <code>todos[0]["title"]</code> needs two steps.</li>
+            <li>Rewrite a filtering loop as a comprehension, and back again.</li>
+            <li>Count records per key without a <code>KeyError</code> on the first one.</li>
+            <li>Say what <code>defaultdict(list)</code> saves you from writing.</li>
+            <li>Explain when a lookup index is wrong and a group index is right.</li>
+            <li>Use set difference to answer a question about two groups.</li>
+            <li>Explain why <code>all()</code> on an empty collection is <code>True</code>.</li>
+          </ul>
+          <p class="section-subtitle">
+            Anything you hesitated on: return to that section, then try it in the REPL on the real data before
+            starting the project.
+          </p>
+
+          <div class="hero-actions">
+            <a href="../projects/02-data-structures.html" class="btn btn-primary">Start Project 2</a>
+            <a href="week1-python-foundations.html" class="btn btn-ghost">Back to Week 1</a>
+          </div>
+        </article>
+
+        <article class="info-card">
+          <h3>If you want to read further</h3>
+          <ul class="study-list">
+            <li><a href="https://docs.python.org/3/tutorial/datastructures.html" target="_blank" rel="noreferrer">Python data structures</a> – lists, dicts, sets and comprehensions in one chapter.</li>
+            <li><a href="https://docs.python.org/3/library/json.html" target="_blank" rel="noreferrer">The json module</a> – the four functions and their options.</li>
+            <li><a href="https://docs.python.org/3/library/collections.html" target="_blank" rel="noreferrer">collections</a> – <code>Counter</code>, <code>defaultdict</code> and friends.</li>
+            <li><a href="https://jsonplaceholder.typicode.com/" target="_blank" rel="noreferrer">JSONPlaceholder</a> – the other resources you can practise against.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer bg-midnight text-on-primary">
+    <div class="container footer-inner">
+      <div>
+        <span class="footer-title">Holberton Albania · Machine Learning Prep</span>
+        <p class="footer-text">Week 2 · JSON records – dictionaries, sets, and thinking in data.</p>
+      </div>
+      <div class="footer-links">
+        <a href="../index.html#tutorials">Back to tutorials</a>
+        <a href="../projects/02-data-structures.html">Project 2</a>
+        <a href="week1-python-foundations.html">Week 1</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../assets/js/main.js"></script>
+</body>
+</html>
