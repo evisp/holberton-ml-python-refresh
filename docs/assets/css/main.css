@@ -1139,3 +1139,92 @@ h1 code, h2 code, h3 code, h4 code,
     transform: none;
   }
 }
+
+
+/* --- The four-across stage strip --------------------------------------- */
+
+.stage-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(196px, 1fr));
+  gap: var(--space-4);
+}
+
+.stage {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-5);
+  background-color: var(--color-ice-white);
+  border: 1px solid var(--color-line-soft);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+}
+
+.stage-step {
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  text-transform: uppercase;
+  letter-spacing: 0.11em;
+  color: var(--color-text-soft);
+}
+
+.stage-name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--text-md);
+  letter-spacing: -0.016em;
+}
+
+.stage-note {
+  margin: 0;
+  font-size: var(--text-sm);
+  line-height: 1.55;
+  color: var(--color-text-muted);
+  max-width: none;
+}
+
+/* --- The icon itself ---------------------------------------------------- */
+
+.stage-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 46px;
+  height: 46px;
+  border-radius: var(--radius-pill);
+  background-color: var(--color-midnight);
+  color: var(--color-ice-white);
+}
+
+.stage-icon svg {
+  display: block;
+  width: 22px;
+  height: 22px;
+}
+
+/* Cherry variant — used on the final stage, and nowhere else */
+.stage-icon.is-accent {
+  background-color: var(--color-cherry);
+}
+
+/* --- Small variant, for section headings -------------------------------- */
+
+.stage-icon-sm {
+  width: 27px;
+  height: 27px;
+  margin-right: 0.55rem;
+  vertical-align: 0.06em;
+}
+
+.stage-icon-sm svg {
+  width: 14px;
+  height: 14px;
+}
+
+@media (max-width: 640px) {
+  .stage {
+    padding: var(--space-4);
+  }
+}
