@@ -1223,6 +1223,27 @@ h1 code, h2 code, h3 code, h4 code,
   height: 14px;
 }
 
+/* --- Fixed two-column grid, for sets of exactly 2 or 4 cards ----------- */
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4);
+}
+
+@media (max-width: 760px) {
+  .grid-2 {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* --- A card that closes a section rather than joining it --------------- */
+
+.info-card.is-summary {
+  background-color: var(--color-peach);
+  border-color: var(--color-peach);
+}
+
 @media (max-width: 640px) {
   .stage {
     padding: var(--space-4);
