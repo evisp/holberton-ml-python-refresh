@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Project 3 · Data pipelines – from JSON to clean CSV</title>
+  <title>Project 3 · Data pipelines – from messy JSON to clean CSV</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="../assets/css/main.css">
 </head>
@@ -33,24 +33,25 @@
       <div class="container">
         <div class="project-hero project-hero-inner">
           <p class="eyebrow">Project 3</p>
-          <h1 class="project-hero-title">Data pipelines – from JSON to clean CSV</h1>
+          <h1 class="project-hero-title">Data pipelines – from messy JSON to clean CSV</h1>
           <p class="project-hero-subtitle">
-            In this project you design a small, script-based data pipeline that takes the JSON todos dataset from Project 2,
-            selects and cleans fields, and writes a clean CSV file. You will separate the work into simple extract, transform,
-            and load steps.
+            In this project you build a small, script-based pipeline over real brewery data — missing coordinates,
+            phone numbers in four different formats, commas inside addresses, accented names. You will separate the
+            work into extract, transform, and load steps, and decide for yourself what "clean" means.
           </p>
 
           <div class="project-hero-tags">
             <span class="pill-tag"><span class="pill-tag-icon">📄</span> JSON input</span>
             <span class="pill-tag"><span class="pill-tag-icon">📑</span> CSV output</span>
             <span class="pill-tag"><span class="pill-tag-icon">⚙️</span> Extract–Transform–Load</span>
-            <span class="pill-tag"><span class="pill-tag-icon">🔁</span> Reusable scripts</span>
+            <span class="pill-tag"><span class="pill-tag-icon">🧹</span> Real cleaning decisions</span>
           </div>
 
           <div class="info-strip">
-            <span class="info-pill">Focus: reading JSON, writing CSV</span>
+            <span class="info-pill">Focus: cleaning data that fights back</span>
             <span class="info-pill">Pattern: extract → transform → load</span>
-            <span class="info-pill">Goal: a simple, repeatable pipeline script</span>
+            <span class="info-pill">Data: Open Brewery DB</span>
+            <span class="info-pill">Prerequisite: Week 3 tutorial</span>
           </div>
         </div>
       </div>
@@ -64,8 +65,9 @@
             <h3>Key concepts</h3>
             <ul class="study-list">
               <li>Separating data work into extract, transform, and load steps.</li>
-              <li>Using the <code>json</code> module to read structured data from a file.</li>
-              <li>Using the <code>csv</code> module (especially <code>csv.DictWriter</code>) to write structured CSV files.</li>
+              <li>Inspecting raw data before writing any code against it.</li>
+              <li>Normalizing inconsistent values and handling missing fields.</li>
+              <li>Using <code>csv.DictWriter</code> to write a file with an explicit schema.</li>
               <li>Designing functions that take data in and return data out, without doing I/O.</li>
             </ul>
           </article>
@@ -73,12 +75,18 @@
           <article class="info-card">
             <h3>Study first (15–30 minutes)</h3>
             <ul class="study-list">
+              <li>
+                <strong>Start here:</strong> the
+                <a href="../tutorials/week3-pipelines-csv.html">Week 3 pipelines tutorial</a> —
+                it covers this whole project from the ground up.
+              </li>
               <li>Python docs: <code>json</code> module (<code>json.load</code>, <code>json.dump</code>).</li>
               <li>Python docs: <code>csv</code> module, especially <code>csv.DictWriter</code>.</li>
-              <li>A brief overview of “ETL” as reading, cleaning, and writing data.</li>
+              <li>A brief overview of "ETL" as reading, cleaning, and writing data.</li>
             </ul>
             <p class="section-subtitle">
-              The pipeline here is small on purpose. The pattern you practice will show up again on larger, real datasets.
+              The pipeline is small on purpose. The data is not tidy on purpose. The pattern you practice here is the
+              one you will use on far larger datasets.
             </p>
           </article>
         </div>
@@ -89,28 +97,57 @@
     <section class="section">
       <div class="container section-inner">
         <header class="section-header">
-          <h2>Prepare the raw input file</h2>
+          <h2>Download the raw input file</h2>
           <p class="section-subtitle">
-            Copy the todos dataset from Project 2 into this project’s data folder. This keeps each project self-contained.
+            This project uses a new dataset. Unlike the todos from Project 2, this one is real, community-maintained,
+            and full of gaps.
           </p>
         </header>
 
         <article class="info-card">
-          <h3>Copy from Project 2</h3>
+          <h3>Open Brewery DB</h3>
           <p>
-            In Project 2 you downloaded the JSONPlaceholder todos dataset as
-            <code>project02/data/todos.json</code>.
+            <a href="https://www.openbrewerydb.org/" target="_blank" rel="noreferrer">Open Brewery DB</a> is a free,
+            open dataset of breweries, cideries, brewpubs and bottleshops around the world. No API key is needed.
           </p>
-          <p>
-            For this project, copy that file into <code>project03/data/raw_todos.json</code>.
-            From the root of your repository:
-          </p>
+          <p>From the root of your repository:</p>
           <pre><code>mkdir -p project03/data
-cp project02/data/todos.json project03/data/raw_todos.json
-          </code></pre>
+curl "https://api.openbrewerydb.org/v1/breweries?per_page=200" -o project03/data/raw_breweries.json</code></pre>
+          <p>
+            Note the quotes around the URL — without them your shell may swallow the <code>?</code> and
+            <code>&amp;</code> characters.
+          </p>
+
+          <h3>What you are getting</h3>
+          <p>Each record looks roughly like this:</p>
+          <pre><code>{
+  "id": "5128df48-79fc-4f0f-8b52-d06be54d0cec",
+  "name": "(405) Brewing Co",
+  "brewery_type": "micro",
+  "address_1": "1716 Topeka St",
+  "address_2": null,
+  "address_3": null,
+  "city": "Norman",
+  "state_province": "Oklahoma",
+  "postal_code": "73069-8224",
+  "country": "United States",
+  "longitude": -97.46818222,
+  "latitude": 35.25738891,
+  "phone": "4058160490",
+  "website_url": "http://www.405brewing.com",
+  "state": "Oklahoma",
+  "street": "1716 Topeka St"
+}</code></pre>
           <p class="section-subtitle">
-            All steps in this project will use <code>project03/data/raw_todos.json</code> as the raw input file and
-            produce a cleaned CSV file as output.
+            Seventeen fields, several of them redundant, and a great many of them <code>null</code> depending on the
+            record. Deciding what to keep and what to do about the gaps is the actual work of this project.
+          </p>
+
+          <h3>A note on the data changing</h3>
+          <p>
+            Open Brewery DB is community-maintained, so if you download it again next month you may get slightly
+            different records. Download once, commit the file to your repository, and work from that snapshot —
+            which is exactly what a real pipeline does with a source it does not control.
           </p>
         </article>
       </div>
@@ -122,7 +159,7 @@ cp project02/data/todos.json project03/data/raw_todos.json
         <header class="section-header">
           <h2>Your repository layout for Project 3</h2>
           <p class="section-subtitle">
-            Keep everything for this project inside <code>project03/</code>. The pipeline will read JSON and write CSV.
+            Keep everything for this project inside <code>project03/</code>. The pipeline reads JSON and writes CSV.
           </p>
         </header>
 
@@ -133,10 +170,11 @@ cp project02/data/todos.json project03/data/raw_todos.json
 ├── project02/
 ├── project03/
 │   ├── data/
-│   │   ├── raw_todos.json
-│   │   ├── todos_clean.json      (optional intermediate)
-│   │   └── todos_clean.csv       (final output)
+│   │   ├── raw_breweries.json          (downloaded once, committed)
+│   │   ├── breweries_extracted.json    (optional intermediate)
+│   │   └── breweries_clean.csv         (final output)
 │   ├── scripts/
+│   │   ├── inspect_raw.py
 │   │   ├── extract.py
 │   │   ├── transform.py
 │   │   ├── load.py
@@ -144,10 +182,10 @@ cp project02/data/todos.json project03/data/raw_todos.json
 │   └── project03-notes.md
 ├── project04/
 ├── project05/
-└── ...
-          </code></pre>
+└── ...</code></pre>
           <p class="section-subtitle">
-            Each script has a focused responsibility: extract from raw JSON, transform records in memory, load to CSV, and orchestrate the full pipeline.
+            Each script has one responsibility: inspect the source, extract and select fields, transform records in
+            memory, load to CSV, and orchestrate the whole run.
           </p>
         </article>
       </div>
@@ -159,18 +197,57 @@ cp project02/data/todos.json project03/data/raw_todos.json
         <header class="section-header">
           <h2>Tasks</h2>
           <p class="section-subtitle">
-            Start by extracting and inspecting fields, then add transformation and CSV output. Finally, wire everything into a single pipeline script.
+            Look at the data before you write code against it. Then build the three steps, then wire them together.
           </p>
         </header>
 
         <div class="tasks-grid">
+
+          <!-- Task 0: inspect -->
+          <article class="task-card">
+            <div class="task-header">
+              <div class="task-header-main">
+                <h3 class="task-title">Task 0 · inspect – find out what you actually downloaded</h3>
+                <p class="task-subtitle">
+                  Before writing a single line of pipeline code, measure the mess.
+                </p>
+              </div>
+              <div class="task-toggle"></div>
+            </div>
+            <div class="task-body">
+              <h4>Requirements</h4>
+              <ul>
+                <li>Create <code>scripts/inspect_raw.py</code> inside <code>project03/</code>.</li>
+                <li>Load <code>data/raw_breweries.json</code> and print:
+                  <ul>
+                    <li>How many records you actually received.</li>
+                    <li>The full list of keys on the first record.</li>
+                    <li>For every field, how many records have it as <code>null</code> or an empty string.</li>
+                    <li>The distinct values of <code>brewery_type</code>.</li>
+                    <li>How many distinct countries appear.</li>
+                  </ul>
+                </li>
+                <li>Write what you found into <code>project03-notes.md</code> before continuing.</li>
+              </ul>
+              <h4>Hints</h4>
+              <ul>
+                <li>A dictionary keyed by field name with a count as the value is all you need — the same
+                  counting pattern from Project 2.</li>
+                <li>Look closely at <code>latitude</code>, <code>longitude</code>, <code>phone</code> and
+                  <code>website_url</code>. The gaps are not evenly spread.</li>
+                <li>Compare <code>state</code> against <code>state_province</code>, and <code>street</code>
+                  against <code>address_1</code>. Notice anything?</li>
+              </ul>
+            </div>
+          </article>
+
           <!-- Task 1: extract -->
           <article class="task-card">
             <div class="task-header">
               <div class="task-header-main">
                 <h3 class="task-title">Task 1 · extract – select and reshape fields</h3>
                 <p class="task-subtitle">
-                  Implement the first step of the pipeline that reads raw JSON and produces a simplified list of records.
+                  Read the raw JSON and produce a narrower list of records. Selection only — no cleaning yet.
                 </p>
               </div>
               <div class="task-toggle"></div>
@@ -179,25 +256,26 @@ cp project02/data/todos.json project03/data/raw_todos.json
               <h4>Requirements</h4>
               <ul>
                 <li>Create <code>scripts/extract.py</code> inside <code>project03/</code>.</li>
-                <li>Implement <code>extract_todos(input_path)</code> that:
+                <li>Implement <code>extract_breweries(input_path)</code> that:
                   <ul>
-                    <li>Reads <code>raw_todos.json</code> using the <code>json</code> module.</li>
-                    <li>Returns a list of dictionaries containing a selected subset of fields, for example:
-                      <ul>
-                        <li><code>id</code></li>
-                        <li><code>userId</code></li>
-                        <li><code>title</code></li>
-                        <li><code>completed</code></li>
-                      </ul>
+                    <li>Reads <code>raw_breweries.json</code> using the <code>json</code> module.</li>
+                    <li>Returns a list of dictionaries keeping only these fields:
+                      <code>id</code>, <code>name</code>, <code>brewery_type</code>, <code>street</code>,
+                      <code>city</code>, <code>state_province</code>, <code>country</code>,
+                      <code>postal_code</code>, <code>phone</code>, <code>website_url</code>,
+                      <code>latitude</code>, <code>longitude</code>.
                     </li>
                   </ul>
                 </li>
-                <li>Optionally write this simplified list to <code>data/todos_clean.json</code> to inspect.</li>
+                <li>The source has two redundant pairs — <code>state</code> / <code>state_province</code> and
+                  <code>street</code> / <code>address_1</code>. Pick one of each and record your reasoning in your notes.</li>
+                <li>Optionally write the result to <code>data/breweries_extracted.json</code> so you can inspect it.</li>
               </ul>
               <h4>Hints</h4>
               <ul>
-                <li>Use <code>json.load</code> to parse the file and list comprehensions to keep only the fields you need.</li>
-                <li>Keep <code>extract_todos</code> focused on reading and selecting fields; it should not clean or convert values yet.</li>
+                <li>Use <code>.get()</code> rather than <code>[]</code> — not every record has every key.</li>
+                <li>Resist the urge to fix anything here. Nulls stay null, phone numbers stay ugly.
+                  Extract selects; transform cleans.</li>
               </ul>
             </div>
           </article>
@@ -206,9 +284,9 @@ cp project02/data/todos.json project03/data/raw_todos.json
           <article class="task-card">
             <div class="task-header">
               <div class="task-header-main">
-                <h3 class="task-title">Task 2 · transform – clean and normalize records</h3>
+                <h3 class="task-title">Task 2 · transform – clean, normalize, and decide</h3>
                 <p class="task-subtitle">
-                  Apply simple cleaning and normalization rules to the extracted records to prepare them for CSV output.
+                  The heart of the project. Most of these rules involve a judgment call.
                 </p>
               </div>
               <div class="task-toggle"></div>
@@ -217,30 +295,37 @@ cp project02/data/todos.json project03/data/raw_todos.json
               <h4>Requirements</h4>
               <ul>
                 <li>Create <code>scripts/transform.py</code>.</li>
-                <li>Implement <code>transform_todos(records)</code> where <code>records</code> is the list returned by <code>extract_todos</code>.</li>
-                <li>Apply transformations such as:
+                <li>Implement <code>transform_breweries(records)</code>, which takes the list from
+                  <code>extract_breweries</code> and returns a <em>new</em> list. It must not read or write files,
+                  and must not modify the list it was given.</li>
+                <li>Apply at least these rules:
                   <ul>
-                    <li>Normalize <code>title</code>:
-                      <ul>
-                        <li>Strip leading and trailing whitespace.</li>
-                        <li>Optionally lowercase or keep original case, but be consistent.</li>
-                      </ul>
-                    </li>
-                    <li>Ensure <code>completed</code> is in a consistent form, for example:
-                      <ul>
-                        <li>Keep as <code>True</code>/<code>False</code> but ensure type correctness.</li>
-                        <li>Or add a new field <code>completed_int</code> with values <code>0</code> or <code>1</code>.</li>
-                      </ul>
-                    </li>
-                    <li>Add a derived field such as <code>title_length</code> (length of the title string).</li>
+                    <li>Rename <code>state_province</code> to <code>state</code>.</li>
+                    <li><code>name</code>: strip surrounding whitespace and collapse any repeated inner spaces.</li>
+                    <li><code>phone</code>: reduce to digits only, or <code>None</code> when missing or empty.</li>
+                    <li><code>website_url</code>: strip whitespace, lowercase it, remove any trailing slash,
+                      or <code>None</code> when missing.</li>
+                    <li><code>postal_code</code>: keep it as a <strong>string</strong>. For US-style ZIP+4 values
+                      like <code>73069-8224</code>, keep the first five characters.</li>
+                    <li><code>latitude</code> / <code>longitude</code>: keep as numbers, or <code>None</code>.</li>
                   </ul>
                 </li>
-                <li>Return a new list of dictionaries with the cleaned structure.</li>
+                <li>Add these derived fields:
+                  <ul>
+                    <li><code>has_coordinates</code> — <code>True</code> only when both values are present.</li>
+                    <li><code>is_closed</code> — whether <code>brewery_type</code> is <code>"closed"</code>.</li>
+                  </ul>
+                </li>
+                <li>Decide whether closed breweries belong in your clean output. Either answer is defensible —
+                  but write down which you chose and why.</li>
               </ul>
               <h4>Hints</h4>
               <ul>
-                <li>Keep <code>transform_todos</code> pure: it should only take in data and return data, without reading or writing files.</li>
-                <li>Think of this step as “data preparation” for later analysis in pandas or other tools.</li>
+                <li>Write one small function per rule and call them in sequence. It is far easier to read,
+                  and far easier to change your mind about one rule later.</li>
+                <li>Why keep <code>postal_code</code> as a string? Find a record whose postal code starts with a
+                  zero and convert it to <code>int</code>. That is why.</li>
+                <li>Building a new dictionary per record is safer than editing the one you were handed.</li>
               </ul>
             </div>
           </article>
@@ -251,7 +336,7 @@ cp project02/data/todos.json project03/data/raw_todos.json
               <div class="task-header-main">
                 <h3 class="task-title">Task 3 · load – write clean CSV</h3>
                 <p class="task-subtitle">
-                  Implement the final step that writes the cleaned records to a CSV file with a fixed schema.
+                  Write the cleaned records to a CSV file with a fixed, explicit schema.
                 </p>
               </div>
               <div class="task-toggle"></div>
@@ -263,31 +348,39 @@ cp project02/data/todos.json project03/data/raw_todos.json
                 <li>Implement <code>load_to_csv(records, output_path)</code> that:
                   <ul>
                     <li>Uses <code>csv.DictWriter</code> from the standard library.</li>
-                    <li>Defines explicit <code>fieldnames</code>, for example:
-                      <ul>
-                        <li><code>["id", "user_id", "title", "completed", "title_length"]</code></li>
-                      </ul>
-                    </li>
-                    <li>Writes a header row and then all records to <code>todos_clean.csv</code>.</li>
+                    <li>Declares an explicit <code>fieldnames</code> list, for example:
+                      <code>["id", "name", "brewery_type", "street", "city", "state", "country",
+                      "postal_code", "phone", "website_url", "latitude", "longitude", "has_coordinates"]</code></li>
+                    <li>Writes a header row, then every record.</li>
                   </ul>
                 </li>
-                <li>Call this function to produce <code>project03/data/todos_clean.csv</code> as the final output.</li>
+                <li>Open the file with <code>newline=""</code> and <code>encoding="utf-8"</code>.</li>
+                <li>Produce <code>project03/data/breweries_clean.csv</code> as the final output.</li>
+              </ul>
+              <h4>Verify your output</h4>
+              <ul>
+                <li>Open the CSV in a spreadsheet. Find a brewery whose street address contains a comma —
+                  it must sit in a single column.</li>
+                <li>Find a name with an accent or a non-English character. It must still be readable.</li>
+                <li>Find a postal code that starts with a zero. Is the zero still there?</li>
               </ul>
               <h4>Hints</h4>
               <ul>
-                <li>Open the CSV with <code>newline=""</code> to avoid extra blank lines on some systems.</li>
-                <li>Map <code>userId</code> to <code>user_id</code> or a similar naming convention to keep your CSV schema clear.</li>
+                <li>Let the <code>csv</code> module handle quoting. Never build CSV lines with
+                  <code>",".join(...)</code>.</li>
+                <li><code>DictWriter</code> raises if a record has a key you did not declare. That is a feature —
+                  decide deliberately using <code>extrasaction</code>.</li>
               </ul>
             </div>
           </article>
 
-          <!-- Task 4: pipeline orchestrator -->
+          <!-- Task 4: pipeline -->
           <article class="task-card">
             <div class="task-header">
               <div class="task-header-main">
                 <h3 class="task-title">Task 4 · pipeline – orchestrate the steps</h3>
                 <p class="task-subtitle">
-                  Wire up the extract, transform, and load steps into a single script that runs the pipeline end-to-end.
+                  Wire extract, transform, and load into a single script that runs end to end.
                 </p>
               </div>
               <div class="task-toggle"></div>
@@ -298,39 +391,39 @@ cp project02/data/todos.json project03/data/raw_todos.json
                 <li>Create <code>scripts/pipeline.py</code> inside <code>project03/</code>.</li>
                 <li>In a <code>main()</code> function:
                   <ul>
-                    <li>Define <code>input_path = "project03/data/raw_todos.json"</code>.</li>
-                    <li>Define <code>output_path = "project03/data/todos_clean.csv"</code>.</li>
-                    <li>Call your functions in order:
-                      <ul>
-                        <li><code>records = extract_todos(input_path)</code></li>
-                        <li><code>clean_records = transform_todos(records)</code></li>
-                        <li><code>load_to_csv(clean_records, output_path)</code></li>
-                      </ul>
-                    </li>
-                    <li>Print a short summary, for example:
-                      <ul>
-                        <li>Number of records processed.</li>
-                        <li>Location of the output CSV file.</li>
-                      </ul>
-                    </li>
+                    <li>Set <code>input_path = "project03/data/raw_breweries.json"</code>.</li>
+                    <li>Set <code>output_path = "project03/data/breweries_clean.csv"</code>.</li>
+                    <li>Call the steps in order:
+                      <code>extract_breweries</code> → <code>transform_breweries</code> → <code>load_to_csv</code>.</li>
+                    <li>Print a summary: records read, records written, records dropped, how many are missing
+                      coordinates, and where the output file was written.</li>
                   </ul>
                 </li>
-                <li>Use <code>if __name__ == "__main__":</code> to run <code>main()</code> when the script is executed.</li>
+                <li>Use <code>if __name__ == "__main__":</code> to run <code>main()</code>.</li>
+                <li>Run the pipeline twice in a row. The output must be identical both times.</li>
               </ul>
               <h4>Optional extension</h4>
               <ul>
-                <li>Add basic argument parsing to allow specifying input and output paths from the command line.</li>
+                <li>Add <code>argparse</code> so <code>--input</code> and <code>--output</code> can be set from
+                  the command line, with the paths above as defaults.</li>
+              </ul>
+              <h4>Hints</h4>
+              <ul>
+                <li>All file reading and writing belongs here and in the load step. The transform step should still
+                  know nothing about files.</li>
+                <li>If your summary numbers do not add up — read plus dropped should equal written —
+                  that is a bug worth finding.</li>
               </ul>
             </div>
           </article>
 
-          <!-- Stretch goals -->
+          <!-- Stretch -->
           <article class="task-card">
             <div class="task-header">
               <div class="task-header-main">
-                <h3 class="task-title">Stretch · logging and validation</h3>
+                <h3 class="task-title">Stretch · logging, validation, and a quality report</h3>
                 <p class="task-subtitle">
-                  Add simple logging and validation to make your pipeline more robust.
+                  Make the pipeline tell you what it did and what it could not handle.
                 </p>
               </div>
               <div class="task-toggle"></div>
@@ -339,14 +432,21 @@ cp project02/data/todos.json project03/data/raw_todos.json
               <span class="task-badge">Optional</span>
               <h4>Ideas</h4>
               <ul>
-                <li>Add basic logging using the <code>logging</code> module to record the start and end of each step,
-                  along with the number of records processed.</li>
-                <li>Implement simple validation in the transform step: check that all required keys are present,
-                  and collect any invalid records into a separate list or file.</li>
-                <li>Add an option in the pipeline to keep only completed todos or only todos for a specific <code>userId</code>.</li>
+                <li>Use the <code>logging</code> module instead of <code>print</code>: log the start and end of each
+                  step at <code>INFO</code>, and each rejected record at <code>WARNING</code>.</li>
+                <li>Validate in the transform step: require <code>id</code>, <code>name</code> and
+                  <code>country</code> to be present and non-empty. Collect failures into
+                  <code>data/breweries_invalid.json</code> rather than discarding them silently.</li>
+                <li>Write a small data quality report — a second CSV, or a section in your notes — giving the
+                  percentage of records missing each field.</li>
+                <li>Add filters to the pipeline: <code>--country</code>, <code>--exclude-closed</code>,
+                  <code>--require-coordinates</code>.</li>
+                <li>The dataset contains breweries sharing a name at different addresses. Detect them and report
+                  how many — but think carefully before "deduplicating" anything.</li>
               </ul>
             </div>
           </article>
+
         </div>
       </div>
     </section>
@@ -357,22 +457,26 @@ cp project02/data/todos.json project03/data/raw_todos.json
         <header class="section-header">
           <h2>Reflection and notes</h2>
           <p class="section-subtitle">
-            Think about how separating extract, transform, and load changed the way you write and read your code.
+            Cleaning data is a series of decisions, not a series of fixes. These questions ask you to defend yours.
           </p>
         </header>
 
         <article class="info-card">
           <h3>Project notes</h3>
           <p>
-            Create a file <code>project03-notes.md</code> inside <code>project03/</code> and write short answers to questions like:
+            Create a file <code>project03-notes.md</code> inside <code>project03/</code> and answer:
           </p>
           <ul class="study-list">
-            <li>How did separating extract, transform, and load affect your code organization?</li>
-            <li>Which step felt most straightforward and which required more decisions?</li>
-            <li>If you had to plug another JSON dataset into this pipeline, what would you need to change?</li>
+            <li>What did Task 0 tell you that you would not have guessed from looking at one record?</li>
+            <li>How did separating extract, transform, and load affect the way your code is organised?</li>
+            <li>Which normalization rule required the most judgement? What did you decide, and what would
+              somebody who disagreed with you have done instead?</li>
+            <li>What did you do with closed breweries, and with records missing coordinates? Why?</li>
+            <li>If you had to point this pipeline at a completely different JSON dataset, which of your files
+              would change and which would not?</li>
           </ul>
           <p class="section-subtitle">
-            These reflections help you connect small pipeline exercises to larger data workflows you may encounter later.
+            The last question is the real test of whether the three-step split earned its keep.
           </p>
         </article>
       </div>
@@ -383,10 +487,11 @@ cp project02/data/todos.json project03/data/raw_todos.json
     <div class="container footer-inner">
       <div>
         <span class="footer-title">Holberton Albania · Machine Learning Prep</span>
-        <p class="footer-text">Project 3 · Data pipelines – from JSON to clean CSV.</p>
+        <p class="footer-text">Project 3 · Data pipelines – from messy JSON to clean CSV.</p>
       </div>
       <div class="footer-links">
         <a href="../index.html#projects">Back to projects</a>
+        <a href="../tutorials/week3-pipelines-csv.html">Week 3 tutorial</a>
         <a href="#top" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;">Back to top</a>
       </div>
     </div>

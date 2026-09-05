@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Week 3 · Pipelines – splitting the work and writing clean CSV</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body class="bg-light text-main">
+
+  <header class="site-header bg-white shadow-sm">
+    <div class="container header-inner">
+      <div class="brand">
+        <div class="brand-logo-circle bg-cherry text-on-primary">H</div>
+        <div class="brand-text">
+          <span class="brand-name">Holberton Albania</span>
+          <span class="brand-tagline">Python &amp; Data Refresh</span>
+        </div>
+      </div>
+      <nav class="nav">
+        <a href="../index.html#hero" class="nav-link">Home</a>
+        <a href="../index.html#projects" class="nav-link">Projects</a>
+        <a href="../index.html#tutorials" class="nav-link">Tutorials</a>
+        <a href="../index.html#how" class="nav-link">How it works</a>
+        <a href="../index.html#resources" class="nav-link">Resources</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero -->
+    <section class="section bg-white">
+      <div class="container">
+        <div class="project-hero project-hero-inner">
+          <p class="eyebrow">Week 3 tutorial</p>
+          <h1 class="project-hero-title">Pipelines – splitting the work and writing clean CSV</h1>
+          <p class="project-hero-subtitle">
+            Weeks 1 and 2 taught you Python. This week teaches design: how to break one program into pieces that
+            each do one job, and what "clean data" actually means when the data fights back.
+          </p>
+
+          <div class="project-hero-tags">
+            <span class="pill-tag"><span class="pill-tag-icon">⚙️</span> Extract–Transform–Load</span>
+            <span class="pill-tag"><span class="pill-tag-icon">🧹</span> Normalizing</span>
+            <span class="pill-tag"><span class="pill-tag-icon">📑</span> CSV</span>
+            <span class="pill-tag"><span class="pill-tag-icon">🧪</span> Validation</span>
+            <span class="pill-tag"><span class="pill-tag-icon">📋</span> Logging</span>
+          </div>
+
+          <div class="info-strip">
+            <span class="info-pill">Reading time: 25–30 minutes</span>
+            <span class="info-pill">Assumes: Weeks 1–2</span>
+            <span class="info-pill">Prepares you for: Project 3</span>
+          </div>
+
+          <div class="hero-actions">
+            <a href="#data" class="btn btn-primary">Start with the data</a>
+            <a href="../projects/03-data-pipelines.html" class="btn btn-ghost">Go straight to Project 3</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- How to use + contents -->
+    <section class="section bg-light">
+      <div class="container section-inner">
+        <div class="section-card-grid">
+          <article class="info-card">
+            <h3>What is different this week</h3>
+            <p class="section-subtitle">
+              There is very little new Python here. You already know <code>json</code>, and the <code>csv</code>
+              module takes fifteen minutes to learn. The hard part is architectural, and it is genuinely hard:
+              deciding how to split a program, and deciding what your data should look like.
+            </p>
+            <ul class="study-list">
+              <li>Two checkpoints, as in Week 2.</li>
+              <li>Short examples use the real brewery data.</li>
+              <li>The full worked pipeline uses a parallel dataset, so Project 3 stays yours to solve.</li>
+            </ul>
+          </article>
+
+          <article class="info-card">
+            <h3>What is in here</h3>
+            <ul class="study-list">
+              <li><a href="#data">0 · Get the data and look at it</a></li>
+              <li><a href="#why-split">1 · Why split one script into three</a></li>
+              <li><a href="#extract">2 · Extract – select and reshape</a></li>
+              <li><a href="#pure">3 · The shape of a transform</a></li>
+              <li><a href="#clean">4 · What "clean" actually means</a></li>
+              <li><a href="#csv-format">5 · CSV, the format</a></li>
+              <li><a href="#csv-module">6 · The <code>csv</code> module</a></li>
+              <li><a href="#orchestrate">7 · Orchestrating the steps</a></li>
+              <li><a href="#twice">8 · Running it twice</a></li>
+              <li><a href="#bad-rows">9 · When records are bad</a></li>
+              <li><a href="#together">10 · Putting it together</a></li>
+              <li><a href="#gotchas">11 · Gotchas</a></li>
+              <li><a href="#map">12 · Concept → task map</a></li>
+              <li><a href="#checklist">13 · Are you ready?</a></li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 0 · Get the data -->
+    <section id="data" class="section">
+      <div class="container section-inner">
+        <header class="section-header">
+          <h2><span class="icon-circle">0</span> Get the data and look at it</h2>
+          <p class="section-subtitle">
+            The first stage of every pipeline is the one people skip: find out what you actually have.
+          </p>
+        </header>
+
+        <article class="info-card">
+          <h3>Download once</h3>
+          <pre><code>mkdir -p project03/data
+curl "https://api.openbrewerydb.org/v1/breweries?per_page=200" -o project03/data/raw_breweries.json</code></pre>
+          <p>
+            Then open a REPL and keep it open, the same way you did in Week 2:
+          </p>
+          <pre><code>&gt;&gt;&gt; import json
+&gt;&gt;&gt; with open("project03/data/raw_breweries.json") as f:
+...     raw = json.load(f)
+...
+&gt;&gt;&gt; len(raw)</code></pre>
+          <p>
+            Whatever number comes back is your dataset. Write it down — that is already Task 0 starting.
+          </p>
+
+          <h3>Two records, side by side</h3>
+          <p>Here is a complete one:</p>
+          <pre><code>{
+  "id": "5128df48-79fc-4f0f-8b52-d06be54d0cec",
+  "name": "(405) Brewing Co",
+  "brewery_type": "micro",
+  "address_1": "1716 Topeka St",
+  "city": "Norman",
+  "state_province": "Oklahoma",
+  "postal_code": "73069-8224",
+  "country": "United States",
+  "longitude": -97.46818222,
+  "latitude": 35.25738891,
+  "phone": "4058160490",
+  "website_url": "http://www.405brewing.com"
+}</code></pre>
+          <p>And here is one from the same file:</p>
+          <pre><code>{
+  "id": "f4284868-386f-46c2-adda-0436d6a9e3bd",
+  "name": "12 Marias",
+  "brewery_type": "micro",
+  "address_1": "EN109 74",
+  "city": "Estarreja",
+  "state_province": "Aveiro",
+  "postal_code": "3865-127",
+  "country": "Portugal",
+  "longitude": null,
+  "latitude": null,
+  "phone": null,
+  "website_url": "https://12marias.pt/"
+}</code></pre>
+          <p>
+            Same schema, wildly different content. No coordinates, no phone, a postal code in a completely different
+            format, a URL with a trailing slash and a different scheme. Neither record is broken — both are just real.
+          </p>
+
+          <h3>The Week 2 counting pattern, put to work</h3>
+          <p>
+            You already know how to do this. It is the same dictionary-of-counts loop, pointed at a new question:
+          </p>
+          <pre><code>missing = {}
+
+for record in raw:
+    for field, value in record.items():
+        if value is None or value == "":
+            missing[field] = missing.get(field, 0) + 1
+
+for field, count in sorted(missing.items(), key=lambda p: p[1], reverse=True):
+    print(f"{field:20} {count:4} missing")</code></pre>
+          <p class="section-subtitle">
+            Run it. The result will surprise you, and it should change what you plan to build. That is the whole point
+            of inspecting before coding.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <!-- 1 · Why split -->
+    <section id="why-split" class="section bg-light">
+      <div class="container section-inner">
+        <header class="section-header">
+          <h2><span class="icon-circle">1</span> Why split one script into three</h2>
+          <p class="section-subtitle">
+            The conceptual core of the week. Everything else follows from it.
+          </p>
+        </header>
+
+        <article class="info-card">
+          <h3>The script that works</h3>
+          <p>You could write the whole project like this, and it would run:</p>
+          <pre><code>import csv
+import json
+
+with open("data/raw_breweries.json") as f:
+    raw = json.load(f)
+
+with open("data/clean.csv", "w", newline="") as f:
+    writer = csv.writer(f)
+    writer.writerow(["id", "name", "city", "country"])
+
+    for record in raw:
+        name = record["name"].strip()
+        writer.writerow([record["id"], name, record["city"], record["country"]])</code></pre>
+          <p>
+            Twelve lines, correct output. So why does Project 3 ask for four files instead?
+          </p>
+
+          <h3>Three questions it cannot answer</h3>
+          <ul class="study-list">
+            <li><strong>The source changes to CSV.</strong> Now you are editing a file that also contains all your
+              cleaning rules, and you risk breaking them while changing how you read.</li>
+            <li><strong>You need the same cleaning for a different output</strong> — a database, JSON, a spreadsheet.
+              The cleaning is tangled up with <code>csv.writer</code>, so you cannot reuse it without copying it.</li>
+            <li><strong>One record produces a wrong value.</strong> Where do you look? Reading, cleaning and writing
+              all happen in one loop, so the only way to inspect the middle is to add prints and re-run everything.</li>
+          </ul>
+
+          <h3>The split</h3>
+          <p>
+            Extract, transform, load. It is not tidiness for its own sake — the point is that
+            <strong>each kind of change touches exactly one file</strong>:
+          </p>
+          <ul class="study-list">
+            <li><strong>extract</strong> knows about the source format, and nothing about cleaning.</li>
+            <li><strong>transform</strong> knows about your cleaning rules, and nothing about files at all.</li>
+            <li><strong>load</strong> knows about the destination format, and nothing about where data came from.</li>
+            <li><strong>pipeline</strong> knows the order, and holds the file paths.</li>
+          </ul>
+          <p>
+            Change the source and only <code>extract.py</code> moves. Change the output to a database and only
+            <code>load.py</code> moves. Argue about whether closed breweries belong in the output, and the argument
+            lives entirely in <code>transform.py</code>.
+          </p>
+          <p class="section-subtitle">
+            If you saw the intro slides: this is stage two of that diagram, including the arrow that loops back.
+            You will transform, discover something wrong, and return to extract. A split pipeline makes that loop
+            cheap. One long script makes it expensive.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <!-- 2 · Extract -->
+    <section id="extract" class="section">
+      <div class="container section-inner">
+        <header class="section-header">
+          <h2><span class="icon-circle">2</span> Extract – select and reshape</h2>
+          <p class="section-subtitle">
+            Read the source, keep what you need, hand it on. Nothing else.
+          </p>
+        </header>
+
+        <article class="info-card">
+          <h3>Reading is a callback</h3>
+          <pre><code>import json
+
+
+def extract_breweries(input_path):
+    """Read the raw file and return the fields we care about."""
+    with open(input_path, encoding="utf-8") as f:
+        raw = json.load(f)
+
+    return [select_fields(record) for record in raw]</code></pre>
+          <p>
+            Note <code>encoding="utf-8"</code>. This dataset contains <code>Straße</code>, <code>Södertälje</code>
+            and <code>Fermelã</code>. On some systems the default encoding is not UTF-8 and those records will fail
+            to load — a bug that appears on your classmate's laptop but not yours.
+          </p>
+
+          <h3>Selecting with <code>.get()</code></h3>
+          <pre><code>FIELDS = ["id", "name", "brewery_type", "city",
+          "state_province", "country", "postal_code",
+          "phone", "website_url", "latitude", "longitude"]
+
+
+def select_fields(record):
+    return {field: record.get(field) for field in FIELDS}</code></pre>
+          <p>
+            A dictionary comprehension over a list of field names. Using <code>.get()</code> means a record missing
+            a key gives <code>None</code> rather than crashing — appropriate here, because at extract time you have
+            not yet decided whether a missing field matters.
+          </p>
+
+          <h3>The discipline</h3>
+          <p>
+            The temptation is enormous: you are already touching every record, so why not strip the name while you
+            are here? Because the moment extract starts cleaning, you can no longer tell whether a strange value came
+            from the source or from your own code. Keeping extract honest means the intermediate file is a faithful,
+            narrower copy of the source — and that is what makes it useful for debugging.
+          </p>
+          <p class="section-subtitle">
+            One decision does belong here: the source carries <code>state</code> and <code>state_province</code>,
+            and <code>street</code> and <code>address_1</code>, holding the same values. Choosing which to keep
+            is selection, not cleaning.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <!-- 3 · Pure transforms -->
+    <section id="pure" class="section bg-light">
+      <div class="container section-inner">
+        <header class="section-header">
+          <h2><span class="icon-circle">3</span> The shape of a transform</h2>
+          <p class="section-subtitle">
+            Data in, data out. No files, no printing, no surprises.
+          </p>
+        </header>
+
+        <article class="info-card">
+          <h3>The rule</h3>
+          <p>
+            A transform function takes a value and returns a value. It does not open files, does not print, and does
+            not change anything outside itself. Given the same input it always produces the same output.
+          </p>
+          <pre><code>def clean_name(name):
+    """Strip the edges and collapse repeated inner spaces."""
+    if not name:
+        return None
+    return " ".join(name.split())</code></pre>
+          <p>
+            <code>" ".join(name.split())</code> is a small idiom worth knowing: <code>.split()</code> with no argument
+            splits on any run of whitespace and discards the empties, so joining the pieces back with single spaces
+            normalises the whole string at once.
+          </p>
+
+          <h3>Why this shape</h3>
+          <ul class="study-list">
+            <li><strong>You can test it in the REPL.</strong> Call it with a bad value and look at what comes back.
+              No files, no setup.</li>
+            <li><strong>You can reorder or reuse the rules</strong> without worrying about hidden effects.</li>
+            <li><strong>Failures are local.</strong> If the output is wrong, the bug is inside that one function.</li>
+          </ul>
+          <p>
+            This is Project 1's "return, don't print" rule grown up. There it made your code reusable; here it makes
+            an entire pipeline stage inspectable.
+          </p>
+
+          <h3>One rule per function, composed</h3>
+          <pre><code>def transform_record(record):
+    """Build a new, clean record from a raw one."""
+    return {
+        "id": record["id"],
+        "name": clean_name(record.get("name")),
+        "brewery_type": record.get("brewery_type"),
+        "city": clean_name(record.get("city")),
+        "state": record.get("state_province"),
+        "country": record.get("country"),
+        "postal_code": clean_postcode(record.get("postal_code")),
+        "phone": clean_phone(record.get("phone")),
+        "website_url": clean_url(record.get("website_url")),
+    }
+
+
+def transform_breweries(records):
+    return [transform_record(record) for record in records]</code></pre>
+          <p class="section-subtitle">
+            Notice <code>transform_record</code> builds a <em>new</em> dictionary rather than editing the one it was
+            given. Week 2's aliasing gotcha is why: editing in place would silently change the extracted data too,
+            and then your intermediate file no longer matches what extract produced.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <!-- 4 · What clean means -->
+    <section id="clean" class="section">
+      <div class="container section-inner">
+        <header class="section-header">
+          <h2><span class="icon-circle">4</span> What "clean" actually means</h2>
+          <p class="section-subtitle">
+            Not "repair the broken bits". Cleaning is deciding what your data should look like — and living with it.
+          </p>
+        </header>
+
+        <article class="info-card">
+          <h3>Four kinds of cleaning</h3>
+          <ul class="study-list">
+            <li><strong>Renaming</strong> to a convention — <code>state_province</code> becomes <code>state</code>,
+              because your destination has its own naming rules.</li>
+            <li><strong>Normalizing</strong> so that values which mean the same thing look the same.</li>
+            <li><strong>Coercing</strong> types so the destination reads them correctly.</li>
+            <li><strong>Deriving</strong> fields the source never had, because the destination needs them.</li>
+          </ul>
+          <p>Only the second one is anything like "fixing". The other three are design decisions.</p>
+
+          <h3>Normalizing a phone number</h3>
+          <p>The same field, across four records in this dataset:</p>
+          <pre><code>"4058160490"
+"+49 9261 628000"
+"+32 496 76 40 63"
+null</code></pre>
+          <pre><code>def clean_phone(phone):
+    """Reduce a phone number to digits, or None if there isn't one."""
+    if not phone:
+        return None
+
+    digits = "".join(character for character in phone if character.isdigit())
+    return digits or None</code></pre>
+          <p>
+            This throws away the <code>+</code>. Is that right? It depends what the CSV is for — and that is the
+            point. There is no universally correct answer, only an answer you chose and can defend.
+          </p>
+
+          <h3>The postal code trap</h3>
+          <p>
+            This dataset contains a brewery in Massachusetts whose postal code is <code>"02351-2419"</code>.
+            Watch what happens if you treat it as a number:
+          </p>
+          <pre><code>&gt;&gt;&gt; int("02351")
+2351</code></pre>
+          <p>
+            The zero is gone and the postal code is now wrong. Postal codes, phone numbers, and IDs are
+            <strong>text that happens to be made of digits</strong> — never convert them. Keep them as strings and
+            resist the temptation.
+          </p>
+          <pre><code>def clean_postcode(postcode):
+    """Keep as text. Reduce US ZIP+4 to the five-digit form."""
+    if not postcode:
+        return None
+
+    postcode = postcode.strip()
+
+    if "-" in postcode and len(postcode) == 10:
+        return postcode[:5]
+
+    return postcode</code></pre>
+          <p>
+            The length check matters: Portugal uses <code>3865-127</code> and Ireland uses <code>R93 X3X8</code>.
+            Splitting on the dash unconditionally would quietly mangle every Portuguese record.
+          </p>
+
+          <h3>Deriving what the destination needs</h3>
+          <pre><code>def add_derived(record, raw):
+    record["has_coordinates"] = (
+        raw.get("latitude") is not None and raw.get("longitude") is not None
+    )
+    record["is_closed"] = raw.get("brewery_type") == "closed"
+    return record</code></pre>
+          <p>
+            <code>has_coordinates</code> did not exist in the source. It exists because whoever reads your CSV wants
+            to filter on it without checking two columns for nulls.
+          </p>
+
+          <h3>Transform decides the schema</h3>
+          <p>
+            This is the sentence Task 3 depends on. The set of keys coming out of your transform step
+            <em>is</em> your CSV's column list. If the two disagree, the load step will tell you loudly — which is
+            exactly why declaring <code>fieldnames</code> explicitly is worth doing.
+          </p>
+        </article>
+
+        <div class="tasks-grid">
+          <article class="task-card">
+            <div class="task-header">
+              <div class="task-header-main">
+                <h3 class="task-title">Checkpoint 1 · write three cleaning rules</h3>
+                <p class="task-subtitle">In the REPL, on real values. Ten minutes.</p>
+              </div>
+              <div class="task-toggle"></div>
+            </div>
+            <div class="task-body">
+              <ul>
+                <li>Write <code>clean_url(url)</code>: strip whitespace, lowercase, drop any trailing slash,
+                  return <code>None</code> if empty. Test it on
+                  <code>"https://12marias.pt/"</code> and <code>"http://10KBrew.com"</code>.</li>
+                <li>Write <code>clean_phone</code> and run it over every record. How many become <code>None</code>?</li>
+                <li>Find a record where <code>clean_postcode</code> does something you did not intend.
+                  There is at least one.</li>
+                <li>For each rule, name one person who would reasonably disagree with your choice.</li>
+              </ul>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5 · CSV the format -->
+    <section id="csv-format" class="section bg-light">
+      <div class="container section-inner">
+        <header class="section-header">
+          <h2><span class="icon-circle">5</span> CSV, the format</h2>
+          <p class="section-subtitle">
+            Ten minutes on the format before the module. It prevents a whole class of bugs.
+          </p>
+        </header>
+
+        <article class="info-card">
+          <h3>It looks trivial</h3>
+          <pre><code>id,name,city
+1,Sample Brewing,Norman
+2,Another Brewing,Austin</code></pre>
+          <p>So why not just build it yourself?</p>
+          <pre><code>line = ",".join([record["id"], record["name"], record["city"]])</code></pre>
+
+          <h3>Because of this record</h3>
+          <p>One brewery in the dataset has this street address:</p>
+          <pre><code>250 Mill St, Suite PW3101</code></pre>
+          <p>
+            Join that with commas and the row gains a phantom column. Every field after it shifts. Nothing raises an
+            error — the file is simply wrong, and stays wrong until somebody notices a city called
+            <code>Suite PW3101</code>.
+          </p>
+
+          <h3>Quoting is the answer</h3>
+          <p>The CSV format handles this by wrapping the value in quotes:</p>
+          <pre><code>id,street,city
+abc,"250 Mill St, Suite PW3101",Taylors</code></pre>
+          <p>
+            And if the value contains a quote, it is doubled. Newlines inside a value work the same way. These rules
+            are fiddly, they have edge cases, and you should never implement them yourself — the
+            <code>csv</code> module already has.
+          </p>
+
+          <h3>The header row</h3>
+          <p>
+            A header is the schema, written down. Without it, the third column is "whatever the writer happened to put
+            there". With it, the file is self-describing, and pandas will read it in Project 4 without being told
+            anything.
+          </p>
+
+          <h3>CSV has no types</h3>
+          <p>
+            Everything in a CSV is text. <code>True</code> is written as the five characters <code>T-r-u-e</code>;
+            a spreadsheet may or may not interpret that as a boolean, and different tools disagree. If your consumer
+            needs a number, decide deliberately: write <code>1</code> and <code>0</code>, or write
+            <code>true</code> and <code>false</code>, and document which.
+          </p>
+          <p class="section-subtitle">
+            This is also why the leading zero disappears when a spreadsheet opens your file — the tool guesses a type
+            you never asked for. Your CSV is correct; the reader is being helpful.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <!-- 6 · csv module -->
+    <section id="csv-module" class="section">
+      <div class="container section-inner">
+        <header class="section-header">
+          <h2><span class="icon-circle">6</span> The <code>csv</code> module</h2>
+          <p class="section-subtitle">
+            Small, standard library, does the fiddly parts correctly.
+          </p>
+        </header>
+
+        <article class="info-card">
+          <h3><code>writer</code> versus <code>DictWriter</code></h3>
+          <p><code>csv.writer</code> takes lists, so the column order lives in your head:</p>
+          <pre><code>import csv
+
+with open("out.csv", "w", newline="", encoding="utf-8") as f:
+    writer = csv.writer(f)
+    writer.writerow(["id", "name", "city"])
+    writer.writerow(["abc", "Sample Brewing", "Norman"])</code></pre>
+          <p><code>csv.DictWriter</code> takes dictionaries and you declare the columns once:</p>
+          <pre><code>FIELDNAMES = ["id", "name", "city", "country", "postal_code"]
+
+with open("out.csv", "w", newline="", encoding="utf-8") as f:
+    writer = csv.DictWriter(f, fieldnames=FIELDNAMES)
+    writer.writeheader()
+
+    for record in records:
+        writer.writerow(record)</code></pre>
+          <p>
+            Or <code>writer.writerows(records)</code> for the whole list at once. Since your records are already
+            dictionaries, <code>DictWriter</code> is the natural fit — and <code>fieldnames</code> becomes the single
+            place your schema is written down.
+          </p>
+
+          <h3><code>newline=""</code> is not optional</h3>
+          <p>
+            The <code>csv</code> module writes its own line endings. If you let Python also translate them, you get a
+            blank line between every row on Windows. It is the single most common CSV bug, it does not reproduce on
+            every machine, and the fix is always the same:
+          </p>
+          <pre><code>open(path, "w", newline="", encoding="utf-8")</code></pre>
+
+          <h3>What <code>DictWriter</code> does about mismatches</h3>
+          <ul class="study-list">
+            <li><strong>A key you did not declare</strong> raises <code>ValueError</code> by default. Pass
+              <code>extrasaction="ignore"</code> to drop it silently — but do that deliberately, because the error is
+              usually telling you something true.</li>
+            <li><strong>A declared field the record lacks</strong> is written as an empty string. Change it with
+              <code>restval="N/A"</code> if you want something else.</li>
+            <li><strong>A <code>None</code> value</strong> is written as an empty string. Usually what you want for
+              missing data.</li>
+          </ul>
+
+          <h3>Reading it back</h3>
+          <pre><code>with open("out.csv", newline="", encoding="utf-8") as f:
+    for row in csv.DictReader(f):
+        print(row["name"], row["postal_code"])</code></pre>
+          <p class="section-subtitle">
+            <code>DictReader</code> uses the header row as keys and returns every value as a <strong>string</strong> —
+            including your numbers and booleans. Project 4 will hand this file to pandas, which does the type guessing
+            for you, and you will finally see why that library exists.
+          </p>
+        </article>
+
+        <div class="tasks-grid">
+          <article class="task-card">
+            <div class="task-header">
+              <div class="task-header-main">
+                <h3 class="task-title">Checkpoint 2 · break a CSV, then fix it</h3>
+                <p class="task-subtitle">The fastest way to believe any of this.</p>
+              </div>
+              <div class="task-toggle"></div>
+            </div>
+            <div class="task-body">
+              <ul>
+                <li>Write five brewery records to a CSV using <code>",".join(...)</code>, including the one whose
+                  address contains a comma. Open it in a spreadsheet and find the damage.</li>
+                <li>Write the same five with <code>csv.DictWriter</code>. Confirm the address is one column.</li>
+                <li>Omit <code>newline=""</code> and compare the two files.</li>
+                <li>Read your file back with <code>DictReader</code> and check
+                  <code>type(row["latitude"])</code>. Is it what you expected?</li>
+              </ul>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7 · Orchestrating -->
+    <section id="orchestrate" class="section bg-light">
+      <div class="container section-inner">
+        <header class="section-header">
+          <h2><span class="icon-circle">7</span> Orchestrating the steps</h2>
+          <p class="section-subtitle">
+            One small file that knows the order and holds the paths.
+          </p>
+        </header>
+
+        <article class="info-card">
+          <h3>Importing your own modules</h3>
+          <pre><code>from extract import extract_breweries
+from transform import transform_breweries
+from load import load_to_csv</code></pre>
+          <p>
+            This works when the four files sit in the same folder and you run <code>pipeline.py</code> from there.
+            If you run it from the repository root instead, Python will not find them — which is the same
+            relative-path lesson from Week 1, now applied to imports rather than data files. Pick one place to run
+            from and stay consistent.
+          </p>
+
+          <h3>The whole orchestrator</h3>
+          <pre><code>def main():
+    input_path = "project03/data/raw_breweries.json"
+    output_path = "project03/data/breweries_clean.csv"
+
+    records = extract_breweries(input_path)
+    clean = transform_breweries(records)
+    load_to_csv(clean, output_path)
+
+    print(f"Read:    {len(records)}")
+    print(f"Written: {len(clean)}")
+    print(f"Output:  {output_path}")
+
+
+if __name__ == "__main__":
+    main()</code></pre>
+          <p>
+            Read it aloud and it says what the pipeline does. That readability is the payoff for all the splitting:
+            somebody can understand the shape of the whole thing without opening the other three files.
+          </p>
+
+          <h3>Where the I/O lives</h3>
+          <p>
+            Paths are here. Reading is in extract, writing is in load, and transform touches no files at all.
+            That boundary is what lets you test your cleaning rules in a REPL without creating a single file.
+          </p>
+
+          <h3>The guard, for the third time</h3>
+          <p>
+            <code>if __name__ == "__main__":</code> appears in every project so far. Now it has a concrete payoff:
+            <code>extract.py</code>, <code>transform.py</code> and <code>load.py</code> are all imported by
+            <code>pipeline.py</code>. Without the guard, importing them would run whatever sits at the bottom of each.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <!-- 8 · Running twice -->
+    <section id="twice" class="section">
+      <div class="container section-inner">
+        <header class="section-header">
+          <h2><span class="icon-circle">8</span> Running it twice</h2>
+          <p class="section-subtitle">
+            The first project whose output is a file, which brings a question you have not had to ask before.
+          </p>
+        </header>
+
+        <article class="info-card">
+          <h3>The same input should give the same output</h3>
+          <p>
+            Run your pipeline twice. The CSV should be identical both times. That property has a name —
+            <strong>idempotent</strong> — and it is what makes a pipeline safe to re-run when something upstream
+            changes.
+          </p>
+          <p>
+            Opening with <code>"w"</code> gives you this for free: the file is truncated and rewritten from scratch.
+            Opening with <code>"a"</code> appends, so a second run doubles your data and a third triples it. For a
+            pipeline output, <code>"w"</code> is almost always correct.
+          </p>
+          <pre><code>python3 project03/scripts/pipeline.py
+wc -l project03/data/breweries_clean.csv
+
+python3 project03/scripts/pipeline.py
+wc -l project03/data/breweries_clean.csv    # must be the same number</code></pre>
+
+          <h3>Things that quietly break it</h3>
+          <ul class="study-list">
+            <li>Appending instead of overwriting.</li>
+            <li>Putting a timestamp in the output — now no two runs match.</li>
+            <li>Iterating a <code>set</code> and writing rows in its order, which is not guaranteed. Sort first.</li>
+          </ul>
+
+          <h3>What the intermediate file is for</h3>
+          <p>
+            Project 3 offers an optional <code>breweries_extracted.json</code> between the steps. It is not required,
+            and it is genuinely useful: it lets you look at the middle of the pipeline without re-running the start.
+            When your CSV has a wrong value, you can answer "did extract produce this, or did transform?" by opening
+            one file.
+          </p>
+          <p class="section-subtitle">
+            On a small dataset that is a convenience. On a pipeline whose extract step takes twenty minutes,
+            it is the difference between a two-minute debug and an hour of waiting.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <!-- 9 · Bad records -->
+    <section id="bad-rows" class="section bg-light">
+      <div class="container section-inner">
+        <header class="section-header">
+          <h2><span class="icon-circle">9</span> When records are bad</h2>
+          <p class="section-subtitle">
+            Missing values are normal. Deciding what to do about them is your job, not the data's.
+          </p>
+        </header>
+
+        <article class="info-card">
+          <h3>Three responses, and when each is right</h3>
+          <ul class="study-list">
+            <li><strong>Fill it.</strong> Write an empty string or a default. Right when the field is optional and
+              its absence is not interesting.</li>
+            <li><strong>Flag it.</strong> Keep the record, add a field like <code>has_coordinates</code>.
+              Right when the consumer should decide.</li>
+            <li><strong>Drop it.</strong> Exclude the record and count it. Right only when the record is unusable —
+              no id, no name.</li>
+          </ul>
+          <p>
+            The wrong response is to crash. A quarter of this dataset is missing coordinates; a pipeline that stops
+            on the first one is useless.
+          </p>
+
+          <h3>Validate at the boundary</h3>
+          <pre><code>def is_valid(record):
+    """A record we can actually use."""
+    return bool(record.get("id")) and bool(record.get("name"))
+
+
+def transform_breweries(records):
+    clean = []
+    rejected = []
+
+    for record in records:
+        if not is_valid(record):
+            rejected.append(record)
+            continue
+        clean.append(transform_record(record))
+
+    return clean, rejected</code></pre>
+          <p>
+            Check once, at the entrance to the transform step, and everything downstream can assume good input.
+            The alternative — defensive checks scattered through every function — is how code becomes unreadable.
+          </p>
+          <p>
+            Note that <code>rejected</code> is <em>returned</em>, not printed. The transform step reports what it
+            could not handle; the orchestrator decides whether to log it, save it, or ignore it.
+          </p>
+
+          <h3>Logging beats printing</h3>
+          <pre><code>import logging
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)-8s %(message)s",
+)
+
+logging.info("Extracted %d records", len(records))
+logging.warning("Rejected %d records with no id or name", len(rejected))</code></pre>
+          <p>
+            Three things <code>print</code> cannot do: attach a severity so you can silence the chatter without
+            losing the warnings, timestamp every line, and redirect to a file without touching your code.
+            For anything that runs unattended, that matters.
+          </p>
+          <p class="section-subtitle">
+            Note the comma before <code>len(records)</code> rather than an f-string. Logging only formats the message
+            if that level is actually enabled — a small habit worth picking up early.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <!-- 10 · Putting it together -->
+    <section id="together" class="section">
+      <div class="container section-inner">
+        <header class="section-header">
+          <h2><span class="icon-circle">10</span> Putting it together</h2>
+          <p class="section-subtitle">
+            A complete pipeline on a different dataset — the books from Week 1, now as JSON.
+          </p>
+        </header>
+
+        <article class="info-card">
+          <h3>The input: <code>raw_books.json</code></h3>
+          <pre><code>[
+  {"title": "  The Hobbit ", "author": "Tolkien", "pages": 310, "isbn": "0345339681"},
+  {"title": "Dune", "author": "Herbert", "pages": null, "isbn": "0441013597"},
+  {"title": "Sula", "author": null, "pages": 174, "isbn": "0452283868"},
+  {"title": "", "author": "Unknown", "pages": 200, "isbn": "0000000000"}
+]</code></pre>
+
+          <h3><code>extract.py</code></h3>
+          <pre><code>import json
+
+FIELDS = ["title", "author", "pages", "isbn"]
+
+
+def extract_books(input_path):
+    """Read the raw file and keep only the fields we need."""
+    with open(input_path, encoding="utf-8") as f:
+        raw = json.load(f)
+
+    return [{field: record.get(field) for field in FIELDS} for record in raw]</code></pre>
+
+          <h3><code>transform.py</code></h3>
+          <pre><code>def clean_text(value):
+    """Strip and collapse whitespace, or None if there is nothing left."""
+    if not value:
+        return None
+    cleaned = " ".join(value.split())
+    return cleaned or None
+
+
+def is_valid(record):
+    """We can live without an author. We cannot live without a title."""
+    return bool(clean_text(record.get("title")))
+
+
+def transform_record(record):
+    title = clean_text(record.get("title"))
+    pages = record.get("pages")
+
+    return {
+        "title": title,
+        "author": clean_text(record.get("author")) or "Unknown",
+        "pages": pages,
+        "has_page_count": pages is not None,
+        "isbn": record.get("isbn"),          # text, never an int
+        "title_length": len(title),
+    }
+
+
+def transform_books(records):
+    """Return (clean, rejected). No files are touched here."""
+    clean = []
+    rejected = []
+
+    for record in records:
+        if is_valid(record):
+            clean.append(transform_record(record))
+        else:
+            rejected.append(record)
+
+    return clean, rejected</code></pre>
+
+          <h3><code>load.py</code></h3>
+          <pre><code>import csv
+
+FIELDNAMES = ["title", "author", "pages", "has_page_count", "isbn", "title_length"]
+
+
+def load_to_csv(records, output_path):
+    """Write records to CSV using an explicit schema."""
+    with open(output_path, "w", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=FIELDNAMES)
+        writer.writeheader()
+        writer.writerows(records)</code></pre>
+
+          <h3><code>pipeline.py</code></h3>
+          <pre><code>import logging
+
+from extract import extract_books
+from transform import transform_books
+from load import load_to_csv
+
+logging.basicConfig(level=logging.INFO, format="%(levelname)-8s %(message)s")
+
+
+def main():
+    input_path = "data/raw_books.json"
+    output_path = "data/books_clean.csv"
+
+    records = extract_books(input_path)
+    logging.info("Extracted %d records", len(records))
+
+    clean, rejected = transform_books(records)
+    if rejected:
+        logging.warning("Rejected %d records with no usable title", len(rejected))
+
+    load_to_csv(clean, output_path)
+
+    print(f"Read:     {len(records)}")
+    print(f"Written:  {len(clean)}")
+    print(f"Rejected: {len(rejected)}")
+    print(f"Output:   {output_path}")
+
+
+if __name__ == "__main__":
+    main()</code></pre>
+
+          <h3>What it produces</h3>
+          <pre><code>title,author,pages,has_page_count,isbn,title_length
+The Hobbit,Tolkien,310,True,0345339681,10
+Dune,Herbert,,False,0441013597,4
+Sula,Unknown,174,True,0452283868,4</code></pre>
+
+          <h3>What to notice</h3>
+          <ul class="study-list">
+            <li>Four records in, three out, one rejected — and the count is reported rather than hidden.</li>
+            <li>The missing <code>pages</code> value became an empty CSV cell, with
+              <code>has_page_count</code> saying so explicitly.</li>
+            <li>The missing author became <code>"Unknown"</code> — a different decision for a different field,
+              deliberately.</li>
+            <li>The ISBN kept its leading zero because it was never converted to a number.</li>
+            <li><code>transform.py</code> imports nothing. It has no idea where the data came from or where
+              it is going.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <!-- 11 · Gotchas -->
+    <section id="gotchas" class="section bg-light">
+      <div class="container section-inner">
+        <header class="section-header">
+          <h2><span class="icon-circle">11</span> Gotchas</h2>
+          <p class="section-subtitle">
+            Six things that will cost you an evening if you meet them cold.
+          </p>
+        </header>
+
+        <article class="info-card">
+          <h3>Forgetting <code>newline=""</code></h3>
+          <p>
+            Blank lines between every row, on some machines only. Always pass it when opening a file for the
+            <code>csv</code> module.
+          </p>
+
+          <h3>Converting things that only look like numbers</h3>
+          <p>
+            Postal codes, phone numbers, ISBNs, IDs, and anything with a leading zero. If you will never do
+            arithmetic on it, it is text.
+          </p>
+
+          <h3>Trusting dictionary order instead of <code>fieldnames</code></h3>
+          <p>
+            <code>DictWriter</code> writes columns in the order you declared, not the order your dictionary happens
+            to have. That is a feature — but it means adding a key in transform and forgetting to declare it in load
+            will raise, and rightly so.
+          </p>
+
+          <h3>Mutating the input list</h3>
+          <pre><code>def transform(records):
+    for record in records:
+        record["name"] = clean_name(record["name"])   # changes the caller's data
+    return records</code></pre>
+          <p>Build and return new dictionaries instead. Week 2's aliasing lesson, with higher stakes.</p>
+
+          <h3>Encoding</h3>
+          <p>
+            Pass <code>encoding="utf-8"</code> when reading and writing. Without it Python uses a
+            platform-dependent default, and a file that works for you fails for somebody else.
+          </p>
+
+          <h3>Running from the wrong folder</h3>
+          <p>
+            Relative paths for data, and imports between your own scripts, both depend on where you launched Python.
+            Decide once whether you run from the repository root or from <code>project03/scripts/</code>, and write
+            it at the top of your notes.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <!-- 12 · Concept to task map -->
+    <section id="map" class="section">
+      <div class="container section-inner">
+        <header class="section-header">
+          <h2><span class="icon-circle">12</span> Concept → task map</h2>
+          <p class="section-subtitle">
+            Stuck on a task? Start here.
+          </p>
+        </header>
+
+        <div class="section-card-grid">
+          <article class="info-card">
+            <h3>Task 0 · inspect</h3>
+            <ul class="study-list">
+              <li><a href="#data">0 · counting missing values</a></li>
+              <li><a href="#why-split">1 · why inspection comes first</a></li>
+            </ul>
+          </article>
+
+          <article class="info-card">
+            <h3>Task 1 · extract</h3>
+            <ul class="study-list">
+              <li><a href="#extract">2 · selecting with <code>.get()</code></a></li>
+              <li><a href="#extract">2 · why extract must not clean</a></li>
+              <li><a href="#gotchas">11 · encoding</a></li>
+            </ul>
+          </article>
+
+          <article class="info-card">
+            <h3>Task 2 · transform</h3>
+            <ul class="study-list">
+              <li><a href="#pure">3 · pure functions, one rule each</a></li>
+              <li><a href="#clean">4 · normalizing, coercing, deriving</a></li>
+              <li><a href="#clean">4 · the postal code trap</a></li>
+              <li><a href="#gotchas">11 · not mutating the input</a></li>
+            </ul>
+          </article>
+
+          <article class="info-card">
+            <h3>Task 3 · load</h3>
+            <ul class="study-list">
+              <li><a href="#csv-format">5 · quoting and the comma problem</a></li>
+              <li><a href="#csv-module">6 · <code>DictWriter</code> and <code>fieldnames</code></a></li>
+              <li><a href="#csv-module">6 · <code>newline=""</code></a></li>
+            </ul>
+          </article>
+
+          <article class="info-card">
+            <h3>Task 4 · pipeline</h3>
+            <ul class="study-list">
+              <li><a href="#orchestrate">7 · imports, <code>main()</code>, the guard</a></li>
+              <li><a href="#twice">8 · running it twice</a></li>
+            </ul>
+          </article>
+
+          <article class="info-card">
+            <h3>Stretch · logging and validation</h3>
+            <ul class="study-list">
+              <li><a href="#bad-rows">9 · fill, flag, or drop</a></li>
+              <li><a href="#bad-rows">9 · validating at the boundary</a></li>
+              <li><a href="#bad-rows">9 · the <code>logging</code> module</a></li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 13 · Checklist -->
+    <section id="checklist" class="section bg-light">
+      <div class="container section-inner">
+        <header class="section-header">
+          <h2><span class="icon-circle">13</span> Are you ready?</h2>
+          <p class="section-subtitle">
+            You are ready for Project 3 when you can do each of these without looking them up.
+          </p>
+        </header>
+
+        <article class="info-card">
+          <h3>Self-check</h3>
+          <ul class="study-list">
+            <li>Give a concrete reason to split a working script into extract, transform and load.</li>
+            <li>Say what belongs in extract and what does not.</li>
+            <li>Explain what makes a transform function "pure", and why that helps.</li>
+            <li>Name the four kinds of cleaning, and say which one is not really "fixing".</li>
+            <li>Explain why a postal code must never become an <code>int</code>.</li>
+            <li>Say what breaks when a value contains a comma, and what the <code>csv</code> module does about it.</li>
+            <li>Write a <code>DictWriter</code> block from memory, including <code>newline=""</code>.</li>
+            <li>Say what happens when a record is missing a declared field, and when it has an undeclared one.</li>
+            <li>Explain why running a pipeline twice should change nothing.</li>
+            <li>Choose between filling, flagging and dropping a record — and defend the choice.</li>
+          </ul>
+          <p class="section-subtitle">
+            Anything you hesitated on: go back to that section, then try it in the REPL on the brewery data before
+            starting the project.
+          </p>
+
+          <div class="hero-actions">
+            <a href="../projects/03-data-pipelines.html" class="btn btn-primary">Start Project 3</a>
+            <a href="week2-json-data-structures.html" class="btn btn-ghost">Back to Week 2</a>
+          </div>
+        </article>
+
+        <article class="info-card">
+          <h3>If you want to read further</h3>
+          <ul class="study-list">
+            <li><a href="https://docs.python.org/3/library/csv.html" target="_blank" rel="noreferrer">The csv module</a> – dialects, quoting options, <code>DictReader</code>.</li>
+            <li><a href="https://docs.python.org/3/library/json.html" target="_blank" rel="noreferrer">The json module</a> – a reminder from Week 2.</li>
+            <li><a href="https://docs.python.org/3/howto/logging.html" target="_blank" rel="noreferrer">Logging HOWTO</a> – levels, handlers, and formatting.</li>
+            <li><a href="https://www.openbrewerydb.org/" target="_blank" rel="noreferrer">Open Brewery DB</a> – the dataset, and the other endpoints it offers.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer bg-midnight text-on-primary">
+    <div class="container footer-inner">
+      <div>
+        <span class="footer-title">Holberton Albania · Machine Learning Prep</span>
+        <p class="footer-text">Week 3 · Pipelines – splitting the work and writing clean CSV.</p>
+      </div>
+      <div class="footer-links">
+        <a href="../index.html#tutorials">Back to tutorials</a>
+        <a href="../projects/03-data-pipelines.html">Project 3</a>
+        <a href="week2-json-data-structures.html">Week 2</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../assets/js/main.js"></script>
+</body>
+</html>
